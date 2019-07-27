@@ -1,0 +1,84 @@
+<div *ngIf="data" class="row mb-4">
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header h5">Delivery Information</div>
+      <div class="card-body">
+        <ul class="list-group padding-sm list-group-flush">
+          <li class="list-group-item"><strong>Delivery address:</strong> {{ data.address }}</li>
+          <li class="list-group-item"><strong>Delivery phone:</strong> {{ data.phone }}</li>
+          <li class="list-group-item"><strong>Total items:</strong> {{ data.totalItem }}</li>
+          <li class="list-group-item"><strong>Total price:</strong> {{ data.totalPrice | currency }}</li>
+          <li class="list-group-item"><strong>Status:</strong>
+            <app-order-status [(input)]="data.status"></app-order-status>
+          </li>
+          <li class="list-group-item" *ngIf="data.confirmedManager"><strong>Confirmed manager:</strong> {{ data.confirmedManager.fullname }}</li>
+          <li class="list-group-item" *ngIf="data.completedManager"><strong>Completed manager:</strong> {{ data.completedManager.fullname }}</li>
+          <li class="list-group-item"><strong>Created at:</strong> {{ data.createdAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item text-justify">{{ data.note }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <button type="button" class="btn btn-secondary mr-1" (click)="clickStatus('pending')" [attr.disabled]="data.status.name == 'SUCCESS' || data.status.name == 'FAILED' ? '' : null">To pending</button>
+      <button type="button" class="btn btn-primary mr-1" (click)="clickStatus('delivering')" [attr.disabled]="data.status.name == 'SUCCESS' || data.status.name == 'FAILED' ? '' : null">To delivering</button>
+      <button type="button" class="btn btn-success mr-1" (click)="clickStatus('success')" [attr.disabled]="data.status.name != 'DELIVERING' ? '' : null">To success</button>
+      <button type="button" class="btn btn-danger" (click)="clickStatus('failed')" [attr.disabled]="data.status.name != 'DELIVERING' ? '' : null">To failed</button>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header h5">Customer Information</div>
+      <div class="card-body">
+        <ul class="list-group padding-sm list-group-flush">
+          <li class="list-group-item"><strong>Customer:</strong> {{ data.customer.fullname }}</li>
+          <li class="list-group-item"><strong>Year of birth:</strong> {{ data.customer.birth }}</li>
+          <li class="list-group-item"><strong>Gender:</strong> {{ data.customer.male == true ? "Male" : "Female" }}</li>
+          <li class="list-group-item"><strong>Default address:</strong> {{ data.customer.address }}</li>
+          <li class="list-group-item"><strong>Default phone:</strong> {{ data.customer.phone }}</li>
+          <li class="list-group-item"><strong>Registered at:</strong> {{ data.createdAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item"><strong>Modified at:</strong> {{ data.updatedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <a class="btn btn-secondary mr-1" [routerLink]="'/admin/orders'">Back</a>
+      <button type="button" class="btn btn-danger" disabled ngbTooltip="Not implemented yet">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="data" class="card mb-4">
+  <div class="card-header h5">List of books ordered</div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ISBN</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total price</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data.orderDetails">
+            <td>{{ item.book.isbn }}</td>
+            <td><a [routerLink]="'/admin/book/' + item.book.isbn">{{ item.book.title }}</a></td>
+            <td>{{ item.book.author }}</td>
+            <td>{{ item.amount }}</td>
+            <td>{{ item.price | currency }}</td>
+            <td>{{ item.amount * item.price | currency }}</td>
+            <td><button class="btn btn-link text-danger" type="button" disabled ngbTooltip="Not implemented yet">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

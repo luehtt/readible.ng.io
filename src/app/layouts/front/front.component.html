@@ -1,0 +1,47 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary text-white border-bottom">
+    <div class="sidebar-heading">
+      <a class="text-white nav-link active" href="/">Readible 1.0.1</a>
+    </div>
+
+    <button class="navbar-toggler" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul *ngIf="loggedIn == true" class="navbar-nav ml-auto mt-2 mt-lg-0" style="font-size: 1rem !important">
+        <li class="nav-item">
+          <a [routerLink]="'/shop'" class="nav-link active"><i class="fas fa-store"></i> Shop</a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i> Cart <span
+            class="badge badge-white badge-outlined">{{cartService.totalItem()}}</span></a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="'/customer/orders'" class="nav-link active"><i class="fas fa-clipboard-list"></i> Orders</a>
+        </li>
+        <li class="nav-item">
+          <a (click)="clickLogout()" [routerLink]="''" class="nav-link active"><i class="fas fa-sign-out-alt"></i> Log
+            out</a>
+        </li>
+      </ul>
+      <ul *ngIf="loggedIn == false" class="navbar-nav ml-auto mt-2 mt-lg-0" style="font-size: 1rem !important">
+        <li class="nav-item">
+          <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i> Cart <span
+            class="badge badge-white badge-outlined">{{cartService.totalItem()}}</span></a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="'/login'" class="nav-link active"><i class="fas fa-sign-in-alt"></i> Log in</a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="'/register'" class="nav-link active"><i class="fas fa-user-plus"></i> Sign up</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid" id="main-content-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+</div>

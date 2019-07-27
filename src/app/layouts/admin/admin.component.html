@@ -1,0 +1,46 @@
+<div id="wrapper" class="d-flex" [ngClass]="{ toggled: toggled == true }">
+  <!-- Sidebar -->
+  <div class="border-right bg-primary text-white" id="sidebar-wrapper">
+    <div class="sidebar-heading">Readible 1.0.1</div>
+    <div class="list-group list-group-flush">
+      <a [routerLink]="'/admin/dashboard'" class="list-group-item list-group-item-action bg-primary text-white">Dashboard</a>
+      <a [routerLink]="'/admin/books'" class="list-group-item list-group-item-action bg-primary text-white">Books</a>
+      <a [routerLink]="'/admin/book-categories'" class="list-group-item list-group-item-action bg-primary text-white">Book Categories</a>
+      <a [routerLink]="'/admin/orders'" class="list-group-item list-group-item-action bg-primary text-white">Orders</a>
+      <a [routerLink]="'/admin/customers'" class="list-group-item list-group-item-action bg-primary text-white">Customers</a>
+      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/managers'" class="list-group-item list-group-item-action bg-primary text-white">Managers</a>
+
+    </div>
+  </div>
+  <!-- /#sidebar-wrapper -->
+
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
+      <button class="btn btn-outline-light btn-sm" (click)="toggled = !toggled"><i class="fas fa-align-justify"></i></button>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0" style="font-size: 1rem !important">
+          <li class="nav-item">
+            <a class="nav-link"><i class="fas fa-bell"></i> Message</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" [routerLink]="''" (click)="clickLogout()"><i class="fas fa-sign-out-alt"></i> Log out</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div id="main-content-wrapper" class="container-fluid">
+      <app-alert></app-alert>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <!-- /#page-content-wrapper -->
+</div>
+<!-- /#wrapper -->

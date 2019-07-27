@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="mb-3">
+    <button (click)="changeStatus('pending')" class="btn btn-primary mr-1" type="button">Pending</button>
+    <button (click)="changeStatus('delivering')" class="btn btn-primary mr-1" type="button">Delivering</button>
+    <button (click)="changeStatus('success')" class="btn btn-success mr-1" type="button">Success</button>
+    <button (click)="changeStatus('failed')" class="btn btn-secondary" type="button">Failed</button>
+    <span class="float-right">
+        <a class="btn btn-link" [routerLink]="'/customer/cart'">Go to Cart</a>
+        | <a class="btn btn-link" [routerLink]="'/shop'">Go to Shop</a>
+    </span>
+  </div>
+
+  <div class="card" style="clear: both;">
+    <div class="card-header h5">List of {{ status }} orders</div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Order Id</th>
+              <th scope="col">Address</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Total</th>
+              <th scope="col">Timestamp</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data">
+              <td>{{ item.id }}</td>
+              <td>{{ item.address }}</td>
+              <td>{{ item.phone }}</td>
+              <td>{{ item.totalItem }} items
+                <br>{{ item.totalPrice | currency }}
+              </td>
+              <td>{{ item.createdAt | date: "yyyy-MM-dd hh:mm:ss" }}
+                <br>{{ item.updatedAt | date: "yyyy-MM-dd hh:mm:ss" }}
+              </td>
+              <td><a [routerLink]="'./' + item.id">Detail</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

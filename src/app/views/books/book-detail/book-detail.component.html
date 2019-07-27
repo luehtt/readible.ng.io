@@ -1,0 +1,189 @@
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card" *ngIf="data">
+      <div class="card-header h5">ISBN: {{ data.isbn }}</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 text-center mb-3 mb-md-0">
+            <img *ngIf="data.image && data.image != ''" class="img-fluid mt-2" [src]="data.image" alt=""/>
+            <div *ngIf="!data.image || data.image == ''">Image missing!</div>
+            <div class="mt-2">
+              <input class="d-none" id="file" type="file" accept="image/*" #fileInput (change)="onChangeImage($event)" />
+              <button type="button" class="btn btn-sm btn-primary mr-1" (click)="fileInput.click()"><i class="fas fa-upload"></i></button>
+              <button type="button" class="btn btn-sm btn-danger mr-1" (click)="data.image = null"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-sm btn-secondary" (click)="clickRefreshImage()"><i class="fas fa-redo"></i></button>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <ul class="list-group padding-sm list-group-flush">
+              <li class="list-group-item"><strong>Title: </strong>{{ data.title }}</li>
+              <li class="list-group-item"><strong>Author: </strong>{{ data.author }}</li>
+              <li class="list-group-item"><strong>Category: </strong>{{ data.category.name }}</li>
+              <li class="list-group-item"><strong>Publisher: </strong>{{ data.publisher }}</li>
+              <li class="list-group-item"><strong>Published: </strong>{{ data.published | date: "yyyy-MM-dd" }}</li>
+              <li class="list-group-item"><strong>Language: </strong>{{ data.language }}</li>
+              <li class="list-group-item"><strong>Rating: </strong>
+                <span class="badge badge-secondary" *ngIf="data.rating == 0">0</span>
+                <span class="badge badge-primary" *ngIf="data.rating != 0">{{ data.rating | number }}</span>
+              </li>
+              <li class="list-group-item"><strong>Price: </strong>{{ data.price | currency }}</li>
+              <li class="list-group-item"><strong>Page: </strong>{{ data.page }}</li>
+              <li class="list-group-item"><strong>Discount: </strong>{{ data.discount }} percent</li>
+              <li class="list-group-item"><strong>Viewed: </strong> {{ data.viewed }}</li>
+              <li class="list-group-item"><strong>Active: </strong>
+                <span class="badge badge-primary" *ngIf="data.active == true">Yes</span>
+                <span class="badge badge-secondary" *ngIf="data.active == false">No</span>
+              </li>
+              <li class="list-group-item"><strong>Created at: </strong>{{ data.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+              <li class="list-group-item"><strong>Updated at: </strong>{{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+              <li class="list-group-item text-justify">{{ data.info }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card" *ngIf="data">
+      <div class="card-header h5">Edit</div>
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="form-group row">
+            <label class="col-sm-4">Title</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="title" />
+              <app-form-error [(input)]="form.controls.title"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Author</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="author" />
+              <app-form-error [(input)]="form.controls.author"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Category</label>
+            <div class="col-sm-8">
+              <select class="form-control" formControlName="categoryId">
+                <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+              </select>
+              <app-form-error [(input)]="form.controls.categoryId"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Publisher</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="publisher" />
+              <app-form-error [(input)]="form.controls.publisher"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Published</label>
+            <div class="col-sm-8 input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" formControlName="published" ngbDatepicker #ngd="ngbDatepicker" />
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="ngd.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
+              </div>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.published"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Language</label>
+            <div class="col-sm-8">
+              <input class="form-control" formControlName="language" #ngt="ngbTypeahead"
+                [ngbTypeahead]="search" (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)"/>
+              <app-form-error [(input)]="form.controls.language"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Price ($)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="price" step="0.01" min="0" />
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.price"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Page</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="page" step="1" min="0" />
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.page"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Discount (%)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="discount" step="1" min="0" />
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.discount"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Active</label>
+            <div class="col-sm-8">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="active" value="true" />
+                <label class="form-check-label">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="active" value="false" />
+                <label class="form-check-label">No</label>
+              </div>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.active"></app-form-error>
+          </div>
+          <div class="form-group row">
+              <label class="col-12">Info</label>
+              <div class="col-12">
+                <textarea class="form-control" formControlName="info" rows="6"></textarea>
+              </div>
+            </div>
+
+          <div class="form-group text-center mt-3">
+            <a [routerLink]="'../'" class="btn btn-secondary mr-1">Back</a>
+            <button type="button" class="btn btn-primary mr-1" (click)="clickSummit()">Update</button>
+            <button type="button" class="btn btn-secondary mr-1" (click)="clickRefreshButton()">Refresh</button>
+            <button type="button" class="btn btn-danger" ngbTooltip="Not implemented yet">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" *ngIf="data">
+  <div class="card-header h5">List of comments</div>
+  <div class="card-body">
+    <div class="input-group mb-4">
+      <input type="text" class="form-control" [(ngModel)]="commentFilter" placeholder="Search..."/>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" (click)="commentFilter = ''"><i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('customer')">Customer</th>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('rating')">Rating</th>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('comment')">Comment</th>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('createdAt')">Commented at</th>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment(null)">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filterComment | slice: (commentPage-1) * commentPageSize : (commentPage-1) * commentPageSize + commentPageSize">
+          <td><ngb-highlight [result]="item.customer.fullname" [term]="commentFilter"></ngb-highlight></td>
+          <td><ngb-rating class="h5 text-warning" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
+          <td><ngb-highlight [result]="item.comment" [term]="commentFilter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="commentFilter"></ngb-highlight></td>
+          <td><button type="button" class="btn btn-link text-danger" ngbTooltip="Not implemented yet">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <ngb-pagination *ngIf="filterComment" [(page)]="commentPage" [pageSize]="commentPageSize" [collectionSize]="filterComment.length">
+    </ngb-pagination>
+  </div>
+</div>

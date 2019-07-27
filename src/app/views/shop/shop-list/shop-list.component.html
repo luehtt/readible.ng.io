@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-3 col-lg-2">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item py-2">
+        <button (click)="onSetFilter('')" class="btn btn-link py-0" type="button">All</button>
+      </li>
+      <li *ngFor="let i of categories" class="list-group-item py-2">
+        <button (click)="onSetFilter(i.name.toLowerCase())" class="btn btn-link py-0" type="button">{{ i.name }}</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="data" class="col-md-9 col-lg-10">
+    <div class="input-group mb-3">
+      <input (change)="search = $event.target.value" [value]="search" class="form-control" placeholder="" type="text">
+      <div class="input-group-append">
+        <button (click)="onSetSearch()" class="btn btn-primary" type="button">Search</button>
+        <button (click)="onClear()" class="btn btn-outline-secondary" type="button">Clear</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div *ngFor="let i of data" class="card-group col-sm-4 col-md-4 col-lg-3 col-xl-2">
+        <div class="card mb-3">
+          <div class="text-center mx-1 mt-2">
+            <img [alt]="i.title" [src]="i.image" class="img-fluid" style="height: 300px"/>
+          </div>
+
+          <div class="card-body">
+            <a [routerLink]="'./' + i.isbn">{{ i.title }}</a>
+            <div><strong>{{ i.author }}</strong></div>
+            <div>
+              <ng-template #t let-fill="fill">
+                <span [class.full]="fill === 100" class="star">
+                  <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+                </span>
+              </ng-template>
+              <ngb-rating [rate]="i.rating" [readonly]="true" [starTemplate]="t" class="h4 text-warning my-1" max="5">
+              </ngb-rating>
+            </div>
+            <div> Price:
+              <span *ngIf="i.discount != 0">
+                <span class="h6 mr-2">{{i.price * (100 - i.discount) / 100 | currency}}</span>
+                <del class="text-muted">({{i.price | currency}})</del>
+              </span>
+              <span *ngIf="i.discount == 0"><span class="h6">{{i.price | currency}}</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="data.length != 0" class="col-12">
+        <ngb-pagination (pageChange)="onPageChange($event)" *ngIf="pagination" [(page)]="pagination.pageIndex"
+                        [collectionSize]="pagination.totalItems" [pageSize]="pagination.itemsPerPage">
+        </ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

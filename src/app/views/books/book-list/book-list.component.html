@@ -1,0 +1,173 @@
+<button *ngIf="createDialog == false" type="button" class="btn btn-primary mb-3" (click)="createDialog = true">Create book</button>
+
+<div class="card" *ngIf="createDialog == true">
+  <div class="card-header h5">Create item</div>
+  <div class="card-body">
+    <form *ngIf="form" [formGroup]="form">
+      <div class="row">
+
+        <!--column 1-->
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-sm-4">Isbn</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="isbn"/>
+              <app-form-error [(input)]="form.controls.isbn"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Title</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="title"/>
+              <app-form-error [(input)]="form.controls.title"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Author</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="author"/>
+              <app-form-error [(input)]="form.controls.author"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Category</label>
+            <div class="col-sm-8">
+              <select class="form-control" formControlName="categoryId">
+                <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+              </select>
+              <app-form-error [(input)]="form.controls.categoryId"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Publisher</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="publisher"/>
+              <app-form-error [(input)]="form.controls.publisher"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Published</label>
+            <div class="col-sm-8 input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" formControlName="published" ngbDatepicker #ngd="ngbDatepicker"/>
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="ngd.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
+              </div>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.published"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Language</label>
+            <div class="col-sm-8">
+              <input class="form-control" formControlName="language" #ngt="ngbTypeahead"
+                [ngbTypeahead]="search" (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)"/>
+              <app-form-error [(input)]="form.controls.language"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Image</label>
+            <div class="col-sm-8">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" (change)="onChangeImage($event)"/>
+                <label class="custom-file-label">{{ createFilename }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--column 2-->
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-sm-4">Price ($)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="price" step="0.01" min="0"/>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.price"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Page</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="page" step="1" min="0"/>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.page"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Discount (%)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="discount" step="1" min="0"/>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.discount"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Active</label>
+            <div class="col-sm-8">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="active" value="true"/>
+                <label class="form-check-label">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="active" value="false"/>
+                <label class="form-check-label">No</label>
+              </div>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.active"></app-form-error>
+          </div>
+          <div class="form-group">
+            <label>Info</label>
+            <div>
+              <textarea class="form-control" formControlName="info" rows="8"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mt-3 ml-3">
+          <button type="button" class="btn btn-secondary mr-2" (click)="createDialog = false">Close</button>
+          <button type="button" class="btn btn-primary" (click)="clickSummit()">Save changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header h5">List of all books</div>
+  <div class="card-body">
+    <div class="input-group mb-4">
+      <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Search..."/>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" (click)="filter = ''"><i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col" class="cursor-pointer" (click)="onSort('isbn')">Isbn</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('title')">Title</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('author')">Author</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('category')">Category</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('publisher')">Publisher</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('published')">Published</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('price')">Price</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort(null)">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of dataFilter | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+          <td><ngb-highlight [result]="item.isbn" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.title" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.author" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.category.name" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.publisher" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.published | date: 'yyyy-MM-dd'" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.price | currency" [term]="filter"></ngb-highlight>
+          <td><a [routerLink]="'./' + item.isbn">Detail</a></td>
+        </tr>
+        </tbody>
+      </table>
+      <ngb-pagination *ngIf="dataFilter" [(page)]="page" [pageSize]="pageSize" [collectionSize]="dataFilter.length">
+      </ngb-pagination>
+    </div>
+  </div>
+</div>

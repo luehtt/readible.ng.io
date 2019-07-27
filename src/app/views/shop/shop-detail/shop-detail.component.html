@@ -1,0 +1,143 @@
+<div class="container" *ngIf="data">
+  <div class="row">
+    <div class="col-md-4 text-center mb-3 mb-md-0">
+      <img *ngIf="data.image && data.image != ''" class="img-fluid mt-2" [src]="data.image" />
+      <div *ngIf="!data.image || data.image == ''">Image missing!</div>
+    </div>
+
+    <div class="col-md-8">
+      <h3 class="mb-0">{{ data.title }}</h3>
+      <hr class="mb-0" />
+      <div>
+        <ng-template #t let-fill="fill">
+          <span [class.full]="fill === 100" class="star">
+            <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+          </span>
+        </ng-template>
+
+        <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t" class="h3 text-warning mr-3"
+                    max="5"></ngb-rating>
+        <span class="h6">{{ data.bookComments.length }} customer review</span>
+      </div>
+
+      <h6 class="mt-0">from <strong>{{ data.author }}</strong></h6>
+      <h6 class="mt-2"><strong>{{ data.publisher }}</strong> published on <strong>{{ data.published | date: "yyyy-MM-dd" }}</strong></h6>
+      <h6 class="mt-2">
+        <strong>
+          <span class="h4" *ngIf="data.discount != 0">{{ (data.price * (100 - data.discount)) / 100 | currency }} <del class="text-muted h6">({{ data.price | currency }})</del></span>
+          <span class="h4" *ngIf="data.discount == 0">{{ data.price | currency }}</span>
+        </strong>
+        each one
+      </h6>
+
+      <div class="row mt-3">
+        <div class="card-group col-sm-6 col-lg-3 mb-2">
+          <div class="card bordered">
+            <div class="card-body py-2 px-3">
+              <strong><i class="fas fa-book"></i> ISBN</strong>
+              <div class="h6 my-1">{{ data.isbn }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-group col-sm-6 col-lg-3 mb-2">
+          <div class="card bordered">
+            <div class="card-body py-2 px-3">
+              <strong><i class="fas fa-scroll"></i> Paperpack</strong>
+              <div class="h6 my-1">{{ data.page }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-group col-sm-6 col-lg-3 mb-2">
+          <div class="card bordered">
+            <div class="card-body py-2 px-3">
+              <strong><i class="fas fa-bug"></i> Category</strong>
+              <div class="h6 my-1">{{ data.category.name }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-group col-sm-6 col-lg-3 mb-2">
+          <div class="card bordered">
+            <div class="card-body py-2 px-3">
+              <strong><i class="fas fa-language"></i> Language</strong>
+              <div class="h6 my-1">{{ data.language }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-2 text-justify">{{ data.info }}</div>
+
+      <hr />
+      <div class="mt-4">
+        <h3>Purchase this item</h3>
+        <h6 class="my-1" *ngIf="bookcart && bookcart.amount != 0">Total in cart: {{ bookcart.amount }} for {{ bookcart.actualPrice * bookcart.amount | currency }}</h6>
+      </div>
+
+      <div class="input-group mt-3 mb-4">
+        <input type="number" min="0" step="1" class="form-control" [value]="amount" (change)="changeAmount($event.target.value)" style="max-width: 100px" />
+        <div class="input-group-append">
+          <button class="btn btn-success" type="button" (click)="clickAddCart()">Add to cart</button>
+          <button class="btn btn-secondary" type="button" (click)="clickClearCart()">Clear</button>
+        </div>
+      </div>
+
+      <a [routerLink]="'../'">Back to index</a> | <a [routerLink]="'/customer/cart'">Go to my cart</a>
+    </div>
+  </div>
+  <hr>
+  <div class="row mt-5">
+    <div class="col-md-4 mb-3 mb-md-0">
+      <h4 class="mb-0">{{ data.bookComments.length }} customer review</h4>
+
+      <ng-template #t2 let-fill="fill">
+          <span [class.full]="fill === 100" class="star">
+            <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+          </span>
+      </ng-template>
+      <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t2" class="h1 text-warning" max="5"
+                  style="margin-left: -.5rem !important"></ngb-rating>
+
+      <div *ngFor="let i of ratings" class="row no-gutters">
+        <div class="col-3 pr-2">{{ i.name }} star(s)</div>
+        <div class="col-6 progress mt-1">
+          <div class="progress-bar bg-warning" [ngStyle]="{ width: '' + i.percent + '%' }"></div>
+        </div>
+        <div class="col-3 text-right pl-2">{{ i.sum }} vote(s)</div>
+      </div>
+
+      <!-- this angular built-in routerLink cannot use with link having backslash or any other special character
+          better use href to hot fix redirect -->
+      <div class="mt-3">
+        <button class="btn btn-primary" *ngIf="auth == true" (click)="commentDialog = true">Post comment</button>
+        <a class="btn btn-secondary" *ngIf="auth == false" [href]="'/login?redirect=' + url">Login to comment</a>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div *ngIf="commentDialog == true && comment" class="card">
+        <div class="card-body">
+          <form [formGroup]="form">
+              <div class="mb-2">
+                Select the stars: <ngb-rating class="h4 text-warning mb-0" [rate]="comment.rating" (rateChange)="changeRating($event)" max="5"></ngb-rating>
+              </div>
+              <textarea type="text" class="form-control" rows="3" formControlName="comment" placeholder="enter the comment"></textarea>
+              <div class="form-group text-center mt-3 mb-0">
+                  <button type="button" class="btn btn-primary mr-1" (click)="clickSummit()">Submit</button>
+                  <button type="button" class="btn btn-secondary" (click)="commentDialog = false">Close</button>
+              </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-center" *ngIf="data.bookComments.length == 0">Be the first one to comment!?</div>
+      <div *ngFor="let i of data.bookComments" class="mb-3 pb-1 border-bottom">
+        <div>
+          <strong>{{ i.customer.fullname }}</strong> commented at {{ i.createdAt | date: "yyyy-MM-dd hh:mm:ss z" }}
+        </div>
+
+        <ngb-rating class="h5 text-warning mb-0" [rate]="i.rating" [readonly]="true" max="5"></ngb-rating>
+        <div class="text-justify">{{ i.comment }}</div>
+      </div>
+    </div>
+  </div>
+</div>
