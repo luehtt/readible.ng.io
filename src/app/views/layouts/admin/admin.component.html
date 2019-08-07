@@ -3,12 +3,13 @@
   <div class="border-right bg-primary text-white" id="sidebar-wrapper">
     <div class="sidebar-heading">Readible 1.0.1</div>
     <div class="list-group list-group-flush">
-      <a [routerLink]="'/admin/dashboard'" class="list-group-item list-group-item-action bg-primary text-white">Dashboard</a>
-      <a [routerLink]="'/admin/books'" class="list-group-item list-group-item-action bg-primary text-white">Books</a>
-      <a [routerLink]="'/admin/book-categories'" class="list-group-item list-group-item-action bg-primary text-white">Book Categories</a>
-      <a [routerLink]="'/admin/orders'" class="list-group-item list-group-item-action bg-primary text-white">Orders</a>
-      <a [routerLink]="'/admin/customers'" class="list-group-item list-group-item-action bg-primary text-white">Customers</a>
-      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/managers'" class="list-group-item list-group-item-action bg-primary text-white">Managers</a>
+      <a [routerLink]="'/admin/dashboard'" [class.active]="selectMenu == 'dashboard'" (click)="selectMenu = 'dashboard'" class="list-group-item list-group-item-action bg-primary text-white">Dashboard</a>
+      <a [routerLink]="'/admin/books'" [class.active]="selectMenu == 'books'" (click)="selectMenu = 'books'" class="list-group-item list-group-item-action bg-primary text-white">Books</a>
+      <a [routerLink]="'/admin/book-categories'" [class.active]="selectMenu == 'book-categories'" (click)="selectMenu = 'book-categories'" class="list-group-item list-group-item-action bg-primary text-white">Book Categories</a>
+      <a [routerLink]="'/admin/orders'" [class.active]="selectMenu == 'orders'" (click)="selectMenu = 'orders'" class="list-group-item list-group-item-action bg-primary text-white">Orders</a>
+      <a [routerLink]="'/admin/customers'" [class.active]="selectMenu == 'customers'" (click)="selectMenu = 'customers'" class="list-group-item list-group-item-action bg-primary text-white">Customers</a>
+      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/managers'" [class.active]="selectMenu == 'managers'" (click)="selectMenu = 'managers'" class="list-group-item list-group-item-action bg-primary text-white">Managers</a>
+      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/statistic/orders'" [class.active]="selectMenu == 'ordersStatistic'" (click)="selectMenu = 'ordersStatistic'" class="list-group-item list-group-item-action bg-primary text-white">Orders Statistic</a>
 
     </div>
   </div>

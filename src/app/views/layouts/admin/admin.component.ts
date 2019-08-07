@@ -11,6 +11,7 @@ export class AdminComponent implements OnInit {
   public toggled = false;
   public loggedIn = false;
   public role: string;
+  public selectMenu = 'dashboard';
 
   constructor(private authService: AuthService) {  }
 
