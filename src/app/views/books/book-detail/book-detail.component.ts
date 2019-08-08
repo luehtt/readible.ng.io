@@ -7,10 +7,10 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 import {BookService} from 'src/app/services/book.service';
 import {BookCategoryService} from 'src/app/services/category.service';
-import {AlertService} from 'src/app/services/common/alert.service';
+import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Book} from 'src/app/models/book';
 import {Const} from 'src/app/common/const';
-import {FormImplemented, FileImplemented, DataImplemented} from 'src/app/common/function';
+import {FormFunc, FileFunc, DataFunc} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
 
 @Component({
@@ -51,7 +51,7 @@ export class BookDetailComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private service: BookService,
-    private alertService: AlertService,
+    private alertService: AlertMessageService,
     private categoryService: BookCategoryService
   ) {}
 
@@ -61,7 +61,7 @@ export class BookDetailComponent implements OnInit {
 
     const getBook = this.service.get(this.id);
     const fetchCategories = this.categoryService.fetch();
-    const startTime = this.alertService.initTime();
+    const startTime = this.alertService.startTime();
     forkJoin([getBook, fetchCategories]).subscribe(
       res => {
         this.data = res[0];
@@ -82,12 +82,12 @@ export class BookDetailComponent implements OnInit {
       title: [this.data.title, [Validators.required, Validators.maxLength(255)]],
       author: [this.data.author, [Validators.required, Validators.maxLength(255)]],
       publisher: [this.data.publisher, [Validators.required, Validators.maxLength(255)]],
-      published: [FormImplemented.convertToNgbDate(this.data.published), [Validators.required]],
+      published: [FormFunc.toNgbDate(this.data.published), [Validators.required]],
       price: [this.data.price, [Validators.required, Validators.min(0.0)]],
       page: [this.data.page, [Validators.required, Validators.min(0)]],
       language: [this.data.language, [Validators.required, Validators.maxLength(32)]],
       categoryId: [this.data.categoryId, [Validators.required]],
-      active: [FormImplemented.convertToRadioYesNo(this.data.active), [Validators.required]],
+      active: [FormFunc.convertToRadioYesNo(this.data.active), [Validators.required]],
       info: [this.data.info],
       discount: [this.data.discount, [Validators.required, Validators.min(0)]]
     });
@@ -100,7 +100,7 @@ export class BookDetailComponent implements OnInit {
         return !this.data ? null : this.data.bookComments.filter(x => x.rating === star);
       default:
         return !this.data ? null : this.data.bookComments.filter(x => x.customer.fullname.toLowerCase().includes(this.commentFilter.toLowerCase()) ||
-          DataImplemented.include(x, this.commentFilter, ['comment', 'createdAt']));
+          DataFunc.include(x, this.commentFilter, ['comment', 'createdAt']));
     }
   }
 
@@ -113,10 +113,10 @@ export class BookDetailComponent implements OnInit {
 
     switch (this.commentSorted) {
       case 'comment': case 'createdAt':
-        this.data.bookComments = DataImplemented.sortString(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
+        this.data.bookComments = DataFunc.sortString(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
         break;
       case 'rating':
-        this.data.bookComments = DataImplemented.sortNumber(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
+        this.data.bookComments = DataFunc.sortNumber(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
         break;
       case 'customer':
         this.data.bookComments = this.commentSortedDirection === 'asc' ?
@@ -129,7 +129,7 @@ export class BookDetailComponent implements OnInit {
   onChangeImage(event) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      FileImplemented.convertFileToBase64(file)
+      FileFunc.convertFileToBase64(file)
         .then(result => (this.data.image = result.toString()))
         .catch(err => {
           this.alertService.failed(err.message);
@@ -149,7 +149,7 @@ export class BookDetailComponent implements OnInit {
   }
 
   clickRefreshButton() {
-    const startTime = this.alertService.initTime();
+    const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
       this.data = res;
       this.data.originalImage = res.image;
@@ -163,18 +163,17 @@ export class BookDetailComponent implements OnInit {
 
   clickSummit() {
     if (this.form.invalid) {
-      FormImplemented.touchControls(this.form.controls);
+      FormFunc.touchControls(this.form.controls);
       return;
     }
 
-    const startTime = this.alertService.initTime();
     const item = new Book();
     item.isbn = this.data.isbn;
     item.title = this.form.controls.title.value;
     item.author = this.form.controls.author.value;
     item.categoryId = this.form.controls.categoryId.value;
     item.publisher = this.form.controls.publisher.value;
-    item.published = FormImplemented.convertFromNgbDate(this.form.controls.published.value);
+    item.published = FormFunc.fromNgbDateToJson(this.form.controls.published.value);
     item.language = this.form.controls.language.value;
     item.price = this.form.controls.price.value;
     item.page = this.form.controls.page.value;
@@ -182,9 +181,10 @@ export class BookDetailComponent implements OnInit {
     item.active = this.form.controls.active.value;
     item.info = this.form.controls.info.value;
     item.updatedAt = this.data.updatedAt;
-
     if (this.data.originalImage !== this.data.image) { item.image = this.data.image; }
 
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.put(item).subscribe(
       res => {
         this.data.title = res.title;

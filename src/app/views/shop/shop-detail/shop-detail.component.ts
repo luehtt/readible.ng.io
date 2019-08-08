@@ -8,7 +8,7 @@ import {BookComment} from 'src/app/models/comment';
 
 import {AuthService} from 'src/app/services/auth/auth.service';
 import {ShopService} from 'src/app/services/shop.service';
-import {AlertService} from 'src/app/services/common/alert.service';
+import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {BookCommentService} from 'src/app/services/comment.service';
 import {CartService} from '../../../services/cart.service';
 
@@ -31,7 +31,7 @@ export class ShopDetailComponent implements OnInit {
 
   constructor(private router: Router, private route: ActivatedRoute,
               private service: ShopService, private cartService: CartService, private commentService: BookCommentService,
-              private alertService: AlertService, private authService: AuthService, private formBuilder: FormBuilder) { }
+              private alertService: AlertMessageService, private authService: AuthService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.url = window.location.href;
@@ -39,7 +39,8 @@ export class ShopDetailComponent implements OnInit {
     this.auth = this.authService.isLogged();
     this.alertService.clear();
 
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
       this.data = res;
       this.ngOnInitForm();
@@ -99,7 +100,8 @@ export class ShopDetailComponent implements OnInit {
     this.comment.comment = this.form.controls.comment.value;
     this.comment.bookIsbn = this.id;
 
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.commentService.post(this.comment).subscribe(res => {
         this.data.bookComments.unshift(res);
         this.ngOnInitRating();

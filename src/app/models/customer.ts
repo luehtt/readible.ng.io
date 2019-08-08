@@ -19,7 +19,7 @@ export class Customer {
   totalPaid: number;
 }
 
-export class CustomerUser {
+export interface CustomerUser {
   customer: Customer;
   user: User;
 }

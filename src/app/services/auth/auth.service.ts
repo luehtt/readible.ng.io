@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {HttpClientService} from '../common/httpclient.service';
+import {HttpClientService} from '../common/http-client.service';
 import {SessionService} from './session.service';
 import {Const} from 'src/app/common/const';
 

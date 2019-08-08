@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {BookCategory} from '../../../models/category';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {BookCategoryService} from '../../../services/category.service';
-import {AlertService} from '../../../services/common/alert.service';
-import {FormImplemented, DataImplemented} from '../../../common/function';
+import {AlertMessageService} from '../../../services/common/alert-message.service';
+import {FormFunc, DataFunc} from '../../../common/function';
 import {Const} from '../../../common/const';
 
 @Component({
@@ -22,7 +22,7 @@ export class BookCategoryListComponent implements OnInit {
   sorted = 'name';
   sortedDirection = 'asc';
 
-  constructor(private formBuilder: FormBuilder, private service: BookCategoryService, private alertService: AlertService) { }
+  constructor(private formBuilder: FormBuilder, private service: BookCategoryService, private alertService: AlertMessageService) { }
 
   ngOnInitForm() {
     this.form = this.formBuilder.group({
@@ -33,7 +33,7 @@ export class BookCategoryListComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
 
-    const startTime = this.alertService.initTime();
+    const startTime = this.alertService.startTime();
     this.service.fetch().subscribe(res => {
       this.data = res;
       this.alertService.success(startTime, 'GET');
@@ -45,7 +45,7 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   get dataFilter() {
-    return !this.data ? null : this.data.filter(x => DataImplemented.include(x, this.filter, ['name', 'createdAt', 'updatedAt']));
+    return !this.data ? null : this.data.filter(x => DataFunc.include(x, this.filter, ['name', 'createdAt', 'updatedAt']));
   }
 
   onSort(sorting: string) {
@@ -55,17 +55,19 @@ export class BookCategoryListComponent implements OnInit {
 
     this.sortedDirection = this.sorted !== sorting ? 'asc' : (this.sortedDirection === 'asc' ? 'desc' : 'asc');
     this.sorted = sorting;
-    this.data = DataImplemented.sortString(this.data, this.sorted, this.sortedDirection);
+    this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
   }
 
   clickSummit() {
     if (this.form.invalid) {
-      FormImplemented.touchControls(this.form.controls);
+      FormFunc.touchControls(this.form.controls);
       return;
     }
 
     this.create.name = this.form.controls.name.value;
-    const startTime = this.alertService.initTime();
+
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.post(this.create).subscribe(res => {
       this.data.push(res);
       this.alertService.success(startTime, 'GET');

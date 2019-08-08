@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AlertService } from 'src/app/services/common/alert.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { ShopService } from 'src/app/services/shop.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { CartService } from '../../services/cart.service';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-front',
@@ -14,7 +14,7 @@ export class FrontComponent implements OnInit {
   loggedIn = false;
 
   constructor(public shopService: ShopService, public cartService: CartService,
-              public alertService: AlertService, public authService: AuthService) {
+              public alertService: AlertMessageService, public authService: AuthService) {
   }
 
   ngOnInit() {

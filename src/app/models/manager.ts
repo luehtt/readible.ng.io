@@ -16,7 +16,7 @@ export class Manager {
   completedOrders: Order[];
 }
 
-export class ManagerUser {
+export interface ManagerUser {
   manager: Manager;
   user: User;
 }

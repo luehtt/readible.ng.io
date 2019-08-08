@@ -1,43 +1,27 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {HttpClientService} from './common/httpclient.service';
-import {Order} from '../models/order';
+import {HttpClientService} from './common/http-client.service';
+import {OrderStatistic} from '../models/statistic';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService {
+export class StatisticService {
 
-  private endpoint = 'orders';
+  private endpoint = 'statistic';
 
   constructor(private httpService: HttpClientService) { }
 
-  fetch(status: string): Observable<Order[]> {
-    if (!status || status === '') {
-      return this.httpService.fetch(this.endpoint);
-    } else {
-      return this.httpService.fetch(this.endpoint + '?status=' + status);
-    }
+  statisticCustomer(reference: string, fromDate: string, toDate: string): Observable<OrderStatistic[]> {
+    return this.httpService.get(`${this.endpoint}/customers?reference=${reference}&fromDate=${fromDate}&toDate=${toDate}`);
   }
 
-  get(id: number): Observable<Order> {
-    return this.httpService.get(this.endpoint + '/' + id);
+  statisticOrder(reference: string, fromDate: string, toDate: string): Observable<OrderStatistic[]> {
+    return this.httpService.get(`${this.endpoint}/orders?reference=${reference}&fromDate=${fromDate}&toDate=${toDate}`);
   }
 
-  put(data: Order): Observable<Order> {
-    return this.httpService.put(this.endpoint + '/' + data.id, data);
-  }
-
-  putStatus(data: Order, status: string): Observable<Order> {
-    return this.httpService.put(this.endpoint + '/' + data.id + '?status=' + status, data);
-  }
-
-  fetchCustomer(status: string): Observable<Order[]> {
-    return this.httpService.fetch(this.endpoint + '?status=' + status);
-  }
-
-  getCustomer(id: number): Observable<Order> {
-    return this.httpService.get(this.endpoint + '/' + id);
+  statisticOrderTimestamp(): Observable<any> {
+    return this.httpService.get(`${this.endpoint}/orders-timestamp`);
   }
 }

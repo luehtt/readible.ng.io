@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AlertService } from 'src/app/services/common/alert.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 
 @Component({
-  selector: 'app-alert',
-  templateUrl: './alert.component.html'
+  selector: 'app-alert-message',
+  templateUrl: './alert-message.component.html'
 })
-export class AlertComponent implements OnInit {
+export class AlertMessageComponent implements OnInit {
 
-  constructor(public service: AlertService) { }
+  constructor(public service: AlertMessageService) { }
 
   ngOnInit() {
   }

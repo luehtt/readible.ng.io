@@ -1,3 +1,61 @@
-<div class="chart-container" style="position: relative; height:40vh; width:70vw">
-  <canvas id="canvas">{{ linechart }}</canvas>
+<div class="row justify-content-center">
+  <div class="col-md-10 col-xl-8 col-lg-6">
+    <div class="row">
+      <div class="col-sm-4 mb-1 mb-sm-0">
+        <select class="form-control" [(ngModel)]="selectedValue" (change)="selectValue()">
+          <option value="order">Total order</option>
+          <option value="item">Total item</option>
+          <option value="price">Total price</option>
+        </select>
+      </div>
+
+      <div class="col-sm-3 mb-1 mb-sm-0">
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="fromDateNgb" ngbDatepicker
+                 #ngToDate="ngbDatepicker"/>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="ngToDate.toggle()" type="button"><i
+              class="fas fa-calendar-alt"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 mb-1 mb-sm-0">
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="toDateNgb" ngbDatepicker
+                 #ngFromDate="ngbDatepicker"/>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="ngFromDate.toggle()" type="button"><i
+              class="fas fa-calendar-alt"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-2 mb-1 mb-sm-0">
+        <button class="btn btn-primary w-100" (click)="selectRange()" type="button"><i class="fas fa-calendar-alt"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="mt-2 text-center" *ngIf="error && error != ''">
+  <span class="text-danger">{{error}}</span>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-6 mb-4 mb-md-0">
+    <div class="chart-container" style="height: 55vh; width: 100%">
+      <canvas id="ageCanvas">{{ ageChart }}</canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="chart-container" style="height: 55vh; width: 100%">
+      <canvas id="genderCanvas">{{ genderChart }}</canvas>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3 text-center">
+  <h5>{{chartTitle}}</h5>
 </div>

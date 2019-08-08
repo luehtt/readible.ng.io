@@ -7,10 +7,10 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
 import { Book } from 'src/app/models/book';
 import { BookCategory } from 'src/app/models/category';
 import { Const } from 'src/app/common/const';
-import { FormImplemented, DataImplemented, FileImplemented } from 'src/app/common/function';
+import { FormFunc, DataFunc, FileFunc } from 'src/app/common/function';
 
 import { BookService } from 'src/app/services/book.service';
-import { AlertService } from 'src/app/services/common/alert.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { BookCategoryService } from 'src/app/services/category.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class BookListComponent implements OnInit {
   create: Book;
   createFilename: string;
   page = 1;
-  pageSize: number = Const.PAGE_SIZE_DEFAULT;
+  pageSize: number = Const.PAGE_SIZE_HIGHER;
   sorted = 'title';
   sortedDirection = 'asc';
 
@@ -48,7 +48,29 @@ export class BookListComponent implements OnInit {
     );
   }
 
-  constructor(private formBuilder: FormBuilder, private service: BookService, private alertService: AlertService, private categoryService: BookCategoryService) {
+  constructor(private formBuilder: FormBuilder, private service: BookService, private alertService: AlertMessageService, private categoryService: BookCategoryService) {
+  }
+
+  ngOnInit() {
+    this.alertService.clear();
+
+    const fetchBooks = this.service.fetch();
+    const fetchCategories = this.categoryService.fetch();
+
+    const startTime = this.alertService.startTime();
+    forkJoin([fetchBooks, fetchCategories]).subscribe(
+      res => {
+        this.data = res[0];
+        this.categories = res[1];
+        this.alertService.success(startTime, 'GET');
+        this.ngOnInitForm();
+        this.create = new Book();
+      },
+      err => {
+        this.alertService.failed(err);
+        this.createDialog = null;
+      }
+    );
   }
 
   ngOnInitForm() {
@@ -68,32 +90,10 @@ export class BookListComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.alertService.clear();
-
-    const fetchBooks = this.service.fetch();
-    const fetchCategories = this.categoryService.fetch();
-
-    const startTime = this.alertService.initTime();
-    forkJoin([fetchBooks, fetchCategories]).subscribe(
-      res => {
-        this.data = res[0];
-        this.categories = res[1];
-        this.alertService.success(startTime, 'GET');
-        this.ngOnInitForm();
-        this.create = new Book();
-      },
-      err => {
-        this.alertService.failed(err);
-        this.createDialog = null;
-      }
-    );
-  }
-
   get dataFilter() {
     return !this.data ? null : this.data.filter(x => x.category.name.toLowerCase().includes(this.filter.toLowerCase()) ||
-      DataImplemented.include(x, this.filter, ['title', 'author', 'isbn', 'publisher', 'published']) ||
-      DataImplemented.includeNumber(x, this.filter, ['price']));
+      DataFunc.include(x, this.filter, ['title', 'author', 'isbn', 'publisher', 'published']) ||
+      DataFunc.includeNumber(x, this.filter, ['price']));
   }
 
   onSort(sorting: string) {
@@ -105,10 +105,10 @@ export class BookListComponent implements OnInit {
 
     switch (this.sorted) {
       case 'isbn': case 'title': case 'author': case 'publisher': case 'published':
-        this.data = DataImplemented.sortString(this.data, this.sorted, this.sortedDirection);
+        this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
         break;
       case 'price':
-        this.data = DataImplemented.sortNumber(this.data, this.sorted, this.sortedDirection);
+        this.data = DataFunc.sortNumber(this.data, this.sorted, this.sortedDirection);
         break;
       case 'category':
         this.data = this.sortedDirection === 'asc' ?
@@ -121,7 +121,7 @@ export class BookListComponent implements OnInit {
   onChangeImage(event) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      FileImplemented.convertFileToBase64(file)
+      FileFunc.convertFileToBase64(file)
         .then(result => {
           this.createFilename = event.target.files[0].name;
           this.create.image = result.toString();
@@ -134,17 +134,16 @@ export class BookListComponent implements OnInit {
 
   clickSummit() {
     if (this.form.invalid) {
-      FormImplemented.touchControls(this.form.controls);
+      FormFunc.touchControls(this.form.controls);
       return;
     }
 
-    const startTime = this.alertService.initTime();
     this.create.isbn = this.form.controls.isbn.value;
     this.create.title = this.form.controls.title.value;
     this.create.author = this.form.controls.author.value;
     this.create.categoryId = this.form.controls.categoryId.value;
     this.create.publisher = this.form.controls.publisher.value;
-    this.create.published = FormImplemented.convertFromNgbDate(this.form.controls.published.value);
+    this.create.published = FormFunc.fromNgbDateToJson(this.form.controls.published.value);
     this.create.language = this.form.controls.language.value;
     this.create.price = this.form.controls.price.value;
     this.create.page = this.form.controls.page.value;
@@ -152,6 +151,8 @@ export class BookListComponent implements OnInit {
     this.create.info = this.form.controls.info.value;
     this.create.active = this.form.controls.active.value;
 
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.post(this.create).subscribe(
       res => {
         this.data.push(res);

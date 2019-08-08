@@ -10,6 +10,7 @@
       <a [routerLink]="'/admin/customers'" [class.active]="selectMenu == 'customers'" (click)="selectMenu = 'customers'" class="list-group-item list-group-item-action bg-primary text-white">Customers</a>
       <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/managers'" [class.active]="selectMenu == 'managers'" (click)="selectMenu = 'managers'" class="list-group-item list-group-item-action bg-primary text-white">Managers</a>
       <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/statistic/orders'" [class.active]="selectMenu == 'ordersStatistic'" (click)="selectMenu = 'ordersStatistic'" class="list-group-item list-group-item-action bg-primary text-white">Orders Statistic</a>
+      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/statistic/customers'" [class.active]="selectMenu == 'customersStatistic'" (click)="selectMenu = 'customersStatistic'" class="list-group-item list-group-item-action bg-primary text-white">Customers Statistic</a>
 
     </div>
   </div>
@@ -38,7 +39,7 @@
     </nav>
 
     <div id="main-content-wrapper" class="container-fluid">
-      <app-alert></app-alert>
+      <app-alert-message></app-alert-message>
       <router-outlet></router-outlet>
     </div>
   </div>

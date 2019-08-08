@@ -1,3 +1,100 @@
+<button *ngIf="createDialog == false" type="button" class="btn btn-primary mb-3" (click)="createDialog = true">Create manager</button>
+
+<div class="row">
+  <div class="col-xl-6 col-lg-8 col-md-10">
+    <div class="card" *ngIf="createDialog == true">
+      <div class="card-header h5">Create manager</div>
+      <div class="card-body">
+        <form *ngIf="form" [formGroup]="form">
+          <div class="form-group">
+            <label>Username</label>
+            <div>
+              <input type="text" class="form-control" formControlName="username" />
+              <app-form-error [(input)]="form.controls.username"></app-form-error>
+              <div class="text-danger" *ngIf="customValidator.username == false">
+                <small>{{USERNAME_EXISTED}}</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <div>
+              <input type="email" class="form-control" formControlName="email" />
+              <app-form-error [(input)]="form.controls.email"></app-form-error>
+              <div class="text-danger" *ngIf="customValidator.email == false">
+                <small>{{EMAIL_EXISTED}}</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div>
+              <input type="password" class="form-control" formControlName="password" />
+              <app-form-error [(input)]="form.controls.password"></app-form-error>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Fullname</label>
+            <div>
+              <input type="text" class="form-control" formControlName="fullname" />
+              <app-form-error [(input)]="form.controls.fullname"></app-form-error>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Year of birth</label>
+                <div>
+                  <input type="number" style="max-width: 200px" class="form-control" formControlName="birth" (change)="validateBirth()"/>
+                  <app-form-error [(input)]="form.controls.birth"></app-form-error>
+                  <div class="text-danger" *ngIf="customValidator.birth == false">
+                    <small>{{REGISTER_AGE_LIMIT}}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Gender</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" formControlName="gender" value="male" />
+                    <label class="form-check-label">Male</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" formControlName="gender" value="female" />
+                    <label class="form-check-label">Female</label>
+                  </div>
+                  <app-form-error [(input)]="form.controls.gender"></app-form-error>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <div><input type="text" class="form-control" formControlName="address" /></div>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <div>
+              <input type="text" class="form-control" formControlName="phone" />
+              <app-form-error [(input)]="form.controls.phone"></app-form-error>
+            </div>
+
+          </div>
+          <div class="form-group text-center mt-4">
+            <div class="form-group mt-3 ml-3">
+              <button type="button" class="btn btn-secondary mr-2" (click)="createDialog = false">Close</button>
+              <button type="button" class="btn btn-primary" (click)="storeManager()">Save changes</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="card">
   <div class="card-header h5">List of all managers</div>
   <div class="card-body">
@@ -15,7 +112,6 @@
           <th (click)="onSort('fullname')" class="cursor-pointer" scope="col">Fullname</th>
           <th (click)="onSort('male')" class="cursor-pointer" scope="col">Gender</th>
           <th (click)="onSort('birth')" class="cursor-pointer" scope="col">Year of Birth</th>
-          <th (click)="onSort('address')" class="cursor-pointer" scope="col">Address</th>
           <th (click)="onSort('phone')" class="cursor-pointer" scope="col">Phone</th>
           <th (click)="onSort('createdAt')" class="cursor-pointer" scope="col">Registered at</th>
           <th (click)="onSort(null)" class="cursor-pointer" scope="col">Action</th>
@@ -26,13 +122,18 @@
           <td><ngb-highlight [result]="item.fullname" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.male == true ? 'Male' : 'Female'" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.birth" [term]="filter"></ngb-highlight></td>
-          <td><ngb-highlight [result]="item.address" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.phone" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd hh:mm:ss'" [term]="filter"></ngb-highlight></td>
           <td><a [routerLink]="'./' + item.userId">Detail</a></td></tr>
         </tbody>
       </table>
-      <ngb-pagination *ngIf="dataFilter" [(page)]="page" [collectionSize]="dataFilter.length" [pageSize]="pageSize">
+      <ngb-pagination *ngIf="dataFilter" [(page)]="page" [collectionSize]="dataFilter.length" [pageSize]="pageSize" [maxSize]="10">
+        <ng-template ngbPaginationFirst>First</ng-template>
+        <ng-template ngbPaginationLast>Last</ng-template>
+        <ng-template ngbPaginationPrevious>Prev</ng-template>
+        <ng-template ngbPaginationNext>Next</ng-template>
+        <ng-template ngbPaginationEllipsis>...</ng-template>
+        <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
       </ngb-pagination>
     </div>
   </div>

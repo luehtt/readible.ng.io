@@ -22,12 +22,11 @@
           <tr>
             <th scope="col" class="cursor-pointer" (click)="onSort('id')">Id</th>
             <th scope="col" class="cursor-pointer" (click)="onSort('customer')">Customer</th>
-            <th scope="col" class="cursor-pointer" (click)="onSort('address')">Address</th>
             <th scope="col" class="cursor-pointer" (click)="onSort('phone')">Phone</th>
-            <th scope="col" class="cursor-pointer" (click)="onSort('totalItem')">Total items</th>
-            <th scope="col" class="cursor-pointer" (click)="onSort('totalPrice')">Total price</th>
+            <th scope="col" class="cursor-pointer" (click)="onSort('totalItem')">Items</th>
+            <th scope="col" class="cursor-pointer" (click)="onSort('totalPrice')">Total</th>
             <th scope="col" class="cursor-pointer" (click)="onSort('createdAt')">Created at</th>
-            <th scope="col" class="cursor-pointer" (click)="onSort('updatedAt')">Updated at</th>
+            <th scope="col" class="cursor-pointer" (click)="onSort('updatedAt')">Last Updated</th>
             <th scope="col" class="cursor-pointer" (click)="onSort(null)">Action</th>
           </tr>
         </thead>
@@ -38,9 +37,6 @@
           </td>
           <td>
             <ngb-highlight [result]="item.customer.fullname" [term]="filter"></ngb-highlight>
-          </td>
-          <td>
-            <ngb-highlight [result]="item.address" [term]="filter"></ngb-highlight>
           </td>
           <td>
             <ngb-highlight [result]="item.phone" [term]="filter"></ngb-highlight>
@@ -61,10 +57,13 @@
           </tr>
         </tbody>
       </table>
-      <ngb-pagination *ngIf="dataFilter"
-                      [(page)]="page"
-                      [pageSize]="pageSize"
-                      [collectionSize]="dataFilter.length">
+      <ngb-pagination *ngIf="dataFilter" [(page)]="page" [pageSize]="pageSize" [collectionSize]="dataFilter.length" [maxSize]="10">
+        <ng-template ngbPaginationFirst>First</ng-template>
+        <ng-template ngbPaginationLast>Last</ng-template>
+        <ng-template ngbPaginationPrevious>Prev</ng-template>
+        <ng-template ngbPaginationNext>Next</ng-template>
+        <ng-template ngbPaginationEllipsis>...</ng-template>
+        <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
       </ngb-pagination>
     </div>
   </div>

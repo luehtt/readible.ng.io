@@ -8,7 +8,7 @@ interface CustomMessage {
 @Injectable({
   providedIn: 'root'
 })
-export class AlertService {
+export class AlertMessageService {
   data: CustomMessage[];
 
   constructor() {

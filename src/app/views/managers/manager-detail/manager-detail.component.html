@@ -5,9 +5,9 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 text-center mb-3 mb-md-0">
-            <img *ngIf="data.image && data.image != ''" [alt]="data.fullname" [src]="data.image"
-                 class="img-fluid mt-2"/>
-            <div *ngIf="!data.image || data.image == ''">Image missing!</div>
+            <img *ngIf="data.image && data.image != ''" [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="data.image" />
+            <img *ngIf="!data.image || data.image == ''" [alt]="data.fullname" class="img-fluid rounded-circle mt-2"
+                 [src]="'https://via.placeholder.com/200/?text=' + data.fullname.substr(0, 1).toUpperCase()" />
           </div>
 
           <div class="col-md-8">
@@ -38,7 +38,10 @@
         <ul class="list-group padding-sm list-group-flush">
           <li class="list-group-item"><strong>Username:</strong> {{ account.username }}</li>
           <li class="list-group-item"><strong>Email:</strong> {{ account.email }}</li>
-          <li class="list-group-item"><strong>Active: </strong> {{ account.active == true ? 'Yes' : 'Disabled' }}</li>
+          <li class="list-group-item"><strong>Active: </strong>
+            <span class="badge badge-primary" *ngIf="account.active == true">Yes</span>
+            <span class="badge badge-secondary" *ngIf="account.active == false">Disabled</span>
+          </li>
           <li class="list-group-item"><strong>Registered at: </strong> {{ account.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
           <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
         </ul>
@@ -92,7 +95,13 @@
         </tr>
         </tbody>
       </table>
-      <ngb-pagination *ngIf="filterOrder" [(page)]="orderPage" [pageSize]="orderPageSize" [collectionSize]="filterOrder.length">
+      <ngb-pagination *ngIf="filterOrder" [(page)]="orderPage" [pageSize]="orderPageSize" [collectionSize]="filterOrder.length" [maxSize]="10">
+        <ng-template ngbPaginationFirst>First</ng-template>
+        <ng-template ngbPaginationLast>Last</ng-template>
+        <ng-template ngbPaginationPrevious>Prev</ng-template>
+        <ng-template ngbPaginationNext>Next</ng-template>
+        <ng-template ngbPaginationEllipsis>...</ng-template>
+        <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
       </ngb-pagination>
     </div>
   </div>

@@ -1,8 +1,8 @@
-export class Pagination {
-  public totalItems: number;
-  public itemsPerPage: number;
-  public pageIndex: number;
-  public startIndex: number;
-  public totalPages: number;
-  public currentItemCount: boolean;
+export interface Pagination {
+  totalItems: number;
+  itemsPerPage: number;
+  pageIndex: number;
+  startIndex: number;
+  totalPages: number;
+  currentItemCount: boolean;
 }

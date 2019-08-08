@@ -1,18 +1,18 @@
-export class DataImplemented {
+export class DataFunc {
   static include(data: object, search: string, keywords: string[]): boolean {
     search = search.toLocaleLowerCase();
-    let n = keywords.length;
-    for (let i=0; i<n; i++) {
-      if (data[keywords[i]].toLocaleLowerCase().includes(search)) return true;
+    const n = keywords.length;
+    for (let i = 0; i < n; i++) {
+      if (data[keywords[i]].toLocaleLowerCase().includes(search)) { return true; }
     }
     return false;
   }
 
   static includeNumber(data: object, search: string, keywords: string[]): boolean {
     search = search.toLocaleLowerCase();
-    let n = keywords.length;
-    for (let i=0; i<n; i++) {
-      if (data[keywords[i]].toString().toLocaleLowerCase().includes(search)) return true;
+    const n = keywords.length;
+    for (let i = 0; i < n; i++) {
+      if (data[keywords[i]].toString().toLocaleLowerCase().includes(search)) { return true; }
     }
     return false;
   }
@@ -28,7 +28,7 @@ export class DataImplemented {
     }
   }
 
-  static sortNumber(data: any[], keyword: string, direction: string) {
+  static sortNumber(data: any[], keyword: string, direction: string): any[] {
     switch (direction) {
       case 'asc':
         return data.sort((a, b) => a[keyword] - b[keyword]);
@@ -38,41 +38,50 @@ export class DataImplemented {
         return data;
     }
   }
+
+  static normalize(data: string, lowercase: boolean = false): string {
+    if (lowercase === true) {
+      return data.replace(/([A-Z])/g, ' $1').trim().toLowerCase();
+    } else {
+      return data.replace(/([A-Z])/g, ' $1').trim();
+    }
+  }
+
+  static normalizeList(data: string[], lowercase: boolean = false) {
+    const n = data.length;
+    for (let i = 0; i < n; i++) {
+      data[i] = this.normalize(data[i], lowercase);
+    }
+  }
 }
 
-export class FileImplemented {
+export class FileFunc {
   static async convertUrlToBase64(url) {
     const res = await fetch(url);
     const blob = await res.blob();
-  
+
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.addEventListener(
-        "load",
-        function() {
-          resolve(reader.result);
-        },
+        'load', () => resolve(reader.result),
         false
       );
-  
+
       reader.onerror = () => {
         return reject(this);
       };
       reader.readAsDataURL(blob);
     });
   }
-  
+
   static async convertFileToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.addEventListener(
-        "load",
-        function() {
-          resolve(reader.result);
-        },
+        'load', () => resolve(reader.result),
         false
       );
-  
+
       reader.onerror = () => {
         return reject(this);
       };
@@ -81,28 +90,49 @@ export class FileImplemented {
   }
 }
 
-export class FormImplemented {
+export class FormFunc {
   static touchControls(controls) {
-    for (let i in controls) {
-      controls[i].markAsTouched();
+    for (const i in controls) {
+      if (controls.hasValue(i)) {
+        controls[i].markAsTouched();
+      }
     }
   }
 
-  static convertToNgbDate(datetime) {
-    let date = new Date(datetime);
+  static toNgbDate(datetime) {
+    const date = new Date(datetime);
     return {
       year: date.getFullYear(),
       month: date.getMonth() + 1,
       day: date.getDate()
     };
   }
-  
-  static convertFromNgbDate(data) {
-    return data.year + "-" + data.month + "-" + data.day;
+
+  static fromNgbDateToJson(data): string {
+    return data.year + '-' + data.month + '-' + data.day;
   }
-  
-  static convertToRadioYesNo(bool) {
-    if (bool == true) return "true";
-    if (bool == false) return "false";
+
+  static toJsonDate(data: Date): string {
+    const yyyy = data.getFullYear().toString();
+    const mm = data.getMonth() < 9 ? '0' + (data.getMonth() + 1) : '' + (data.getMonth() + 1);
+    const dd = data.getDate() < 10 ? '0' + data.getDate() : '' + data.getDate();
+
+    return yyyy + '-' + mm + '-' + dd;
+  }
+
+  static convertToRadioYesNo(bool): string {
+    if (bool === true) { return 'true'; }
+    if (bool === false) { return 'false'; }
+  }
+
+  static dateIsSameMonth(date1: Date, date2: Date): boolean {
+    if (date1.getFullYear() !== date2.getFullYear()) { return false; }
+    return date1.getMonth() === date2.getMonth();
+  }
+
+  static dateIsSameYear(date1: Date, date2: Date): boolean {
+    return date1.getFullYear() === date2.getFullYear();
   }
 }
+
+

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AlertService } from 'src/app/services/common/alert.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { OrderService } from 'src/app/services/order.service';
 import { Order } from 'src/app/models/order';
 
@@ -12,7 +12,7 @@ export class CustomerOrderListComponent implements OnInit {
   data: Order[];
   status = 'pending';
 
-  constructor(private service: OrderService, private alertService: AlertService) {
+  constructor(private service: OrderService, private alertService: AlertMessageService) {
   }
 
   ngOnInit() {
@@ -21,7 +21,8 @@ export class CustomerOrderListComponent implements OnInit {
   }
 
   fetchData() {
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.fetchCustomer(this.status).subscribe(
       res => {
         this.data = res;

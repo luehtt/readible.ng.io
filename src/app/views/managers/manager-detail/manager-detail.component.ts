@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {User} from '../../../models/user';
-import {AlertService} from 'src/app/services/common/alert.service';
-import {DataImplemented} from '../../../common/function';
+import {AlertMessageService} from 'src/app/services/common/alert-message.service';
+import {DataFunc} from '../../../common/function';
 import {Const} from '../../../common/const';
 import {Order} from '../../../models/order';
 import {ManagerService} from '../../../services/manager.service';
@@ -21,7 +21,7 @@ export class ManagerDetailComponent implements OnInit {
   // this.orders is a combine list of confirmedOrders and completedOrders
   orders: Order[];
   orderPage = 1;
-  orderPageSize: number = Const.PAGE_SIZE_HIGHEST;
+  orderPageSize: number = Const.PAGE_SIZE_HIGHER;
   orderFilter = '';
   orderSorted = 'id';
   orderSortedDirection = 'asc';
@@ -29,14 +29,15 @@ export class ManagerDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: ManagerService,
-    private alertService: AlertService,
+    private alertService: AlertMessageService,
   ) {}
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
     this.alertService.clear();
 
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res.manager;
@@ -56,8 +57,8 @@ export class ManagerDetailComponent implements OnInit {
 
   get filterOrder() {
     return !this.data ? null : this.orders.filter(x => x.status.locale.toLowerCase().includes(this.orderFilter.toLowerCase()) ||
-      DataImplemented.include(x, this.orderFilter, ['createdAt', 'updatedAt']) ||
-      DataImplemented.includeNumber(x, this.orderFilter, ['id', 'totalItem', 'totalPrice'])
+      DataFunc.include(x, this.orderFilter, ['createdAt', 'updatedAt']) ||
+      DataFunc.includeNumber(x, this.orderFilter, ['id', 'totalItem', 'totalPrice'])
     );
   }
 
@@ -68,10 +69,10 @@ export class ManagerDetailComponent implements OnInit {
 
     switch (this.orderSorted) {
       case 'createdAt': case 'updatedAt':
-        this.orders = DataImplemented.sortString(this.orders, this.orderSorted, this.orderSortedDirection);
+        this.orders = DataFunc.sortString(this.orders, this.orderSorted, this.orderSortedDirection);
         break;
       case 'id': case 'totalItem': case 'totalPrice': case 'statusId':
-        this.orders = DataImplemented.sortNumber(this.orders, this.orderSorted, this.orderSortedDirection);
+        this.orders = DataFunc.sortNumber(this.orders, this.orderSorted, this.orderSortedDirection);
         break;
     }
   }

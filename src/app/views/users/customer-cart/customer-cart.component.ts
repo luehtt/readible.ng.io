@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ShopService } from 'src/app/services/shop.service';
 import { Cart } from 'src/app/models/cart';
-import { AlertService } from 'src/app/services/common/alert.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { Customer } from 'src/app/models/customer';
 import { Book } from 'src/app/models/book';
 import { Const } from '../../../common/const';
@@ -20,7 +20,7 @@ export class CustomerCartComponent implements OnInit {
   form: FormGroup;
   customer: Customer;
 
-  constructor(private formBuilder: FormBuilder, private service: ShopService, private cartService: CartService, private alertService: AlertService) {}
+  constructor(private formBuilder: FormBuilder, private service: ShopService, private cartService: CartService, private alertService: AlertMessageService) {}
 
   get totalPrice() {
     return !this.data ? 0 : this.data.map(x => x ? x.actualPrice * x.amount : 0).reduce((a, b) => a + b, 0);
@@ -29,12 +29,14 @@ export class CustomerCartComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
     this.data = this.cartService.fetchCart();
+    this.viewed = this.cartService.fetchViewed();
+
     this.ngOnInitMeta();
     this.ngOnInitForm();
-    this.viewed = this.cartService.fetchViewed();
   }
 
   ngOnInitForm() {
+    const startTime = this.alertService.startTime();
     this.service.getCustomer().subscribe(
       res => {
         this.customer = res;
@@ -44,6 +46,7 @@ export class CustomerCartComponent implements OnInit {
           phone: [this.customer.phone],
           note: ['']
         });
+        this.alertService.success(startTime, 'GET');
       }, err => {
         this.alertService.failed(err);
       }
@@ -56,10 +59,12 @@ export class CustomerCartComponent implements OnInit {
 
   ngOnInitMeta() {
     for (const i of this.data) {
+      const startTime = this.alertService.startTime();
       this.service.get(i.isbn).subscribe(
         res => {
           i.meta = res;
           i.actualPrice = i.meta.discount === 0 ? i.meta.price : i.meta.price * (100 - i.meta.discount) / 100;
+          this.alertService.success(startTime, 'GET');
         }, err => {
           this.alertService.failed(err);
         }
@@ -89,7 +94,8 @@ export class CustomerCartComponent implements OnInit {
     data.note = this.form.controls.note.value;
     data.orderDetails = orderDetails;
 
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.postOrder(data).subscribe(res => {
       this.alertService.success(startTime, 'POST');
       this.cartService.clearCart();

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { AlertService } from 'src/app/services/common/alert.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { OrderService } from 'src/app/services/order.service';
 import { Order } from 'src/app/models/order';
 
@@ -14,14 +14,14 @@ export class OrderDetailComponent implements OnInit {
   data: Order;
   id: number;
 
-  constructor(private route: ActivatedRoute, private service: OrderService, private alertService: AlertService) {
+  constructor(private route: ActivatedRoute, private service: OrderService, private alertService: AlertMessageService) {
   }
 
   ngOnInit() {
     this.alertService.clear();
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
 
-    const startTime = this.alertService.initTime();
+    const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res;
@@ -34,7 +34,8 @@ export class OrderDetailComponent implements OnInit {
   }
 
   clickStatus(value) {
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.putStatus(this.data, value).subscribe(
       res => {
         this.data.status = res.status;

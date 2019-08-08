@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 
-import {AlertService} from 'src/app/services/common/alert.service';
+import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {OrderService} from 'src/app/services/order.service';
 import {Order} from 'src/app/models/order';
 import {Const} from '../../../common/const';
-import {DataImplemented} from '../../../common/function';
+import {DataFunc} from '../../../common/function';
 
 @Component({
   selector: 'app-order-list',
@@ -19,13 +19,13 @@ export class OrderListComponent implements OnInit {
   sorted = 'title';
   sortedDirection = 'asc';
 
-  constructor(private service: OrderService, private alertService: AlertService) {
+  constructor(private service: OrderService, private alertService: AlertMessageService) {
   }
 
   get dataFilter() {
     return !this.data ? null : this.data.filter(x => x.customer.fullname.toLowerCase().includes(this.filter.toLowerCase()) ||
-      DataImplemented.include(x, this.filter, ['address', 'phone', 'createdAt', 'updatedAt']) ||
-      DataImplemented.includeNumber(x, this.filter, ['id', 'totalItem', 'totalPrice']));
+      DataFunc.include(x, this.filter, ['phone', 'createdAt', 'updatedAt']) ||
+      DataFunc.includeNumber(x, this.filter, ['id', 'totalItem', 'totalPrice']));
   }
 
   ngOnInit() {
@@ -39,7 +39,8 @@ export class OrderListComponent implements OnInit {
   }
 
   fetchData() {
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.fetch(this.status).subscribe(
       res => {
         this.data = res;
@@ -60,11 +61,11 @@ export class OrderListComponent implements OnInit {
     this.sorted = sorting;
 
     switch (this.sorted) {
-      case 'address': case 'phone': case 'createdAt': case 'updatedAt':
-        this.data = DataImplemented.sortString(this.data, this.sorted, this.sortedDirection);
+      case 'phone': case 'createdAt': case 'updatedAt':
+        this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
         break;
       case 'id': case 'totalItem': case 'totalPrice':
-        this.data = DataImplemented.sortNumber(this.data, this.sorted, this.sortedDirection);
+        this.data = DataFunc.sortNumber(this.data, this.sorted, this.sortedDirection);
         break;
       case 'customer':
         this.data = this.sortedDirection === 'asc' ?

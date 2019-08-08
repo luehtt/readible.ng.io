@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {HttpClientService} from './common/httpclient.service';
+import {HttpClientService} from './common/http-client.service';
 import {Book, BookPagination} from '../models/book';
 import {Endpoint} from '../common/const';
 import {Customer} from '../models/customer';

@@ -4,8 +4,8 @@ import {ActivatedRoute} from '@angular/router';
 import {Customer} from 'src/app/models/customer';
 import {User} from '../../../models/user';
 import {CustomerService} from 'src/app/services/customer.service';
-import {AlertService} from 'src/app/services/common/alert.service';
-import {DataImplemented} from '../../../common/function';
+import {AlertMessageService} from 'src/app/services/common/alert-message.service';
+import {DataFunc} from '../../../common/function';
 import {Const} from '../../../common/const';
 
 
@@ -32,14 +32,14 @@ export class CustomerDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: CustomerService,
-    private alertService: AlertService,
+    private alertService: AlertMessageService,
   ) {}
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
     this.alertService.clear();
 
-    const startTime = this.alertService.initTime();
+    const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res.customer;
@@ -54,8 +54,8 @@ export class CustomerDetailComponent implements OnInit {
 
   get filterOrder() {
     return !this.data ? null : this.data.orders.filter(x => x.status.locale.toLowerCase().includes(this.orderFilter.toLowerCase()) ||
-      DataImplemented.include(x, this.orderFilter, ['createdAt', 'updatedAt']) ||
-      DataImplemented.includeNumber(x, this.orderFilter, ['id', 'totalItem', 'totalPrice'])
+      DataFunc.include(x, this.orderFilter, ['createdAt', 'updatedAt']) ||
+      DataFunc.includeNumber(x, this.orderFilter, ['id', 'totalItem', 'totalPrice'])
     );
   }
 
@@ -66,10 +66,10 @@ export class CustomerDetailComponent implements OnInit {
 
     switch (this.orderSorted) {
       case 'createdAt': case 'updatedAt':
-        this.data.orders = DataImplemented.sortString(this.data.orders, this.orderSorted, this.orderSortedDirection);
+        this.data.orders = DataFunc.sortString(this.data.orders, this.orderSorted, this.orderSortedDirection);
         break;
       case 'id': case 'totalItem': case 'totalPrice': case 'statusId':
-        this.data.orders = DataImplemented.sortNumber(this.data.orders, this.orderSorted, this.orderSortedDirection);
+        this.data.orders = DataFunc.sortNumber(this.data.orders, this.orderSorted, this.orderSortedDirection);
         break;
     }
   }
@@ -80,7 +80,7 @@ export class CustomerDetailComponent implements OnInit {
         const star = parseInt(this.commentFilter.substring(0, 1), 10);
         return !this.data ? null : this.data.bookComments.filter(x => x.rating === star);
       default:
-        return !this.data ? null : this.data.bookComments.filter(x => DataImplemented.include(x, this.commentFilter, ['comment', 'createdAt', 'bookIsbn']));
+        return !this.data ? null : this.data.bookComments.filter(x => DataFunc.include(x, this.commentFilter, ['comment', 'createdAt', 'bookIsbn']));
     }
   }
 
@@ -94,10 +94,10 @@ export class CustomerDetailComponent implements OnInit {
 
     switch (this.commentSorted) {
       case 'comment': case 'createdAt': case 'bookIsbn':
-        this.data.bookComments = DataImplemented.sortString(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
+        this.data.bookComments = DataFunc.sortString(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
         break;
       case 'rating':
-        this.data.bookComments = DataImplemented.sortNumber(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
+        this.data.bookComments = DataFunc.sortNumber(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
         break;
     }
   }

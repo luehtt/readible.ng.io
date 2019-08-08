@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Book } from 'src/app/models/book';
 import { Pagination } from 'src/app/models/pagination';
 
-import { AlertService } from 'src/app/services/common/alert.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { ShopService } from 'src/app/services/shop.service';
 import { BookCategory } from 'src/app/models/category';
 import { BookCategoryService } from 'src/app/services/category.service';
@@ -24,17 +24,18 @@ export class ShopListComponent implements OnInit {
   currentPage = 1;
   defaultLimit = Const.PAGE_SIZE_DEFAULT;
 
-  constructor(private service: ShopService, private categoryService: BookCategoryService, private alertService: AlertService) {
+  constructor(private service: ShopService, private categoryService: BookCategoryService, private alertService: AlertMessageService) {
   }
 
   ngOnInit() {
     this.alertService.clear();
-    const startTime = this.alertService.initTime();
+    const startTime = this.alertService.startTime();
 
     this.categoryService.fetch().subscribe(res => {
       this.categories = res;
       this.alertService.success(startTime, 'GET');
     }, err => {
+      console.log(err);
       this.alertService.failed(err);
     });
 
@@ -48,7 +49,8 @@ export class ShopListComponent implements OnInit {
     } else if (this.search !== '') {
       this.onSearch();
     } else {
-      const startTime = this.alertService.initTime();
+      this.alertService.clear();
+      const startTime = this.alertService.startTime();
       this.service.fetchPage(page, this.defaultLimit, this.filter).subscribe(res => {
         this.pagination = res.pagination;
         this.data = res.data;
@@ -71,7 +73,8 @@ export class ShopListComponent implements OnInit {
   }
 
   onFilter() {
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.fetchPage(this.currentPage, this.defaultLimit, this.filter).subscribe(res => {
       this.pagination = res.pagination;
       this.data = res.data;
@@ -88,7 +91,8 @@ export class ShopListComponent implements OnInit {
   }
 
   onSearch() {
-    const startTime = this.alertService.initTime();
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
     this.service.fetchSearchPage(this.currentPage, this.defaultLimit, this.filter, this.search).subscribe(res => {
       console.log(res);
       this.pagination = res.pagination;

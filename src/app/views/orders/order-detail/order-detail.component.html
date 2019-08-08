@@ -70,7 +70,7 @@
         <tbody>
           <tr *ngFor="let item of data.orderDetails">
             <td>{{ item.book.isbn }}</td>
-            <td><a [routerLink]="'/admin/book/' + item.book.isbn">{{ item.book.title }}</a></td>
+            <td><a [routerLink]="'/admin/books/' + item.book.isbn">{{ item.book.title }}</a></td>
             <td>{{ item.book.author }}</td>
             <td>{{ item.amount }}</td>
             <td>{{ item.price | currency }}</td>

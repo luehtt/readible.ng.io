@@ -1,14 +1,14 @@
 import {Customer} from './customer';
 import {Book} from './book';
 
-export class DashboardTop {
+export interface DashboardTop {
   sold: Book[];
   rating: Book[];
   purchased: Customer[];
   paid: Customer[];
 }
 
-export class DashboardSummary {
+export interface DashboardSummary {
   book: number;
   customer: number;
   comment: number;

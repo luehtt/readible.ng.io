@@ -5,12 +5,14 @@
         <button (click)="onSetFilter('')" class="btn btn-link py-0" type="button">All</button>
       </li>
       <li *ngFor="let i of categories" class="list-group-item py-2">
-        <button (click)="onSetFilter(i.name.toLowerCase())" class="btn btn-link py-0" type="button">{{ i.name }}</button>
+        <button (click)="onSetFilter(i.name.toLowerCase())" class="btn btn-link py-0 text-left" type="button">{{ i.name }}</button>
       </li>
     </ul>
   </div>
 
   <div *ngIf="data" class="col-md-9 col-lg-10">
+    <app-alert-message></app-alert-message>
+
     <div class="input-group mb-3">
       <input (change)="search = $event.target.value" [value]="search" class="form-control" placeholder="" type="text">
       <div class="input-group-append">
@@ -22,11 +24,13 @@
     <div class="row">
       <div *ngFor="let i of data" class="card-group col-sm-4 col-md-4 col-lg-3 col-xl-2">
         <div class="card mb-3">
-          <div class="text-center mx-1 mt-2">
-            <img [alt]="i.title" [src]="i.image" class="img-fluid" style="height: 300px"/>
+          <div class="text-center mx-1">
+            <img *ngIf="i.image && i.image != ''" [alt]="i.title" class="img-fluid mt-2" [src]="i.image" />
+            <img *ngIf="!i.image || i.image == ''" [alt]="i.title" class="img-fluid mt-2"
+                 [src]="'https://via.placeholder.com/250x350/?text=' + i.title.substr(0, 1).toUpperCase()" />
           </div>
 
-          <div class="card-body">
+          <div class="card-body px-2">
             <a [routerLink]="'./' + i.isbn">{{ i.title }}</a>
             <div><strong>{{ i.author }}</strong></div>
             <div>
@@ -49,9 +53,16 @@
         </div>
       </div>
       <div *ngIf="data.length != 0" class="col-12">
-        <ngb-pagination (pageChange)="onPageChange($event)" *ngIf="pagination" [(page)]="pagination.pageIndex"
-                        [collectionSize]="pagination.totalItems" [pageSize]="pagination.itemsPerPage">
-        </ngb-pagination>
+		  <ngb-pagination (pageChange)="onPageChange($event)" *ngIf="pagination" [(page)]="pagination.pageIndex" [maxSize]="10"
+        [collectionSize]="pagination.totalItems" [pageSize]="pagination.itemsPerPage">
+			  <ng-template ngbPaginationFirst>First</ng-template>
+			  <ng-template ngbPaginationLast>Last</ng-template>
+			  <ng-template ngbPaginationPrevious>Prev</ng-template>
+			  <ng-template ngbPaginationNext>Next</ng-template>
+			  <ng-template ngbPaginationEllipsis>...</ng-template>
+			  <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+		  </ngb-pagination>
+
       </div>
     </div>
   </div>

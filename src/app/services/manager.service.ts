@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {HttpClientService} from './common/httpclient.service';
+import {HttpClientService} from './common/http-client.service';
 import {Manager, ManagerUser} from '../models/manager';
 
 @Injectable({
@@ -23,5 +23,9 @@ export class ManagerService {
 
   auth(): Observable<Manager> {
     return this.httpService.post(this.endpoint, null);
+  }
+
+  register(data): Observable<any> {
+    return this.httpService.post('register/manager', data);
   }
 }

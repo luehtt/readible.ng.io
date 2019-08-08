@@ -29,7 +29,7 @@ export class Book {
 }
 
 
-export class BookPagination {
-  public pagination: Pagination;
-  public data: Book[];
+export interface BookPagination {
+  pagination: Pagination;
+  data: Book[];
 }

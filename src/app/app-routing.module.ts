@@ -4,16 +4,18 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbDatepickerModule, NgbPaginationModule, NgbRatingModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
 
-import {DashboardComponent} from 'src/app/views/dashboard/dashboard.component';
 import {RoleGuardService} from 'src/app/services/auth/role-guard.service';
+import {AuthGuardService} from 'src/app/services/auth/auth-guard.service';
+
+import {DashboardComponent} from 'src/app/views/dashboard/dashboard.component';
 import {LoginComponent} from 'src/app/views/auth/login/login.component';
-import {AdminComponent} from 'src/app/layouts/admin/admin.component';
-import {FrontComponent} from 'src/app/layouts/front/front.component';
+import {AdminComponent} from 'src/app/views/layouts/admin/admin.component';
+import {FrontComponent} from 'src/app/views/layouts/front/front.component';
 import {CustomerCartComponent} from 'src/app/views/users/customer-cart/customer-cart.component';
 import {RegisterComponent} from 'src/app/views/auth/register/register.component';
 import {BookCategoryListComponent} from 'src/app/views/books/book-category-list/book-category-list.component';
-import {AlertComponent} from './layouts/components/alert/alert.component';
-import {FormErrorComponent} from './layouts/components/form-error/form-error.component';
+import {AlertMessageComponent} from './views/components/alert-message/alert-message.component';
+import {FormErrorComponent} from './views/components/form-error/form-error.component';
 import {BookListComponent} from './views/books/book-list/book-list.component';
 import {BookDetailComponent} from './views/books/book-detail/book-detail.component';
 import {ShopListComponent} from './views/shop/shop-list/shop-list.component';
@@ -26,7 +28,9 @@ import {ManagerDetailComponent} from './views/managers/manager-detail/manager-de
 import {ManagerListComponent} from './views/managers/manager-list/manager-list.component';
 import {CustomerOrderDetailComponent} from './views/users/customer-order-detail/customer-order-detail.component';
 import {CustomerOrderListComponent} from './views/users/customer-order/customer-order-list.component';
-import {OrderStatusComponent} from './layouts/components/order-status/order-status.component';
+import {OrderStatusComponent} from './views/components/order-status/order-status.component';
+import {StatisticOrderComponent} from './views/statistic/statistic-order/statistic-order.component';
+import {StatisticCustomerComponent} from './views/statistic/statistic-customer/statistic-customer.component';
 
 const routes: Routes = [
   {
@@ -56,6 +60,10 @@ const routes: Routes = [
       {path: 'managers', component: ManagerListComponent, pathMatch: 'full',
         canActivate: [RoleGuardService], data: {expectedRoles: ['ADMIN']}},
       {path: 'managers/:id', component: ManagerDetailComponent,
+        canActivate: [RoleGuardService], data: {expectedRoles: ['ADMIN']}},
+      {path: 'statistic/orders', component: StatisticOrderComponent,
+        canActivate: [RoleGuardService], data: {expectedRoles: ['ADMIN']}},
+      {path: 'statistic/customers', component: StatisticCustomerComponent,
         canActivate: [RoleGuardService], data: {expectedRoles: ['ADMIN']}},
     ],
     canActivate: [RoleGuardService],
@@ -91,7 +99,8 @@ const routes: Routes = [
     ShopListComponent, ShopDetailComponent,
     LoginComponent, RegisterComponent,
     AdminComponent, FrontComponent,
-    AlertComponent, FormErrorComponent, OrderStatusComponent
+    AlertMessageComponent, FormErrorComponent, OrderStatusComponent,
+    StatisticOrderComponent, StatisticCustomerComponent
   ]
 })
 export class AppRoutingModule {
