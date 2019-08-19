@@ -1,7 +1,7 @@
 <!-- Page Content -->
 <div id="page-content-wrapper">
   <nav class="navbar navbar-expand-md navbar-dark bg-primary text-white border-bottom">
-    <div class="sidebar-heading">
+    <div class="navbar-heading">
       <a class="text-white nav-link active" href="/">Readible 1.0.1</a>
     </div>
 
@@ -10,13 +10,13 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul *ngIf="loggedIn == true" class="navbar-nav ml-auto mt-2 mt-lg-0" style="font-size: 1rem !important">
+      <ul *ngIf="loggedIn == true" class="navbar-nav ml-auto pl-3 pl-md-0" style="font-size: 1rem !important">
         <li class="nav-item">
           <a [routerLink]="'/shop'" class="nav-link active"><i class="fas fa-store"></i> Shop</a>
         </li>
         <li class="nav-item">
-          <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i> Cart <span
-            class="badge badge-white badge-outlined">{{cartService.totalItem()}}</span></a>
+          <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i>
+            {{cartService.totalItem()}} item(s) in Cart</a>
         </li>
         <li class="nav-item">
           <a [routerLink]="'/customer/orders'" class="nav-link active"><i class="fas fa-clipboard-list"></i> Orders</a>
@@ -26,10 +26,10 @@
             out</a>
         </li>
       </ul>
-      <ul *ngIf="loggedIn == false" class="navbar-nav ml-auto mt-2 mt-lg-0" style="font-size: 1rem !important">
+      <ul *ngIf="loggedIn == false" class="navbar-nav ml-auto pl-3 pl-md-0" style="font-size: 1rem !important">
         <li class="nav-item">
-          <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i> Cart <span
-            class="badge badge-white badge-outlined">{{cartService.totalItem()}}</span></a>
+          <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i>
+            {{cartService.totalItem()}} item(s) in Cart</a>
         </li>
         <li class="nav-item">
           <a [routerLink]="'/login'" class="nav-link active"><i class="fas fa-sign-in-alt"></i> Log in</a>
@@ -42,6 +42,8 @@
   </nav>
 
   <div class="container-fluid" id="main-content-wrapper">
-    <router-outlet></router-outlet>
+    <div class="my-3">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

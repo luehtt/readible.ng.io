@@ -5,7 +5,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbDatepickerModule, NgbPaginationModule, NgbRatingModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {RoleGuardService} from 'src/app/services/auth/role-guard.service';
-import {AuthGuardService} from 'src/app/services/auth/auth-guard.service';
 
 import {DashboardComponent} from 'src/app/views/dashboard/dashboard.component';
 import {LoginComponent} from 'src/app/views/auth/login/login.component';

@@ -8,6 +8,7 @@ import { ShopService } from 'src/app/services/shop.service';
 import { BookCategory } from 'src/app/models/category';
 import { BookCategoryService } from 'src/app/services/category.service';
 import { Const } from '../../../common/const';
+import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-shop-list',
@@ -24,7 +25,8 @@ export class ShopListComponent implements OnInit {
   currentPage = 1;
   defaultLimit = Const.PAGE_SIZE_DEFAULT;
 
-  constructor(private service: ShopService, private categoryService: BookCategoryService, private alertService: AlertMessageService) {
+  constructor(private service: ShopService, private categoryService: BookCategoryService,
+              private alertService: AlertMessageService, public placeholderService: PlaceholderService) {
   }
 
   ngOnInit() {
@@ -94,13 +96,11 @@ export class ShopListComponent implements OnInit {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.fetchSearchPage(this.currentPage, this.defaultLimit, this.filter, this.search).subscribe(res => {
-      console.log(res);
       this.pagination = res.pagination;
       this.data = res.data;
       this.alertService.success(startTime, 'GET');
       this.mapCommentRating();
     }, err => {
-      console.log(err);
       this.alertService.failed(err);
     });
   }

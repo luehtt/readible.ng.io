@@ -11,6 +11,7 @@ import {ShopService} from 'src/app/services/shop.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {BookCommentService} from 'src/app/services/comment.service';
 import {CartService} from '../../../services/cart.service';
+import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-shop-detail',
@@ -29,9 +30,9 @@ export class ShopDetailComponent implements OnInit {
   commentDialog = false;
   comment: BookComment;
 
-  constructor(private router: Router, private route: ActivatedRoute,
+  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
               private service: ShopService, private cartService: CartService, private commentService: BookCommentService,
-              private alertService: AlertMessageService, private authService: AuthService, private formBuilder: FormBuilder) { }
+              private alertService: AlertMessageService, private authService: AuthService, public placeholderService: PlaceholderService) { }
 
   ngOnInit() {
     this.url = window.location.href;

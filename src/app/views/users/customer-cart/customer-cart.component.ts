@@ -58,6 +58,7 @@ export class CustomerCartComponent implements OnInit {
   }
 
   ngOnInitMeta() {
+    if (!this.data) { return; }
     for (const i of this.data) {
       const startTime = this.alertService.startTime();
       this.service.get(i.isbn).subscribe(

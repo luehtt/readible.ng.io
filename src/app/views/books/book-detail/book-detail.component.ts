@@ -12,6 +12,7 @@ import {Book} from 'src/app/models/book';
 import {Const} from 'src/app/common/const';
 import {FormFunc, FileFunc, DataFunc} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
+import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-book-detail',
@@ -52,6 +53,7 @@ export class BookDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private service: BookService,
     private alertService: AlertMessageService,
+    public placeholderService: PlaceholderService,
     private categoryService: BookCategoryService
   ) {}
 

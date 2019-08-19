@@ -10,18 +10,19 @@ import {Const} from '../common/const';
 export class CartService {
 
   private LIMIT_VIEWED = Const.LIMIT_VIEWED_BOOK;
-  private VIEWED = 'viewed';
-  private CART = 'cart';
+  private VIEWED_SESSION = 'viewed';
+  private CART_SESSION = 'cart';
 
   constructor() {
   }
 
   setCart(data: Cart[]) {
-    localStorage.setItem(this.CART, JSON.stringify(data));
+    localStorage.setItem(this.CART_SESSION, JSON.stringify(data));
   }
 
   fetchCart(): Cart[] {
-    const get = JSON.parse(localStorage.getItem(this.CART)) ;
+    const get = JSON.parse(localStorage.getItem(this.CART_SESSION));
+    if (!get) { return null; }
     const data: Cart[] = [];
     for (const i of get) {
       data.push(i as Cart);
@@ -35,7 +36,7 @@ export class CartService {
   }
 
   clearCart() {
-    localStorage.setItem(this.CART, '');
+    localStorage.setItem(this.CART_SESSION, '');
   }
 
   addCart(item: Book, amount: number) {
@@ -63,11 +64,13 @@ export class CartService {
 
   totalItem(): number {
     const data = this.fetchCart();
+    if (!data) { return 0; }
     return data.map(x => x.amount).reduce((a, b) => a + b, 0);
   }
 
   totalPrice(): number {
     const data = this.fetchCart();
+    if (!data) { return 0; }
     return data.map(x => x.actualPrice).reduce((a, b) => a + b, 0);
   }
 
@@ -75,7 +78,8 @@ export class CartService {
   //////////////////////////////////////////////////////////////////
 
   fetchViewed(): Book[] {
-    const get = JSON.parse(localStorage.getItem(this.VIEWED)) ;
+    const get = JSON.parse(localStorage.getItem(this.VIEWED_SESSION));
+    if (!get) { return null; }
     const data: Book[] = [];
     for (const i of get) {
       data.push(i as Book);
@@ -88,7 +92,7 @@ export class CartService {
   }
 
   clearViewed() {
-    localStorage.setItem(this.VIEWED, '');
+    localStorage.setItem(this.VIEWED_SESSION, '');
   }
 
   addViewed(item: Book) {

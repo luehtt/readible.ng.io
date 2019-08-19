@@ -32,7 +32,6 @@ export class DashboardComponent implements OnInit {
     const startTime2 = this.alertService.startTime();
     this.service.fetchTop().subscribe(res => {
       this.top = res;
-      console.log(res);
       this.alertService.success(startTime2, 'GET');
     }, err => {
       this.alertService.failed(err);

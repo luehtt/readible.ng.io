@@ -129,7 +129,7 @@ export class StatisticCustomerComponent implements OnInit {
         labels,
         datasets: [ {
           data: values,
-          backgroundColor: [ColorCode.DARK_GREEN, ColorCode.DEFAULT, ColorCode.AMBER, ColorCode.DANGER],
+          backgroundColor: [ColorCode.RED, ColorCode.GREEN, ColorCode.BLUE, ColorCode.AMBER],
           steppedLine: 'middle'
         } ]
       },
@@ -170,7 +170,7 @@ export class StatisticCustomerComponent implements OnInit {
         labels,
         datasets: [ {
           data: values,
-          backgroundColor: [ColorCode.SUCCESS, ColorCode.PINK],
+          backgroundColor: [ColorCode.TEAL, ColorCode.ROSE],
           steppedLine: 'middle'
         } ]
       },

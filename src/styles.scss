@@ -1,15 +1,13 @@
-$default-font: 'Montserrat Alternates',
-sans-serif;
+$default-font: 'Open Sans', sans-serif;
 
 $transition-fs: 0.15s;
 $transition-none: 0s;
 $transition-md: 0.3s;
 $transition-sl: 0.5s;
 
-$font-size-xs: 0.65rem;
-$font-size-sm: 0.85rem;
-$font-size-md: 0.95rem;
-$font-size-h6: 1.15rem;
+$font-size-sm: 0.8rem;
+$font-size-md: 1rem;
+$font-size-h6: 1.1rem;
 $font-size-h5: 1.25rem;
 $font-size-h4: 1.5rem;
 $font-size-h3: 1.75rem;
@@ -21,8 +19,8 @@ $font-size-xh: 5rem;
 $border-radius-max: 100rem;
 $border-radius-none: 0;
 $border-radius-half: 50%;
-$border-radius-sm: 0.25rem;
-$border-radius-md: 0.5rem;
+$border-radius-sm: 0.15rem;
+$border-radius-md: 0.35rem;
 $border-radius-lg: 1rem;
 
 $box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.16),
@@ -62,6 +60,34 @@ $color-light-focus: #fff;
 
 body {
   font-family: $default-font;
+  color: $font-size-md;
+}
+
+.form-group {
+  margin-bottom: .45rem;
+
+  label { margin-bottom: .45rem; }
+  label.form-check-label { margin: 0; }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.card {
+  & .card-header {
+    color: #fff;
+    background-color: $color-blue !important;
+    font-size: $font-size-h6;
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+.alert {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,19 +106,17 @@ body {
   background-color: $color-blue;
 
   // customize shape
-  &.badge-square {
-    border-radius: $border-radius-none !important;
-  }
-
-  &.badge-round {
-    border-radius: $border-radius-half !important;
-  }
-
-  &.badge-pill {
-    border-radius: $border-radius-max !important;
-  }
+  &.badge-square { border-radius: $border-radius-none !important; }
+  &.badge-round { border-radius: $border-radius-half !important; }
+  &.badge-pill { border-radius: $border-radius-max !important; }
 
   // customize size
+  &.badge-sm {
+    font-size: $font-size-md !important;
+    padding: 0.15rem !important;
+    border-radius: $border-radius-md;
+  }
+
   &.badge-lg {
     font-size: $font-size-md !important;
     padding: 0.5rem 1rem !important;
@@ -100,53 +124,18 @@ body {
   }
 
   // customize color
-  &.badge-primary {
-    background-color: $color-blue !important;
-  }
-
-  &.badge-default {
-    background-color: $color-teal !important;
-  }
-
-  &.badge-secondary {
-    background-color: $color-gray !important;
-  }
-
-  &.badge-success {
-    background-color: $color-green !important;
-  }
-
-  &.badge-warning {
-    background-color: $color-amber !important;
-  }
-
-  &.badge-danger {
-    background-color: $color-red !important;
-  }
-
-  &.badge-info {
-    background-color: $color-cyan !important;
-  }
-
-  &.badge-unique {
-    background-color: $color-violet !important;
-  }
-
-  &.badge-elegant {
-    background-color: $color-rose !important;
-  }
-
-  &.badge-purple {
-    background-color: $color-purple !important;
-  }
-
-  &.badge-dark {
-    background-color: $color-dark !important;
-  }
-
-  &.badge-light {
-    background-color: $color-light !important;
-  }
+  &.badge-primary { background-color: $color-blue !important; }
+  &.badge-default { background-color: $color-teal !important; }
+  &.badge-secondary { background-color: $color-gray !important; }
+  &.badge-success { background-color: $color-green !important; }
+  &.badge-warning { background-color: $color-amber !important; }
+  &.badge-danger { background-color: $color-red !important; }
+  &.badge-info { background-color: $color-cyan !important; }
+  &.badge-unique { background-color: $color-violet !important; }
+  &.badge-elegant { background-color: $color-rose !important; }
+  &.badge-purple { background-color: $color-purple !important; }
+  &.badge-dark { background-color: $color-dark !important; }
+  &.badge-light { background-color: $color-light !important; }
 }
 
 //////////////////////////////////////////////////////
@@ -164,6 +153,23 @@ body {
   font-weight: 500;
   background-color: $color-blue;
   cursor: pointer;
+  height: calc(1.5em + .75rem + 2px);
+
+  &.no-shadow {
+    box-shadow: none !important;
+  }
+
+  .input-group & {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    height: calc(1.5em + .75rem + 2px);
+    box-shadow: none;
+  }
+
+  .input-group .input-group-append & {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+  }
 
   // customize etc
   &:disabled {
@@ -171,18 +177,22 @@ body {
     cursor: default !important;
   }
 
+  &.calendar {
+    margin: 0;
+    box-shadow: none;
+    color: #fff;
+    background-color: $color-cyan;
+    border-radius: .25rem;
+    height: calc(1.5em + .75rem + 2px);
+
+    &:hover { background-color: $color-cyan-focus; }
+  }
+
   // customize shape
-  &.btn-square {
-    border-radius: $border-radius-none !important;
-  }
-
-  &.btn-round {
-    border-radius: $border-radius-half !important;
-  }
-
-  &.btn-pill {
-    border-radius: $border-radius-max !important;
-  }
+  &.btn-normal { border-radius: $border-radius-sm !important; }
+  &.btn-square { border-radius: $border-radius-none !important; }
+  &.btn-round { border-radius: $border-radius-half !important; }
+  &.btn-pill { border-radius: $border-radius-max !important; }
 
   // customize size
   &.btn-sm {
@@ -201,89 +211,46 @@ body {
   // customize gradient color
   @mixin btn-color-gradient($color, $color-2, $color-focus, $color-2-focus) {
     background: linear-gradient(45deg, $color, $color-2) !important;
+    color: #fff;
 
     &:hover {
       background: linear-gradient(45deg, $color-focus, $color-2-focus) !important;
     }
   }
 
-  &.btn-purple-gradient {
-    @include btn-color-gradient($color-rose, $color-violet, $color-rose-focus, $color-violet-focus)
-  }
-
-  &.btn-blue-gradient {
-    @include btn-color-gradient($color-cyan, $color-blue, $color-cyan-focus, $color-blue-focus)
-  }
-
-  &.btn-red-gradient {
-    @include btn-color-gradient($color-amber, $color-red, $color-amber-focus, $color-red-focus)
-  }
-
-  &.btn-green-gradient {
-    @include btn-color-gradient($color-green, $color-teal, $color-green-focus, $color-teal-focus)
-  }
+  &.btn-purple-gradient { @include btn-color-gradient($color-rose, $color-violet, $color-rose-focus, $color-violet-focus) }
+  &.btn-blue-gradient { @include btn-color-gradient($color-cyan, $color-blue, $color-cyan-focus, $color-blue-focus) }
+  &.btn-red-gradient { @include btn-color-gradient($color-amber, $color-red, $color-amber-focus, $color-red-focus) }
+  &.btn-green-gradient { @include btn-color-gradient($color-green, $color-teal, $color-green-focus, $color-teal-focus) }
 
   // customize color
   @mixin btn-color($color, $color-focus) {
     background-color: $color !important;
+    color: #fff;
+
     &:hover {
       background-color: $color-focus !important;
     }
   }
 
-  &.btn-primary {
-    @include btn-color($color-blue, $color-blue-focus)
-  }
-
-  &.btn-default {
-    @include btn-color($color-teal, $color-teal-focus)
-  }
-
-  &.btn-info {
-    @include btn-color($color-cyan, $color-cyan-focus)
-  }
-
-  &.btn-success {
-    @include btn-color($color-green, $color-green-focus)
-  }
-
-  &.btn-warning {
-    @include btn-color($color-amber, $color-amber-focus)
-  }
-
-  &.btn-danger {
-    @include btn-color($color-red, $color-red-focus)
-  }
-
-  &.btn-secondary {
-    @include btn-color($color-gray, $color-gray-focus)
-  }
-
-  &.btn-unique {
-    @include btn-color($color-violet, $color-violet-focus)
-  }
-
-  &.btn-romantic {
-    @include btn-color($color-rose, $color-rose-focus)
-  }
-
-  &.btn-elegant {
-    @include btn-color($color-purple, $color-purple-focus)
-  }
-
-  &.btn-light {
-    @include btn-color($color-light, $color-light-focus)
-  }
-
-  &.btn-dark {
-    @include btn-color($color-dark, $color-dark-focus)
-  }
+  &.btn-primary { @include btn-color($color-blue, $color-blue-focus) }
+  &.btn-default { @include btn-color($color-teal, $color-teal-focus) }
+  &.btn-info { @include btn-color($color-cyan, $color-cyan-focus) }
+  &.btn-success { @include btn-color($color-green, $color-green-focus) }
+  &.btn-warning { @include btn-color($color-amber, $color-amber-focus) }
+  &.btn-danger { @include btn-color($color-red, $color-red-focus) }
+  &.btn-secondary { @include btn-color($color-gray, $color-gray-focus) }
+  &.btn-unique { @include btn-color($color-violet, $color-violet-focus) }
+  &.btn-romantic { @include btn-color($color-rose, $color-rose-focus) }
+  &.btn-elegant { @include btn-color($color-purple, $color-purple-focus) }
+  &.btn-light { @include btn-color($color-light, $color-light-focus) }
+  &.btn-dark { @include btn-color($color-dark, $color-dark-focus) }
 
   // customize btn outline
   @mixin btn-outline-color($color, $color-focus) {
     background-color: transparent !important;
     color: $color !important;
-    border: 1px solid $color !important;
+    border: 1.5px solid $color !important;
 
     &:hover {
       color: $color-focus !important;
@@ -291,52 +258,27 @@ body {
     }
   }
 
-  &.btn-outline-primary {
-    @include btn-outline-color($color-blue, $color-blue-focus)
-  }
+  &.btn-outline-primary { @include btn-outline-color($color-blue, $color-blue-focus) }
+  &.btn-outline-default { @include btn-outline-color($color-teal, $color-teal-focus) }
+  &.btn-outline-info { @include btn-outline-color($color-cyan, $color-cyan-focus) }
+  &.btn-outline-success { @include btn-outline-color($color-green, $color-green-focus) }
+  &.btn-outline-warning { @include btn-outline-color($color-amber, $color-amber-focus) }
+  &.btn-outline-danger { @include btn-outline-color($color-red, $color-red-focus) }
+  &.btn-outline-unique { @include btn-outline-color($color-violet, $color-violet-focus) }
+  &.btn-outline-romantic { @include btn-outline-color($color-rose, $color-rose-focus) }
+  &.btn-outline-elegant { @include btn-outline-color($color-purple, $color-purple-focus) }
+  &.btn-outline-light { @include btn-outline-color($color-light, $color-light-focus) }
+  &.btn-outline-dark { @include btn-outline-color($color-dark, $color-dark-focus) }
+  &.btn-outline-secondary { @include btn-outline-color($color-gray, $color-gray-focus) }
 
-  &.btn-outline-default {
-    @include btn-outline-color($color-teal, $color-teal-focus)
-  }
-
-  &.btn-outline-info {
-    @include btn-outline-color($color-cyan, $color-cyan-focus)
-  }
-
-  &.btn-outline-success {
-    @include btn-outline-color($color-green, $color-green-focus)
-  }
-
-  &.btn-outline-warning {
-    @include btn-outline-color($color-amber, $color-amber-focus)
-  }
-
-  &.btn-outline-danger {
-    @include btn-outline-color($color-red, $color-red-focus)
-  }
-
-  &.btn-outline-secondary {
-    @include btn-outline-color($color-gray, $color-gray-focus)
-  }
-
-  &.btn-outline-unique {
-    @include btn-outline-color($color-violet, $color-violet-focus)
-  }
-
-  &.btn-outline-romantic {
-    @include btn-outline-color($color-rose, $color-rose-focus)
-  }
-
-  &.btn-outline-elegant {
-    @include btn-outline-color($color-purple, $color-purple-focus)
-  }
-
-  &.btn-outline-light {
-    @include btn-outline-color($color-light, $color-light-focus)
-  }
-
-  &.btn-outline-dark {
-    @include btn-outline-color($color-dark, $color-dark-focus)
+  &.btn-link {
+    color: $color-blue;
+    background-color: transparent !important;
+    padding: 0 0.35rem !important;
+    border: none;
+    box-shadow: none;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -345,63 +287,26 @@ body {
 
 @mixin bg-color($color, $color-focus) {
   background-color: $color !important;
+  color: #fff;
 
   &.focus {
     background-color: $color-focus !important;
   }
 }
 
-.bg-primary {
-  @include bg-color($color-blue, $color-blue-focus)
-}
+.bg-primary { @include bg-color($color-blue, $color-blue-focus) }
+.bg-default { @include bg-color($color-teal, $color-teal-focus) }
+.bg-info { @include bg-color($color-cyan, $color-cyan-focus) }
+.bg-success { @include bg-color($color-green, $color-green-focus) }
+.bg-danger { @include bg-color($color-red, $color-red-focus) }
+.bg-warning { @include bg-color($color-amber, $color-amber-focus) }
+.bg-unique { @include bg-color($color-violet, $color-violet-focus) }
+.bg-elegant { @include bg-color($color-purple, $color-purple-focus) }
+.bg-romantic { @include bg-color($color-rose, $color-rose-focus) }
+.bg-secondary { @include bg-color($color-gray, $color-gray-focus) }
+.bg-light { @include bg-color($color-light, $color-light-focus) }
+.bg-secondary { @include bg-color($color-gray, $color-gray-focus) }
 
-.bg-default {
-  @include bg-color($color-teal, $color-teal-focus)
-}
-
-.bg-info {
-  @include bg-color($color-cyan, $color-cyan-focus)
-}
-
-.bg-success {
-  @include bg-color($color-green, $color-green-focus)
-}
-
-.bg-danger {
-  @include bg-color($color-red, $color-red-focus)
-}
-
-.bg-warning {
-  @include bg-color($color-amber, $color-amber-focus)
-}
-
-.bg-unique {
-  @include bg-color($color-violet, $color-violet-focus)
-}
-
-.bg-elegant {
-  @include bg-color($color-purple, $color-purple-focus)
-}
-
-.bg-romantic {
-  @include bg-color($color-rose, $color-rose-focus)
-}
-
-.bg-secondary {
-  @include bg-color($color-blue, $color-blue-focus)
-}
-
-.bg-light {
-  @include bg-color($color-light, $color-light-focus)
-}
-
-.bg-secondary {
-  @include bg-color($color-gray, $color-gray-focus)
-}
-
-.bg-light {
-  @include bg-color($color-dark, $color-dark-focus)
-}
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
@@ -414,21 +319,10 @@ body {
   }
 }
 
-.bg-purple-gradient {
-  @include bg-color-gradient($color-rose, $color-rose-focus, $color-violet, $color-violet-focus);
-}
-
-.bg-purple-gradient {
-  @include bg-color-gradient($color-cyan, $color-cyan-focus, $color-blue, $color-blue-focus);
-}
-
-.bg-purple-gradient {
-  @include bg-color-gradient($color-amber, $color-amber-focus, $color-red, $color-red-focus);
-}
-
-.bg-purple-gradient {
-  @include bg-color-gradient($color-green, $color-green-focus, $color-teal, $color-teal-focus);
-}
+.bg-purple-gradient { @include bg-color-gradient($color-rose, $color-rose-focus, $color-violet, $color-violet-focus) }
+.bg-blue-gradient { @include bg-color-gradient($color-cyan, $color-cyan-focus, $color-blue, $color-blue-focus) }
+.bg-red-gradient { @include bg-color-gradient($color-amber, $color-amber-focus, $color-red, $color-red-focus) }
+.bg-green-gradient { @include bg-color-gradient($color-green, $color-green-focus, $color-teal, $color-teal-focus) }
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
@@ -441,53 +335,18 @@ body {
   }
 }
 
-.border-primary {
-  @include border-color($color-blue, $color-blue-focus);
-}
-
-.border-default {
-  @include border-color($color-teal, $color-teal-focus);
-}
-
-.border-info {
-  @include border-color($color-cyan, $color-cyan-focus);
-}
-
-.border-success {
-  @include border-color($color-green, $color-green-focus);
-}
-
-.border-danger {
-  @include border-color($color-red, $color-red-focus);
-}
-
-.border-warning {
-  @include border-color($color-amber, $color-amber-focus);
-}
-
-.border-light {
-  @include border-color($color-light, $color-light-focus);
-}
-
-.border-dark {
-  @include border-color($color-dark, $color-dark-focus);
-}
-
-.border-secondary {
-  @include border-color($color-gray, $color-gray-focus);
-}
-
-.border-unique {
-  @include border-color($color-violet, $color-violet-focus);
-}
-
-.border-elegant {
-  @include border-color($color-purple, $color-purple-focus);
-}
-
-.border-romantic {
-  @include border-color($color-rose, $color-rose-focus);
-}
+.border-primary { @include border-color($color-blue, $color-blue-focus) }
+.border-default { @include border-color($color-teal, $color-teal-focus) }
+.border-info { @include border-color($color-cyan, $color-cyan-focus) }
+.border-success { @include border-color($color-green, $color-green-focus) }
+.border-danger { @include border-color($color-red, $color-red-focus) }
+.border-warning { @include border-color($color-amber, $color-amber-focus) }
+.border-light { @include border-color($color-light, $color-light-focus) }
+.border-dark { @include border-color($color-dark, $color-dark-focus) }
+.border-secondary { @include border-color($color-gray, $color-gray-focus) }
+.border-unique { @include border-color($color-violet, $color-violet-focus) }
+.border-elegant { @include border-color($color-purple, $color-purple-focus) }
+.border-romantic { @include border-color($color-rose, $color-rose-focus) }
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
@@ -502,18 +361,18 @@ body {
   & .card-header {
     background: $color-light;
     border-radius: $border-radius-md $border-radius-md 0 0;
-    padding: .75rem 1rem;
+    padding: 1rem 1.25rem;
   }
 
   & .card-body {
     flex: 1 1 auto;
-    padding: .75rem 1rem;
+    padding: .75rem 1.25rem;
   }
 
   & .card-footer {
     background: $color-light;
     border-radius: 0 0 $border-radius-md $border-radius-md;
-    padding: .75rem 1rem;
+    padding: 1rem 1.25rem;
   }
 
   & img.card-img-top {
@@ -566,35 +425,128 @@ h5 {
 
 h6 {
   font-size: $font-size-h6;
+  margin-bottom: 0;
 }
 
-.h1 {
-  font-size: $font-size-h1;
+.h1 { font-size: $font-size-h1 }
+.h2 { font-size: $font-size-h2 }
+.h3 { font-size: $font-size-h3 }
+.h4 { font-size: $font-size-h4 }
+.h5 { font-size: $font-size-h5 }
+.h6 { font-size: $font-size-h6 }
+.hg { font-size: $font-size-hg }
+
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+svg {
+  min-width: 24px;
 }
 
-.h2 {
-  font-size: $font-size-h2;
-}
+.list-group {
+  & .list-group-item {
+    padding: .45rem 15px;
+  }
 
-.h3 {
-  font-size: $font-size-h3;
-}
-
-.h4 {
-  font-size: $font-size-h4;
-}
-
-.h5 {
-  font-size: $font-size-h5;
-}
-
-.h6 {
-  font-size: $font-size-h6;
-}
-
-.hg {
-  font-size: $font-size-hg;
+  &.p-md .list-group-item {
+    padding: .65rem 1.25rem;
+  }
 }
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
+
+.row.less-gutters {
+  margin-left: -8px;
+  margin-right: -8px;
+
+  &>.col, &>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}
+
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+@mixin text-color($color, $color-focus) {
+  color: $color !important;
+
+  &.focus {
+    color: $color-focus !important;
+  }
+}
+
+.text-primary { @include text-color($color-blue, $color-blue-focus) }
+.text-info { @include text-color($color-cyan, $color-cyan-focus) }
+.text-secondary { @include text-color($color-gray, $color-gray-focus) }
+.text-danger { @include text-color($color-red, $color-red-focus) }
+.text-warning { @include text-color($color-amber, $color-amber-focus) }
+.text-success { @include text-color($color-green, $color-green-focus) }
+.text-light { @include text-color($color-light, $color-light-focus) }
+
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+@mixin a-bg-color($color, $color-focus) {
+  color: #fff;
+  background-color: $color;
+
+  &:hover { background-color: $color-focus !important }
+  &:focus { background-color: $color-focus !important }
+  &.active { background-color: $color-focus !important }
+}
+
+a.bg-primary { @include a-bg-color($color-blue, $color-blue-focus) }
+a.bg-info { @include a-bg-color($color-cyan, $color-cyan-focus) }
+a.bg-secondary { @include a-bg-color($color-gray, $color-gray-focus) }
+a.bg-danger { @include a-bg-color($color-red, $color-red-focus) }
+a.bg-warning { @include a-bg-color($color-amber, $color-amber-focus) }
+a.bg-success { @include a-bg-color($color-green, $color-green-focus) }
+a.bg-light { @include a-bg-color($color-light, $color-light-focus) }
+
+
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+.star {
+  position: relative;
+  display: inline-block;
+  color: #d3d3d3;
+
+  &.full {
+    color: $color-amber;
+  }
+
+  & .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: $color-amber;
+  }
+}
+
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+.sidebar-heading {
+  padding: 0.975rem 1.25rem !important;
+  font-size: 1.2rem !important;
+}
+
+.navbar-heading {
+  font-size: 1.2rem !important;
+}
+
+
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+.table {
+  & td {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+
+

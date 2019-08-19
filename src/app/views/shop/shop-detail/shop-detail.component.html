@@ -3,9 +3,9 @@
 
   <div class="row">
     <!--image section-->
-    <div class="col-md-4 text-center mb-3 mb-md-0">
+    <div class="col-md-4 mb-4 mb-md-0">
       <img *ngIf="data.image && data.image != ''" [alt]="data.title" [src]="data.image" class="img-fluid mt-2" />
-      <img *ngIf="!data.image || data.image == ''" [alt]="data.title" [src]="'https://via.placeholder.com/250x350/?text=' + data.title.substr(0, 1).toUpperCase()" class="img-fluid mt-2" />
+      <img *ngIf="!data.image || data.image == ''" [alt]="data.title" [src]="placeholderService.imgHolder(250, 350, data.title)" class="img-fluid mt-2" />
     </div>
     <!--end image section-->
 
@@ -35,24 +35,24 @@
 
       <!--3 card section-->
       <div class="row mt-3">
-        <div class="card-group col-sm-4 mb-2">
-          <div class="card bordered">
+        <div class="card-group col-sm-4">
+          <div class="card bordered bg-success">
             <div class="card-body py-2 px-3">
               <strong><i class="fas fa-book"></i> ISBN</strong>
               <div class="h6 my-1">{{ data.isbn }}</div>
             </div>
           </div>
         </div>
-        <div class="card-group col-sm-4 mb-2">
-          <div class="card bordered">
+        <div class="card-group col-sm-4">
+          <div class="card bordered bg-unique">
             <div class="card-body py-2 px-3">
               <strong><i class="fas fa-scroll"></i> Paperpack</strong>
               <div class="h6 my-1">{{ data.page }}</div>
             </div>
           </div>
         </div>
-        <div class="card-group col-sm-4 mb-2">
-          <div class="card bordered">
+        <div class="card-group col-sm-4">
+          <div class="card bordered bg-romantic">
             <div class="card-body py-2 px-3">
               <strong><i class="fas fa-language"></i> Language</strong>
               <div class="h6 my-1">{{ data.language }}</div>

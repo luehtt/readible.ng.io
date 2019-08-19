@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-3 col-lg-2">
     <ul class="list-group list-group-flush">
-      <li class="list-group-item py-2">
+      <li class="list-group-item p-1">
         <button (click)="onSetFilter('')" class="btn btn-link py-0" type="button">All</button>
       </li>
-      <li *ngFor="let i of categories" class="list-group-item py-2">
+      <li *ngFor="let i of categories" class="list-group-item p-1">
         <button (click)="onSetFilter(i.name.toLowerCase())" class="btn btn-link py-0 text-left" type="button">{{ i.name }}</button>
       </li>
     </ul>
@@ -16,21 +16,18 @@
     <div class="input-group mb-3">
       <input (change)="search = $event.target.value" [value]="search" class="form-control" placeholder="" type="text">
       <div class="input-group-append">
-        <button (click)="onSetSearch()" class="btn btn-primary" type="button">Search</button>
-        <button (click)="onClear()" class="btn btn-outline-secondary" type="button">Clear</button>
+        <button (click)="onSetSearch()" class="btn btn-square btn-primary" type="button">Search</button>
+        <button (click)="onClear()" class="btn btn-secondary" type="button">Clear</button>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row less-gutters">
       <div *ngFor="let i of data" class="card-group col-sm-4 col-md-4 col-lg-3 col-xl-2">
         <div class="card mb-3">
-          <div class="text-center mx-1">
-            <img *ngIf="i.image && i.image != ''" [alt]="i.title" class="img-fluid mt-2" [src]="i.image" />
-            <img *ngIf="!i.image || i.image == ''" [alt]="i.title" class="img-fluid mt-2"
-                 [src]="'https://via.placeholder.com/250x350/?text=' + i.title.substr(0, 1).toUpperCase()" />
-          </div>
+          <img class="img-fluid card-img-top" *ngIf="i.image && i.image != ''" [alt]="i.title" [src]="i.image" />
+          <img class="img-fluid card-img-top" *ngIf="!i.image || i.image == ''" [alt]="i.title" [src]="placeholderService.imgHolder(250, 350, i.title)" />
 
-          <div class="card-body px-2">
+          <div class="card-body">
             <a [routerLink]="'./' + i.isbn">{{ i.title }}</a>
             <div><strong>{{ i.author }}</strong></div>
             <div>
@@ -42,12 +39,12 @@
               <ngb-rating [rate]="i.rating" [readonly]="true" [starTemplate]="t" class="h4 text-warning my-1" max="5">
               </ngb-rating>
             </div>
-            <div> Price:
+            <div>
               <span *ngIf="i.discount != 0">
-                <span class="h6 mr-2">{{i.price * (100 - i.discount) / 100 | currency}}</span>
+                <span class="mr-2 h6">{{i.price * (100 - i.discount) / 100 | currency}}</span>
                 <del class="text-muted">({{i.price | currency}})</del>
               </span>
-              <span *ngIf="i.discount == 0"><span class="h6">{{i.price | currency}}</span></span>
+              <span class="h6" *ngIf="i.discount == 0">{{i.price | currency}}</span>
             </div>
           </div>
         </div>

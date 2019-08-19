@@ -1,6 +1,7 @@
 export const Const = {
   SERVER_URL: 'https://localhost:5001/api/',
   THIS_URL: 'http://localhost:4200/',
+  PLACEHOLDER_URL: 'https://via.placeholder.com/',
   RETRY_ATTEMPT: 3,
   REGISTER_LOWER_LIMIT: 15,
   REGISTER_UPPER_LIMIT: 100,
@@ -19,7 +20,6 @@ export const Endpoint = {
   BOOK_COMMENT: 'book-comments',
   SHOP: 'shop',
   ORDER: 'orders',
-  CUSTOMER_OTHER: 'customer_orders',
   USER: 'users',
   CUSTOMER: 'customers',
   LOGIN: 'login',
@@ -46,13 +46,27 @@ export const FormMessage = {
 };
 
 export const ColorCode = {
-  PRIMARY: '#0062cc',
-  DEFAULT: '#2bbbad',
-  UNIQUE: '#880e4f',
-  SUCCESS: '#00c851',
-  PURPLE: '#a6c',
-  AMBER: '#ffa000',
-  DARK_GREEN: '#388e3c',
-  DANGER: '#ff3547',
-  PINK: '#ec407a'
+  BLUE: '#2196f3',
+  TEAL: '#009688',
+  PURPLE: '#9c27b0',
+  VIOLET: '#673ab7',
+  GREEN: '#4caf50',
+  AMBER: '#ffc107',
+  RED: '#f44336',
+  CYAN: '#00bcd4',
+  ROSE: '#e91e63',
+  BROWN: '#795548',
 };
+
+export const ColorCodeList = [
+  ColorCode.BLUE,
+  ColorCode.TEAL,
+  ColorCode.PURPLE,
+  ColorCode.VIOLET,
+  ColorCode.GREEN,
+  ColorCode.AMBER,
+  ColorCode.RED,
+  ColorCode.CYAN,
+  ColorCode.ROSE,
+  ColorCode.BROWN
+];

@@ -134,12 +134,12 @@ export class StatisticOrderComponent implements OnInit {
     switch (this.selectedValue) {
       case 'order':
         values = this.data.map(x => x.totalOrder);
-        borderColor = ColorCode.DARK_GREEN;
+        borderColor = ColorCode.GREEN;
         this.chartTitle = 'Total order ';
         break;
       case 'item':
         values = this.data.map(x => x.totalItem);
-        borderColor = ColorCode.DEFAULT;
+        borderColor = ColorCode.VIOLET;
         this.chartTitle = 'Total items sold ';
         break;
       case 'price':
