@@ -155,6 +155,80 @@ export class ImageFunc {
             default: return transform + 'none';
         }
     }
+  
+    public static TransformImage(imageString: string): string {
+      if (!imageString.includes('data:image/jpeg;base64')) return imageString;
+      const ifd = GetIFD(imageString);
+      if (!ifd) return null;
+      if (!ifd.Orientation || ifd.Orientation === 0 || ifd.Orientation === 1) return imageString;
+      
+      // begin to transform taken pictures
+      const orientation = ifd.Orientation;
+      let image = new Image();
+      let base64 = '';
+
+      image.onload = () => {
+        let canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        let ctx = canvas.getContext('2d');
+        let x = 0;
+        let y = 0;
+        ctx.save();
+        
+        switch(orientation) {
+          case 2:
+            x = -canvas.width;
+            ctx.scale(-1, 1);
+            break;
+          case 3:
+            x = -canvas.width;
+            y = -canvas.height;
+            ctx.scale(-1, -1);
+            break;
+          case 4:
+            y = -canvas.height;
+            ctx.scale(1, -1);
+            break;
+          case 5:
+            canvas.width = image.height;
+            canvas.height = image.width;
+            ctx.translate(canvas.width, canvas.height / canvas.width);
+            ctx.rotate(Math.PI / 2);
+            y = -canvas.width;
+            ctx.scale(1, -1);
+            break;
+          case 6:
+            canvas.width = image.height;
+            canvas.height = image.width;
+            ctx.translate(canvas.width, canvas.height / canvas.width);
+            ctx.rotate(Math.PI / 2);
+            break;
+          case 7:
+            canvas.width = image.height;
+            canvas.height = image.width;
+            ctx.translate(canvas.width, canvas.height / canvas.width);
+            ctx.rotate(Math.PI / 2);
+            x = -canvas.height;
+            ctx.scale(-1, 1);
+            break;
+          case 8:
+            canvas.width = image.height;
+            canvas.height = image.width;
+            ctx.translate(canvas.width, canvas.height / canvas.width);
+            ctx.rotate(Math.PI / 2);
+            x = -canvas.height;
+            y = -canvas.width;
+            ctx.scale(-1, -1);
+            break;
+        }
+        ctx.drawImage(image, x, y);
+        ctx.restore();
+        base64 = canvas.toDataURL("image/jpeg", 0.8);
+      }
+      
+      return base64;
+    }
 }
 
 
