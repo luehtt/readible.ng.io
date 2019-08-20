@@ -5,8 +5,8 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 text-center mb-3 mb-md-0">
-            <img *ngIf="data.image && data.image != ''" [alt]="data.title" class="img-fluid mt-2" [src]="data.image" />
-            <img *ngIf="!data.image || data.image == ''" [alt]="data.title" class="img-fluid mt-2"
+            <img *ngIf="data.image && data.image != ''" [alt]="data.title" class="img-fluid mt-2" [src]="data.image" [ngStyle]="{'transform': imageTransform}"/>
+            <img *ngIf="!data.image || data.image == ''" [alt]="data.title" class="img-fluid mt-2" 
                  [src]="placeholderService.imgHolder(500, 700, data.title)" />
 
             <div class="mt-2">
