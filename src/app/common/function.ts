@@ -112,13 +112,25 @@ export class FormFunc {
     return data.year + '-' + data.month + '-' + data.day;
   }
 
-  static toJsonDate(data: Date): string {
+  static toJsonDate(data: Date = new Date()): string {
     const yyyy = data.getFullYear().toString();
-    const mm = data.getMonth() < 9 ? '0' + (data.getMonth() + 1) : '' + (data.getMonth() + 1);
+    const MM = data.getMonth() < 9 ? '0' + (data.getMonth() + 1) : '' + (data.getMonth() + 1);
     const dd = data.getDate() < 10 ? '0' + data.getDate() : '' + data.getDate();
 
-    return yyyy + '-' + mm + '-' + dd;
+    return yyyy + '-' + MM + '-' + dd;
   }
+  
+  static toJsonDateTime(date: Date = new Date()): string {
+    const yyyy = data.getFullYear().toString();
+    const MM = data.getMonth() < 9 ? '0' + (data.getMonth() + 1) : '' + (data.getMonth() + 1);
+    const dd = data.getDate() < 10 ? '0' + data.getDate() : '' + data.getDate();
+    const hh = data.getHour() < 10 ? '0' + data.getHour() : '' + data.getHour();
+    const mm = data.getMinute() < 10 ? '0' + data.getMinute() : '' + data.getMinute();
+    const ss = data.getSecond() < 10 ? '0' + data.getSecond() : '' + data.getSecond();
+    
+    return yyyy + '-' + MM + '-' + dd;
+  }
+  
 
   static convertToRadioYesNo(bool): string {
     if (bool === true) { return 'true'; }
@@ -136,6 +148,9 @@ export class FormFunc {
 }
 
 export class ImageFunc {
+    // these functions determine whether an photo taken by phone is in corrected orientiation
+    // almost photos from internet is in corrected orientiation that need no transformation
+  
     public static GetIFD(imageString: string): number {
         if (!imageString.includes('data:image/jpeg;base64')) return null;
         const exif = piexif.load(imageString);
@@ -177,20 +192,20 @@ export class ImageFunc {
         ctx.save();
         
         switch(orientation) {
-          case 2:
+          case 2: // mirror horizontal
             x = -canvas.width;
             ctx.scale(-1, 1);
             break;
-          case 3:
+          case 3: // rotate 180 
             x = -canvas.width;
             y = -canvas.height;
             ctx.scale(-1, -1);
             break;
-          case 4:
+          case 4: // mirror vertical
             y = -canvas.height;
             ctx.scale(1, -1);
             break;
-          case 5:
+          case 5: // mirror horizontal and rotate 270 clock wise
             canvas.width = image.height;
             canvas.height = image.width;
             ctx.translate(canvas.width, canvas.height / canvas.width);
@@ -198,13 +213,13 @@ export class ImageFunc {
             y = -canvas.width;
             ctx.scale(1, -1);
             break;
-          case 6:
+          case 6: // rotate 90 clock wise
             canvas.width = image.height;
             canvas.height = image.width;
             ctx.translate(canvas.width, canvas.height / canvas.width);
             ctx.rotate(Math.PI / 2);
             break;
-          case 7:
+          case 7: // mirror horizontal and rotate 90 clock wise
             canvas.width = image.height;
             canvas.height = image.width;
             ctx.translate(canvas.width, canvas.height / canvas.width);
@@ -212,7 +227,7 @@ export class ImageFunc {
             x = -canvas.height;
             ctx.scale(-1, 1);
             break;
-          case 8:
+          case 8: // rotate 270 clock wise
             canvas.width = image.height;
             canvas.height = image.width;
             ctx.translate(canvas.width, canvas.height / canvas.width);
