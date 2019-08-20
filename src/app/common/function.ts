@@ -135,4 +135,26 @@ export class FormFunc {
   }
 }
 
+export class ImageFunc {
+    public static GetIFD(imageString: string): number {
+        if (!imageString.includes('data:image/jpeg;base64')) return null;
+        const exif = piexif.load(imageString);
+        return exif["0th"][piexif.ImageIFD];
+    }
+
+    public static TransformCss(orientation: number): string {
+        const transform = '';
+        switch (orientation) {
+            case 2: return transform + 'rotateY(180deg)';
+            case 3: return transform + 'rotate(180deg)';
+            case 4: return transform + 'rotate(180deg) rotateY(180deg)';
+            case 5: return transform + 'rotate(270deg) rotateY(180deg)';
+            case 6: return transform + 'translateY(-100%) rotate(90deg)';
+            case 7: return transform + 'translateY(-100%) translateX(-100%) rotate(90deg) rotateY(180deg)';
+            case 8: return transform + 'translateX(-100%) rotate(270deg)';
+            default: return transform + 'none';
+        }
+    }
+}
+
 
