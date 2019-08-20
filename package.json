@@ -21,6 +21,7 @@
     "@angular/router": "~8.1.2",
     "@ng-bootstrap/ng-bootstrap": "^5.1.0",
     "chart.js": "^2.8.0",
+    "piexifjs": "^1.0.6",
     "rxjs": "~6.4.0",
     "sass": "^1.22.10",
     "scss": "^0.2.4",

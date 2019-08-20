@@ -12,7 +12,7 @@
             <div class="mt-2">
               <input class="d-none" id="file" type="file" accept="image/*" #fileInput (change)="onChangeImage($event)" />
               <button type="button" class="btn btn-sm btn-primary mr-1" (click)="fileInput.click()"><i class="fas fa-upload"></i></button>
-              <button type="button" class="btn btn-sm btn-danger mr-1" (click)="data.image = null"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-sm btn-danger mr-1" (click)="data.image = ''"><i class="fas fa-trash-alt"></i></button>
               <button type="button" class="btn btn-sm btn-secondary" (click)="clickRefreshImage()"><i class="fas fa-redo"></i></button>
             </div>
           </div>

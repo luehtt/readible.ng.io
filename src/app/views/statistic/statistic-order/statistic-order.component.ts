@@ -91,8 +91,8 @@ export class StatisticOrderComponent implements OnInit {
     this.toDate = new Date(FormFunc.fromNgbDateToJson(this.toDateNgb));
 
     if (this.fromDate >= this.toDate) { this.error = this.SELECTED_DATE_MISMATCHED; }
-    if (this.selectedReference === 'day' && FormFunc.dateIsSameMonth(this.fromDate, this.toDate)) { this.error = this.DURATION_TOO_SHORT; }
-    if (this.selectedReference === 'year' && FormFunc.dateIsSameYear(this.fromDate, this.toDate)) { this.error = this.DURATION_TOO_SHORT; }
+    if (this.selectedReference === 'day' && FormFunc.isSameMonth(this.fromDate, this.toDate)) { this.error = this.DURATION_TOO_SHORT; }
+    if (this.selectedReference === 'year' && FormFunc.isSameYear(this.fromDate, this.toDate)) { this.error = this.DURATION_TOO_SHORT; }
     if (this.error) { return; }
     this.getData();
   }
@@ -107,8 +107,8 @@ export class StatisticOrderComponent implements OnInit {
 
   private getData() {
     this.alertService.clear();
-    const fromDate = FormFunc.toJsonDate(this.fromDate);
-    const toDate = FormFunc.toJsonDate(this.toDate);
+    const fromDate = FormFunc.jsonDate(this.fromDate);
+    const toDate = FormFunc.jsonDate(this.toDate);
 
     const startTime = this.alertService.startTime();
     this.service.statisticOrder(this.selectedReference, fromDate, toDate).subscribe(res => {
@@ -150,7 +150,7 @@ export class StatisticOrderComponent implements OnInit {
     }
 
     // set title with selectedRange
-    this.chartTitle += 'from ' + FormFunc.toJsonDate(this.fromDate) + ' to ' + FormFunc.toJsonDate(this.toDate);
+    this.chartTitle += 'from ' + FormFunc.jsonDate(this.fromDate) + ' to ' + FormFunc.jsonDate(this.toDate);
 
     // init line chart
     this.chart = new Chart('canvas', {

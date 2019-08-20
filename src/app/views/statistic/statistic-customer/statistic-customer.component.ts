@@ -78,8 +78,8 @@ export class StatisticCustomerComponent implements OnInit {
 
   private getData() {
     this.alertService.clear();
-    const fromDate = FormFunc.toJsonDate(this.fromDate);
-    const toDate = FormFunc.toJsonDate(this.toDate);
+    const fromDate = FormFunc.jsonDate(this.fromDate);
+    const toDate = FormFunc.jsonDate(this.toDate);
 
     const startTime1 = this.alertService.startTime();
     this.service.statisticCustomer('age', fromDate, toDate).subscribe(res => {
@@ -120,7 +120,7 @@ export class StatisticCustomerComponent implements OnInit {
     }
 
     // set title with selectedRange
-    this.chartTitle += ' from ' + FormFunc.toJsonDate(this.fromDate) + ' to ' + FormFunc.toJsonDate(this.toDate);
+    this.chartTitle += ' from ' + FormFunc.jsonDate(this.fromDate) + ' to ' + FormFunc.jsonDate(this.toDate);
 
     // init doughnut chart
     this.ageChart = new Chart('ageCanvas', {
@@ -161,7 +161,7 @@ export class StatisticCustomerComponent implements OnInit {
     }
 
     // set title with selectedRange
-    this.chartTitle += ' from ' + FormFunc.toJsonDate(this.fromDate) + ' to ' + FormFunc.toJsonDate(this.toDate);
+    this.chartTitle += ' from ' + FormFunc.jsonDate(this.fromDate) + ' to ' + FormFunc.jsonDate(this.toDate);
 
     // init doughnut chart
     this.genderChart = new Chart('genderCanvas', {

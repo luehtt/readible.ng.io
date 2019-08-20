@@ -90,7 +90,7 @@ export class BookDetailComponent implements OnInit {
       page: [this.data.page, [Validators.required, Validators.min(0)]],
       language: [this.data.language, [Validators.required, Validators.maxLength(32)]],
       categoryId: [this.data.categoryId, [Validators.required]],
-      active: [FormFunc.convertToRadioYesNo(this.data.active), [Validators.required]],
+      active: [FormFunc.radioTrueFalse(this.data.active), [Validators.required]],
       info: [this.data.info],
       discount: [this.data.discount, [Validators.required, Validators.min(0)]]
     });
@@ -135,8 +135,10 @@ export class BookDetailComponent implements OnInit {
       FileFunc.convertFileToBase64(file)
         .then(res => {
           this.data.image = res.toString();
-          const ifd = ImageFunc.GetIFD(this.data.image);
-          this.imageTransform = ifd ? ImageFunc.TransformCss(ifd.Orientation);
+          // const orientation = ImageFunc.GetOrientation(this.data.image);
+          // if (orientation && orientation !== 0 && orientation !== 1) {
+          //   this.imageTransform = ImageFunc.TransformCss(orientation);
+          // }
         }).catch(err => {
           this.alertService.failed(err.message);
         });
@@ -146,7 +148,7 @@ export class BookDetailComponent implements OnInit {
   clickRefreshImage() {
     this.service.get(this.id).subscribe(
       res => {
-        this.data = res;
+        this.data.originalImage = res.image;
         this.data.image = res.image;
       }, err => {
         this.alertService.failed(err.message);
@@ -159,6 +161,7 @@ export class BookDetailComponent implements OnInit {
     this.service.get(this.id).subscribe(res => {
       this.data = res;
       this.data.originalImage = res.image;
+      this.data.image = res.image;
       this.data.rating = res.bookComments.length === 0 ? 0 : res.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / res.bookComments.length;
       this.alertService.success(startTime, 'GET');
       this.ngOnInitForm();

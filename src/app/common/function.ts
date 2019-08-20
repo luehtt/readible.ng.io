@@ -1,3 +1,5 @@
+import { piexif } from 'piexifjs';
+
 export class DataFunc {
   static include(data: object, search: string, keywords: string[]): boolean {
     search = search.toLocaleLowerCase();
@@ -112,49 +114,48 @@ export class FormFunc {
     return data.year + '-' + data.month + '-' + data.day;
   }
 
-  static toJsonDate(data: Date = new Date()): string {
+  static jsonDate(data: Date = new Date()): string {
     const yyyy = data.getFullYear().toString();
     const MM = data.getMonth() < 9 ? '0' + (data.getMonth() + 1) : '' + (data.getMonth() + 1);
     const dd = data.getDate() < 10 ? '0' + data.getDate() : '' + data.getDate();
-
     return yyyy + '-' + MM + '-' + dd;
   }
-  
-  static toJsonDateTime(date: Date = new Date()): string {
+
+  static jsonDatetime(data: Date = new Date()): string {
     const yyyy = data.getFullYear().toString();
     const MM = data.getMonth() < 9 ? '0' + (data.getMonth() + 1) : '' + (data.getMonth() + 1);
     const dd = data.getDate() < 10 ? '0' + data.getDate() : '' + data.getDate();
-    const hh = data.getHour() < 10 ? '0' + data.getHour() : '' + data.getHour();
-    const mm = data.getMinute() < 10 ? '0' + data.getMinute() : '' + data.getMinute();
-    const ss = data.getSecond() < 10 ? '0' + data.getSecond() : '' + data.getSecond();
-    
-    return yyyy + '-' + MM + '-' + dd;
+    const hh = data.getHours() < 10 ? '0' + data.getHours() : '' + data.getHours();
+    const mm = data.getMinutes() < 10 ? '0' + data.getMinutes() : '' + data.getMinutes();
+    const ss = data.getSeconds() < 10 ? '0' + data.getSeconds() : '' + data.getSeconds();
+    return yyyy + '-' + MM + '-' + dd + 'T' + hh + ':' + mm + ':' + ss;
   }
-  
 
-  static convertToRadioYesNo(bool): string {
+
+  static radioTrueFalse(bool): string {
     if (bool === true) { return 'true'; }
     if (bool === false) { return 'false'; }
   }
 
-  static dateIsSameMonth(date1: Date, date2: Date): boolean {
+  static isSameMonth(date1: Date, date2: Date): boolean {
     if (date1.getFullYear() !== date2.getFullYear()) { return false; }
     return date1.getMonth() === date2.getMonth();
   }
 
-  static dateIsSameYear(date1: Date, date2: Date): boolean {
+  static isSameYear(date1: Date, date2: Date): boolean {
     return date1.getFullYear() === date2.getFullYear();
   }
 }
 
 export class ImageFunc {
-    // these functions determine whether an photo taken by phone is in corrected orientiation
-    // almost photos from internet is in corrected orientiation that need no transformation
-  
-    public static GetIFD(imageString: string): number {
-        if (!imageString.includes('data:image/jpeg;base64')) return null;
+    // these functions determine whether an photo taken by phone is in corrected orientation
+    // almost photos from internet is in corrected orientation that need no transformation
+
+    public static GetOrientation(imageString: string): number {
+        if (!imageString.includes('data:image/jpeg;base64')) { return null; }
         const exif = piexif.load(imageString);
-        return exif["0th"][piexif.ImageIFD];
+        if (!exif) { return 0; }
+        return exif['0th'][piexif.ImageIFD.Orientation];
     }
 
     public static TransformCss(orientation: number): string {
@@ -169,80 +170,6 @@ export class ImageFunc {
             case 8: return transform + 'translateX(-100%) rotate(270deg)';
             default: return transform + 'none';
         }
-    }
-  
-    public static TransformImage(imageString: string): string {
-      if (!imageString.includes('data:image/jpeg;base64')) return imageString;
-      const ifd = GetIFD(imageString);
-      if (!ifd) return null;
-      if (!ifd.Orientation || ifd.Orientation === 0 || ifd.Orientation === 1) return imageString;
-      
-      // begin to transform taken pictures
-      const orientation = ifd.Orientation;
-      let image = new Image();
-      let base64 = '';
-
-      image.onload = () => {
-        let canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
-        let ctx = canvas.getContext('2d');
-        let x = 0;
-        let y = 0;
-        ctx.save();
-        
-        switch(orientation) {
-          case 2: // mirror horizontal
-            x = -canvas.width;
-            ctx.scale(-1, 1);
-            break;
-          case 3: // rotate 180 
-            x = -canvas.width;
-            y = -canvas.height;
-            ctx.scale(-1, -1);
-            break;
-          case 4: // mirror vertical
-            y = -canvas.height;
-            ctx.scale(1, -1);
-            break;
-          case 5: // mirror horizontal and rotate 270 clock wise
-            canvas.width = image.height;
-            canvas.height = image.width;
-            ctx.translate(canvas.width, canvas.height / canvas.width);
-            ctx.rotate(Math.PI / 2);
-            y = -canvas.width;
-            ctx.scale(1, -1);
-            break;
-          case 6: // rotate 90 clock wise
-            canvas.width = image.height;
-            canvas.height = image.width;
-            ctx.translate(canvas.width, canvas.height / canvas.width);
-            ctx.rotate(Math.PI / 2);
-            break;
-          case 7: // mirror horizontal and rotate 90 clock wise
-            canvas.width = image.height;
-            canvas.height = image.width;
-            ctx.translate(canvas.width, canvas.height / canvas.width);
-            ctx.rotate(Math.PI / 2);
-            x = -canvas.height;
-            ctx.scale(-1, 1);
-            break;
-          case 8: // rotate 270 clock wise
-            canvas.width = image.height;
-            canvas.height = image.width;
-            ctx.translate(canvas.width, canvas.height / canvas.width);
-            ctx.rotate(Math.PI / 2);
-            x = -canvas.height;
-            y = -canvas.width;
-            ctx.scale(-1, -1);
-            break;
-        }
-        ctx.drawImage(image, x, y);
-        ctx.restore();
-        base64 = canvas.toDataURL("image/jpeg", 0.8);
-      }
-      
-      return base64;
     }
 }
 
