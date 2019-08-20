@@ -10,7 +10,7 @@ import {BookCategoryService} from 'src/app/services/category.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Book} from 'src/app/models/book';
 import {Const} from 'src/app/common/const';
-import {FormFunc, FileFunc, DataFunc} from 'src/app/common/function';
+import {FormFunc, FileFunc, DataFunc, ImageFunc} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 
@@ -20,6 +20,7 @@ import {PlaceholderService} from '../../../services/common/placeholder.service';
 })
 export class BookDetailComponent implements OnInit {
   data: Book;
+  imageTransform: string;
   categories: BookCategory[];
   id: string;
   form: FormGroup;
@@ -132,8 +133,11 @@ export class BookDetailComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       FileFunc.convertFileToBase64(file)
-        .then(result => (this.data.image = result.toString()))
-        .catch(err => {
+        .then(res => {
+          this.data.image = res.toString();
+          const ifd = ImageFunc.GetIFD(this.data.image);
+          this.imageTransform = ifd ? ImageFunc.TransformCss(ifd.Orientation);
+        }).catch(err => {
           this.alertService.failed(err.message);
         });
     }
