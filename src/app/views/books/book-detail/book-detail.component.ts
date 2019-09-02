@@ -75,7 +75,7 @@ export class BookDetailComponent implements OnInit {
         this.data.originalImage = res[0].image;
         this.data.rating = res[0].bookComments.length === 0 ? 0 : res[0].bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / res[0].bookComments.length;
         this.alertService.success(startTime, 'GET');
-        this.ngOnInitForm();
+        this.initForm();
       },
       err => {
         this.alertService.failed(err);
@@ -83,7 +83,7 @@ export class BookDetailComponent implements OnInit {
     );
   }
 
-  ngOnInitForm() {
+  private initForm() {
     this.form = this.formBuilder.group({
       title: [this.data.title, [Validators.required, Validators.maxLength(255)]],
       author: [this.data.author, [Validators.required, Validators.maxLength(255)]],
@@ -138,17 +138,17 @@ export class BookDetailComponent implements OnInit {
       FileFunc.convertFileToBase64(file)
         .then(res => {
           this.data.image = res.toString();
-          // const orientation = ImageFunc.GetOrientation(this.data.image);
-          // if (orientation && orientation !== 0 && orientation !== 1) {
-          //   this.imageTransform = ImageFunc.TransformCss(orientation);
-          // }
+          const orientation = ImageFunc.GetOrientation(this.data.image);
+          if (orientation && orientation !== 0 && orientation !== 1) {
+            this.imageTransform = ImageFunc.TransformCss(orientation);
+          }
         }).catch(err => {
           this.alertService.failed(err.message);
         });
     }
   }
 
-  clickRefreshImage() {
+  onRefreshImage() {
     this.service.get(this.id).subscribe(
       res => {
         this.data.originalImage = res.image;
@@ -159,7 +159,7 @@ export class BookDetailComponent implements OnInit {
     );
   }
 
-  clickRefresh() {
+  onRefresh() {
     const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
       this.data = res;
@@ -167,13 +167,13 @@ export class BookDetailComponent implements OnInit {
       this.data.image = res.image;
       this.data.rating = res.bookComments.length === 0 ? 0 : res.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / res.bookComments.length;
       this.alertService.success(startTime, 'GET');
-      this.ngOnInitForm();
+      this.initForm();
     }, err => {
       this.alertService.failed(err.message);
     });
   }
 
-  clickSummit() {
+  onSubmit() {
     if (this.form.invalid) {
       FormFunc.touchControls(this.form.controls);
       return;
@@ -221,7 +221,7 @@ export class BookDetailComponent implements OnInit {
     );
   }
 
-  clickDelete() {
+  onDelete() {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.destroy(this.id).subscribe(res => {
@@ -234,7 +234,7 @@ export class BookDetailComponent implements OnInit {
     );
   }
 
-  clickDeleteComment(id: number) {
+  onDeleteComment(id: number) {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.commentService.destroy(id).subscribe(res => {

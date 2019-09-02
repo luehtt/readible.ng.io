@@ -13,7 +13,7 @@
               <input class="d-none" id="file" type="file" accept="image/*" #fileInput (change)="onChangeImage($event)" />
               <button type="button" class="btn btn-sm btn-primary mr-1" (click)="fileInput.click()"><i class="fas fa-upload"></i></button>
               <button type="button" class="btn btn-sm btn-danger mr-1" (click)="data.image = ''"><i class="fas fa-trash-alt"></i></button>
-              <button type="button" class="btn btn-sm btn-secondary" (click)="clickRefreshImage()"><i class="fas fa-redo"></i></button>
+              <button type="button" class="btn btn-sm btn-secondary" (click)="onRefreshImage()"><i class="fas fa-redo"></i></button>
             </div>
           </div>
 
@@ -143,9 +143,9 @@
 
           <div class="form-group text-center mt-3">
             <a [routerLink]="'../'" class="btn btn-secondary mr-1">Back</a>
-            <button type="button" class="btn btn-primary mr-1" (click)="clickSummit()">Update</button>
-            <button type="button" class="btn btn-unique mr-1" (click)="clickRefresh()">Refresh</button>
-            <button type="button" class="btn btn-danger" (click)="clickDelete()">Delete</button>
+            <button type="button" class="btn btn-primary mr-1" (click)="onSubmit()">Update</button>
+            <button type="button" class="btn btn-unique mr-1" (click)="onRefresh()">Refresh</button>
+            <button type="button" class="btn btn-danger" (click)="onDelete()">Delete</button>
           </div>
         </form>
       </div>
@@ -180,7 +180,7 @@
           <td><ngb-rating class="h5 text-warning" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
           <td class="text-justify"><ngb-highlight [result]="item.comment" [term]="commentFilter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="commentFilter"></ngb-highlight></td>
-          <td class="text-center"><button type="button" class="btn btn-link text-danger" (click)="clickDeleteComment(item.id)">Delete</button></td>
+          <td class="text-center"><button type="button" class="btn btn-link text-danger" (click)="onDeleteComment(item.id)">Delete</button></td>
         </tr>
       </tbody>
     </table>

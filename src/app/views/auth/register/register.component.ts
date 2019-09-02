@@ -54,7 +54,7 @@ export class RegisterComponent implements OnInit {
     if (year < Const.REGISTER_LOWER_LIMIT) { this.customValidator.birth = false; }
   }
 
-  clickSummit() {
+  onSubmit() {
     // validate built-in validator
     if (this.form.invalid) {
       FormFunc.touchControls(this.form.controls);

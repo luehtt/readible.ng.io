@@ -30,6 +30,7 @@ import {CustomerOrderListComponent} from './views/users/customer-order/customer-
 import {OrderStatusComponent} from './views/components/order-status/order-status.component';
 import {StatisticOrderComponent} from './views/statistic/statistic-order/statistic-order.component';
 import {StatisticCustomerComponent} from './views/statistic/statistic-customer/statistic-customer.component';
+import {AccountComponent} from './views/auth/account/account.component';
 
 const routes: Routes = [
   {
@@ -40,7 +41,7 @@ const routes: Routes = [
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
       {path: 'shop', component: ShopListComponent, pathMatch: 'full'},
-      {path: 'shop/:id', component: ShopDetailComponent}
+      {path: 'shop/:id', component: ShopDetailComponent},
     ]
   },
 
@@ -49,6 +50,7 @@ const routes: Routes = [
     component: AdminComponent,
     children: [
       {path: 'dashboard', component: DashboardComponent},
+      {path: 'account', component: AccountComponent},
       {path: 'books', component: BookListComponent},
       {path: 'books/:id', component: BookDetailComponent, pathMatch: 'full'},
       {path: 'book-categories', component: BookCategoryListComponent},
@@ -96,7 +98,7 @@ const routes: Routes = [
     ManagerListComponent, ManagerDetailComponent,
     CustomerCartComponent, CustomerOrderListComponent, CustomerOrderDetailComponent,
     ShopListComponent, ShopDetailComponent,
-    LoginComponent, RegisterComponent,
+    LoginComponent, RegisterComponent, AccountComponent,
     AdminComponent, ShopComponent,
     AlertMessageComponent, FormErrorComponent, OrderStatusComponent,
     StatisticOrderComponent, StatisticCustomerComponent

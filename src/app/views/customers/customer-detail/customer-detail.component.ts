@@ -46,7 +46,6 @@ export class CustomerDetailComponent implements OnInit {
       res => {
         this.data = res.customer;
         this.account = res.user;
-        console.log(res);
         this.alertService.success(startTime, 'GET');
       },
       err => {

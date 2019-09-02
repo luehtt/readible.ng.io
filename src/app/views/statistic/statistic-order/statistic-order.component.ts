@@ -46,14 +46,14 @@ export class StatisticOrderComponent implements OnInit {
     this.selectedReference = 'day';
     this.selectedRecent = 'fortnight';
     this.selectedValue = 'item';
-    this.initOrderTimestamp();
+    this.initTimestamp();
   }
 
-  selectValue() {
+  onSelectValue() {
     this.renderChart();
   }
 
-  selectRecent() {
+  onSelectRecent() {
     const toDate = new Date();
     this.toDate = toDate < this.latestTimestamp ? toDate : this.latestTimestamp;
     this.fromDate = new Date();
@@ -83,7 +83,7 @@ export class StatisticOrderComponent implements OnInit {
     }
   }
 
-  selectRange() {
+  onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
     this.fromDate = new Date(FormFunc.fromNgbDateToJson(this.fromDateNgb));
     this.toDate = new Date(FormFunc.fromNgbDateToJson(this.toDateNgb));
@@ -98,11 +98,11 @@ export class StatisticOrderComponent implements OnInit {
     this.getData();
   }
 
-  private initOrderTimestamp() {
+  private initTimestamp() {
     this.service.statisticOrderTimestamp().subscribe(res => {
       this.latestTimestamp = new Date(res.latestOrder.createdAt);
       this.oldestTimestamp = new Date(res.oldestOrder.createdAt);
-      this.selectRecent();
+      this.onSelectRecent();
     });
   }
 

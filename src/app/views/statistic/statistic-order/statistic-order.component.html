@@ -1,6 +1,6 @@
 <div class="row less-gutters">
   <div class="col-xl-2 col-md-6 mb-1 mb-xl-0">
-    <select class="form-control" [(ngModel)]="selectedValue" (change)="selectValue()">
+    <select class="form-control" [(ngModel)]="selectedValue" (change)="onSelectValue()">
       <option value="order">Total order</option>
       <option value="item">Total item</option>
       <option value="price">Total price</option>
@@ -8,7 +8,7 @@
   </div>
 
   <div class="col-xl-2 col-md-6 mb-1 mb-xl-0">
-    <select class="form-control" [(ngModel)]="selectedRecent" (change)="selectRecent()">
+    <select class="form-control" [(ngModel)]="selectedRecent" (change)="onSelectRecent()">
       <option value="week">Last 7 days</option>
       <option value="fortnight">Last 14 days</option>
       <option value="month">Last 30 days</option>
@@ -35,7 +35,7 @@
   </div>
 
   <div class="col-xl-2 col-md-4 mb-xl-0 mb-1 mb-md-0">
-    <select class="form-control" [(ngModel)]="selectedReference" (change)="selectRange()">
+    <select class="form-control" [(ngModel)]="selectedReference" (change)="onSelectRange()">
       <option value="day">Day</option>
       <option value="month">Month</option>
       <option value="year">Year</option>

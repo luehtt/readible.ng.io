@@ -31,11 +31,11 @@ export class CustomerCartComponent implements OnInit {
     this.data = this.cartService.fetchCart();
     this.viewed = this.cartService.fetchViewed();
 
-    this.ngOnInitMeta();
-    this.ngOnInitForm();
+    this.initMetadata();
+    this.initForm();
   }
 
-  ngOnInitForm() {
+  private initForm() {
     const startTime = this.alertService.startTime();
     this.service.getCustomer().subscribe(
       res => {
@@ -53,11 +53,7 @@ export class CustomerCartComponent implements OnInit {
     );
   }
 
-  get totalItem() {
-    return !this.data ? 0 : this.data.map(x => x.amount).reduce((a, b) => a + b, 0);
-  }
-
-  ngOnInitMeta() {
+  private initMetadata() {
     if (!this.data) { return; }
     for (const i of this.data) {
       const startTime = this.alertService.startTime();
@@ -73,17 +69,21 @@ export class CustomerCartComponent implements OnInit {
     }
   }
 
-  clickRemoveCart(object) {
+  get totalItem() {
+    return !this.data ? 0 : this.data.map(x => x.amount).reduce((a, b) => a + b, 0);
+  }
+
+  onRemoveCart(object) {
     this.data = this.data.filter(x => x.isbn !== object.isbn);
     this.cartService.removeCart(object);
   }
 
-  clickClearCart() {
+  onClearCart() {
     this.data = [];
     this.cartService.clearCart();
   }
 
-  clickSubmit() {
+  onSubmit() {
     const orderDetails = [];
     for (const i of this.data) {
       orderDetails.push( { bookIsbn: i.isbn, amount: i.amount } );

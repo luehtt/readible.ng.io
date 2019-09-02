@@ -33,7 +33,7 @@
         each one
       </h6>
 
-      <!--3 card section-->
+      <!-- card section-->
       <div class="row my-3">
         <div class="card-group col-sm-4">
           <div class="card bordered bg-success">
@@ -60,8 +60,7 @@
           </div>
         </div>
       </div>
-
-      <!--end 4 card section-->
+      <!--end card section-->
 
       <div class="mt-2 text-justify">{{ data.info }}</div>
       <hr />
@@ -73,10 +72,10 @@
       </div>
 
       <div class="input-group mt-3 mb-4">
-        <input (change)="changeAmount($event.target.value)" [value]="amount" class="form-control" min="0" step="1" style="max-width: 100px" type="number" />
+        <input (change)="onChangeAmount($event.target.value)" [value]="amount" class="form-control" min="0" step="1" style="max-width: 100px" type="number" />
         <div class="input-group-append">
-          <button (click)="clickAddCart()" class="btn btn-success" type="button">Add to cart</button>
-          <button (click)="clickClearCart()" class="btn btn-secondary" type="button">Clear</button>
+          <button (click)="onAddCart()" class="btn btn-success" type="button">Add to cart</button>
+          <button (click)="onClearCart()" class="btn btn-secondary" type="button">Clear</button>
         </div>
       </div>
       <a [routerLink]="'../'">Back to index</a> | <a [routerLink]="'/customer/cart'">Go to my cart</a>
@@ -108,7 +107,7 @@
 
       <!--this angular built-in routerLink cannot use with link having backslash or any other special character-->
       <div class="mt-3">
-        <button (click)="clickComment(null)" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
+        <button (click)="onOpenComment(null)" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
         <a *ngIf="auth == false" [href]="'/login?redirect=' + url" class="btn btn-secondary">Login to comment</a>
       </div>
     </div>
@@ -119,12 +118,12 @@
         <div class="card-body">
           <form [formGroup]="form">
               <div class="mb-2">
-                Select the stars: <ngb-rating (rateChange)="changeRating($event)" [rate]="comment.rating" class="h4 text-warning mb-0" max="5"></ngb-rating>
+                Select the stars: <ngb-rating (rateChange)="onChangeRating($event)" [rate]="comment.rating" class="h4 text-warning mb-0" max="5"></ngb-rating>
               </div>
               <div class="mb-2">Comment</div>
               <textarea class="form-control" formControlName="comment" placeholder="enter the comment" rows="3" type="text"></textarea>
               <div class="form-group text-center mt-3 mb-0">
-                  <button (click)="clickSummit()" class="btn btn-primary mr-1" type="button">Submit</button>
+                  <button (click)="onSubmitComment()" class="btn btn-primary mr-1" type="button">Submit</button>
                   <button (click)="commentDialog = false" class="btn btn-secondary" type="button">Close</button>
               </div>
           </form>
@@ -142,8 +141,8 @@
         <ngb-rating [rate]="i.rating" [readonly]="true" class="h5 text-warning mb-0" max="5"></ngb-rating>
         <div class="text-justify">{{ i.comment }}</div>
         <div *ngIf="i.customerId == customerId">
-          <button class="btn btn-sm btn-pill btn-primary mr-2" (click)="clickComment(i)">Edit</button>
-          <button class="btn btn-sm btn-pill btn-danger" (click)="clickDeleteComment(i.id)">Delete</button>
+          <button class="btn btn-sm btn-pill btn-primary mr-2" (click)="onOpenComment(i)">Edit</button>
+          <button class="btn btn-sm btn-pill btn-danger" (click)="onDeleteComment(i.id)">Delete</button>
         </div>
       </div>
       <!--end list of comment section-->

@@ -33,12 +33,12 @@ export class OrderListComponent implements OnInit {
     this.fetchData();
   }
 
-  changeStatus(value: string) {
+  onSelectStatus(value: string) {
     this.status = value;
     this.fetchData();
   }
 
-  fetchData() {
+  private fetchData() {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.fetch(this.status).subscribe(

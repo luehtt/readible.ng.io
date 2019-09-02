@@ -2,10 +2,10 @@
   <app-alert-message></app-alert-message>
 
   <div class="mb-3">
-    <button (click)="changeStatus('pending')" class="btn btn-primary mr-1" type="button">Pending</button>
-    <button (click)="changeStatus('delivering')" class="btn btn-primary mr-1" type="button">Delivering</button>
-    <button (click)="changeStatus('success')" class="btn btn-success mr-1" type="button">Success</button>
-    <button (click)="changeStatus('failed')" class="btn btn-secondary" type="button">Failed</button>
+    <button (click)="onSelectStatus('pending')" class="btn btn-primary mr-1" type="button">Pending</button>
+    <button (click)="onSelectStatus('delivering')" class="btn btn-primary mr-1" type="button">Delivering</button>
+    <button (click)="onSelectStatus('success')" class="btn btn-success mr-1" type="button">Success</button>
+    <button (click)="onSelectStatus('failed')" class="btn btn-secondary" type="button">Failed</button>
     <span class="float-right">
         <a class="btn btn-link" [routerLink]="'/customer/cart'">Go to Cart</a> |
         <a class="btn btn-link" [routerLink]="'/shop'">Go to Shop</a>

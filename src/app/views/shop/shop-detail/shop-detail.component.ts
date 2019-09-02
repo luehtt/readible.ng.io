@@ -46,10 +46,10 @@ export class ShopDetailComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
       this.data = res;
-      this.ngOnInitForm();
-      this.ngOnInitRating();
-      this.ngOnInitBookcart();
-      this.ngOnInitViewed();
+      this.initForm();
+      this.initBookRating();
+      this.initBookcart();
+      this.initBookViewed();
       this.alertService.success(startTime, 'GET');
     }, err => {
       this.alertService.failed(err);
@@ -57,18 +57,22 @@ export class ShopDetailComponent implements OnInit {
     });
   }
 
-  ngOnInitBookcart() {
+  private initBookcart() {
     this.bookcart = this.cartService.getCart(this.data.isbn);
     if (!this.bookcart) { this.bookcart = new Cart(this.data, 0); }
     this.amount = this.bookcart.amount;
   }
 
-  ngOnInitRating() {
+  private initBookRating() {
     this.data.rating = this.data.bookComments.length === 0 ? 0 : this.data.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / this.data.bookComments.length;
     this.ratings = this.service.mapRating(this.data.bookComments, 5, 'rating');
   }
 
-  ngOnInitForm() {
+  private initBookViewed() {
+    this.cartService.addViewed(this.data);
+  }
+
+  private initForm() {
     this.form = this.formBuilder.group({
       comment: [''],
     });
@@ -76,34 +80,26 @@ export class ShopDetailComponent implements OnInit {
     this.comment.rating = 3;
   }
 
-  ngOnInitViewed() {
-    this.cartService.addViewed(this.data);
-  }
-
-  clickAddCart() {
+  onAddCart() {
     this.cartService.addCart(this.data, this.amount);
     this.bookcart = this.cartService.getCart(this.data.isbn);
   }
 
-  clickClearCart() {
+  onClearCart() {
     this.amount = 0;
     this.cartService.addCart(this.data, this.amount);
     this.bookcart = this.cartService.getCart(this.data.isbn);
   }
 
-  changeAmount(value: string) {
+  onChangeAmount(value: string) {
     this.amount = parseInt(value, 10);
   }
 
-  changeRating(value) {
+  onChangeRating(value) {
     this.comment.rating = value;
   }
 
-  clickSummit() {
-    if (this.commentEditing === true) { this.updateComment(); } else { this.storeComment(); }
-  }
-
-  clickComment(item: BookComment) {
+  onOpenComment(item: BookComment) {
     this.commentDialog = true;
 
     if (!item) {
@@ -119,6 +115,10 @@ export class ShopDetailComponent implements OnInit {
     }
   }
 
+  onSubmitComment() {
+    if (this.commentEditing === true) { this.updateComment(); } else { this.storeComment(); }
+  }
+
   private storeComment() {
     this.comment.comment = this.form.controls.comment.value;
     this.comment.customerId = this.customerId;
@@ -128,8 +128,8 @@ export class ShopDetailComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.commentService.post(this.comment).subscribe(res => {
         this.data.bookComments.unshift(res);
-        this.ngOnInitRating();
-        this.ngOnInitForm();
+        this.initBookRating();
+        this.initForm();
 
         this.commentDialog = false;
         this.comment = null;
@@ -152,8 +152,8 @@ export class ShopDetailComponent implements OnInit {
         item.rating = res.rating;
         item.comment = res.comment;
         item.updatedAt = res.updatedAt;
-        this.ngOnInitRating();
-        this.ngOnInitForm();
+        this.initBookRating();
+        this.initForm();
 
         this.alertService.success(startTime, 'PUT');
         this.commentDialog = false;
@@ -165,13 +165,13 @@ export class ShopDetailComponent implements OnInit {
     );
   }
 
-  clickDeleteComment(id: number) {
+  onDeleteComment(id: number) {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.commentService.destroy(id).subscribe(res => {
         this.data.bookComments = this.data.bookComments.filter(x => x.id !== res.id);
-        this.ngOnInitRating();
-        this.ngOnInitForm();
+        this.initBookRating();
+        this.initForm();
 
         this.alertService.success(startTime, 'DELETE');
         this.commentDialog = false;

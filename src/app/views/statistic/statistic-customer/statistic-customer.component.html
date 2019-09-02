@@ -1,6 +1,6 @@
 <div class="row less-gutters justify-content-center">
   <div class="col-xl-2 col-md-2 mb-1 mb-mb-0">
-    <select class="form-control" [(ngModel)]="selectedValue" (change)="selectValue()">
+    <select class="form-control" [(ngModel)]="selectedValue" (change)="onSelectValue()">
       <option value="order">Total order</option>
       <option value="item">Total item</option>
       <option value="price">Total price</option>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="col-xl-1 col-md-2 mb-1 mb-md-0">
-    <button class="btn my-0 w-100 no-shadow btn-outline-primary" (click)="selectRange()" type="button"><i class="fas fa-search"></i>
+    <button class="btn my-0 w-100 no-shadow btn-outline-primary" (click)="onSelectRange()" type="button"><i class="fas fa-search"></i>
     </button>
   </div>
 </div>

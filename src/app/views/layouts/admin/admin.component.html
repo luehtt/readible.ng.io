@@ -31,7 +31,10 @@
             <a class="nav-link"><i class="fas fa-bell"></i> Message</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" [routerLink]="''" (click)="clickLogout()"><i class="fas fa-sign-out-alt"></i> Log out</a>
+            <a class="nav-link" [routerLink]="'/admin/account'"><i class="fas fa-user"></i> Account</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" [routerLink]="''" (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Log out</a>
           </li>
         </ul>
       </div>

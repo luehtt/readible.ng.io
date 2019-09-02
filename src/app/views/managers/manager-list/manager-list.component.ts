@@ -52,10 +52,10 @@ export class ManagerListComponent implements OnInit {
       }
     );
 
-    this.ngOnInitForm();
+    this.initForm();
   }
 
-  ngOnInitForm() {
+  private initForm() {
     const recommendedYear = new Date().getFullYear() - 40;
 
     this.form = this.formBuilder.group({
@@ -99,7 +99,7 @@ export class ManagerListComponent implements OnInit {
     if (year < Const.REGISTER_LOWER_LIMIT) { this.customValidator.birth = false; }
   }
 
-  storeManager() {
+  onSubmit() {
     // validate built-in validator
     if (this.form.invalid) {
       FormFunc.touchControls(this.form.controls);

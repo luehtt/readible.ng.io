@@ -63,7 +63,7 @@ export class BookListComponent implements OnInit {
         this.data = res[0];
         this.categories = res[1];
         this.alertService.success(startTime, 'GET');
-        this.ngOnInitForm();
+        this.initForm();
         this.create = new Book();
       },
       err => {
@@ -73,7 +73,7 @@ export class BookListComponent implements OnInit {
     );
   }
 
-  ngOnInitForm() {
+  private initForm() {
     this.form = this.formBuilder.group({
       isbn: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       title: ['', [Validators.required, Validators.maxLength(255)]],
@@ -118,7 +118,7 @@ export class BookListComponent implements OnInit {
     }
   }
 
-  onChangeImage(event) {
+  onUploadImage(event) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       FileFunc.convertFileToBase64(file)
@@ -132,7 +132,7 @@ export class BookListComponent implements OnInit {
     }
   }
 
-  clickSummit() {
+  onSubmit() {
     if (this.form.invalid) {
       FormFunc.touchControls(this.form.controls);
       return;
@@ -165,8 +165,8 @@ export class BookListComponent implements OnInit {
     );
   }
 
-  resetSummit() {
-    this.ngOnInitForm();
+  private resetSummit() {
+    this.initForm();
     this.create = new Book();
     this.createDialog = false;
     this.createFilename = '';

@@ -33,7 +33,7 @@ export class OrderDetailComponent implements OnInit {
     );
   }
 
-  clickStatus(value) {
+  onChangeStatus(value) {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.putStatus(this.data, value).subscribe(

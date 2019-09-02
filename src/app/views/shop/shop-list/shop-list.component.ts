@@ -57,7 +57,7 @@ export class ShopListComponent implements OnInit {
         this.pagination = res.pagination;
         this.data = res.data;
         this.alertService.success(startTime, 'GET');
-        this.mapCommentRating();
+        this.calcCommentRating();
       }, err => {
         this.alertService.failed(err);
       });
@@ -81,7 +81,7 @@ export class ShopListComponent implements OnInit {
       this.pagination = res.pagination;
       this.data = res.data;
       this.alertService.success(startTime, 'GET');
-      this.mapCommentRating();
+      this.calcCommentRating();
     }, err => {
       this.alertService.failed(err);
     });
@@ -99,7 +99,7 @@ export class ShopListComponent implements OnInit {
       this.pagination = res.pagination;
       this.data = res.data;
       this.alertService.success(startTime, 'GET');
-      this.mapCommentRating();
+      this.calcCommentRating();
     }, err => {
       this.alertService.failed(err);
     });
@@ -111,7 +111,7 @@ export class ShopListComponent implements OnInit {
     this.onPageChange(1);
   }
 
-  mapCommentRating() {
+  private calcCommentRating() {
     for (const i of this.data) {
       const n = i.bookComments.length;
       i.rating = n === 0 ? 0 : i.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / i.bookComments.length;

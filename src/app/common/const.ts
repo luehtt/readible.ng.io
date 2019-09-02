@@ -3,14 +3,14 @@ export const Const = {
   THIS_URL: 'http://localhost:4200/',
   PLACEHOLDER_URL: 'https://via.placeholder.com/',
   RETRY_ATTEMPT: 3,
-  REGISTER_LOWER_LIMIT: 15,
+  REGISTER_LOWER_LIMIT: 12,
   REGISTER_UPPER_LIMIT: 100,
   PAGE_SIZE_SMALLER: 15,
   PAGE_SIZE_DEFAULT: 30,
   PAGE_SIZE_HIGHER: 60,
   PAGE_SIZE_HIGHEST: 120,
   LIMIT_VIEWED_BOOK: 6,
-  INITIAL_YEAR: 2018,
+  INITIAL_YEAR: new Date().getFullYear() - 3,
   LANGUAGE: ['English', 'Português', 'Français', 'العربية', '日本語', '한국어', '中文', 'Tiếng Việt']
 };
 
@@ -43,6 +43,7 @@ export const FormMessage = {
   EMAIL_EXISTED: 'The email has existed in the database',
   CONFIRM_PASSWORD_MISMATCHED: 'The confirm password is not the same as password',
   REGISTER_AGE_LIMIT: 'The age must be higher than ' + Const.REGISTER_LOWER_LIMIT + ' and lower than ' + Const.REGISTER_UPPER_LIMIT,
+  CONFIRM_PASSWORD_ERROR: 'The two password does not match'
 };
 
 export const ColorCode = {

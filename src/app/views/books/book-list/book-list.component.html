@@ -67,7 +67,7 @@
             <label class="col-sm-4">Image</label>
             <div class="col-sm-8">
               <div class="custom-file">
-                <input type="file" class="custom-file-input" (change)="onChangeImage($event)"/>
+                <input type="file" class="custom-file-input" (change)="onUploadImage($event)"/>
                 <label class="custom-file-label">{{ createFilename }}</label>
               </div>
             </div>
@@ -121,7 +121,7 @@
 
         <div class="form-group mt-3 ml-3">
           <button type="button" class="btn btn-secondary mr-2" (click)="createDialog = false">Close</button>
-          <button type="button" class="btn btn-primary" (click)="clickSummit()">Save changes</button>
+          <button type="button" class="btn btn-primary" (click)="onSubmit()">Save changes</button>
         </div>
       </div>
     </form>

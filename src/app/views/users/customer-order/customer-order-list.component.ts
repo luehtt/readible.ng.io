@@ -20,7 +20,7 @@ export class CustomerOrderListComponent implements OnInit {
     this.fetchData();
   }
 
-  fetchData() {
+  private fetchData() {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.fetchCustomer(this.status).subscribe(
@@ -34,7 +34,7 @@ export class CustomerOrderListComponent implements OnInit {
     );
   }
 
-  changeStatus(value: string) {
+  onSelectStatus(value: string) {
     this.status = value;
     this.fetchData();
   }

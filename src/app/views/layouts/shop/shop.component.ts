@@ -21,7 +21,7 @@ export class ShopComponent implements OnInit {
     this.loggedIn = this.authService.isLogged();
   }
 
-  clickLogout() {
+  onLogout() {
     this.authService.logout();
   }
 

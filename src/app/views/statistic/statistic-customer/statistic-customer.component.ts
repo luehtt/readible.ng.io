@@ -44,11 +44,11 @@ export class StatisticCustomerComponent implements OnInit {
     this.initOrderTimestamp();
   }
 
-  selectValue() {
+  onSelectValue() {
     this.getData();
   }
 
-  selectRange() {
+  onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
     this.fromDate = new Date(FormFunc.fromNgbDateToJson(this.fromDateNgb));
     this.toDate = new Date(FormFunc.fromNgbDateToJson(this.toDateNgb));
@@ -68,7 +68,7 @@ export class StatisticCustomerComponent implements OnInit {
       this.toDate = toDate < this.latestTimestamp ? toDate : this.latestTimestamp;
       this.fromDate = new Date();
       this.fromDate.setDate(this.toDate.getDate() - 30);
-      this.selectValue();
+      this.onSelectValue();
     });
   }
 

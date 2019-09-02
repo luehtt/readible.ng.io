@@ -25,12 +25,6 @@ export class BookCategoryListComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private service: BookCategoryService, private alertService: AlertMessageService) { }
 
-  ngOnInitForm() {
-    this.form = this.formBuilder.group({
-      name: ['', [Validators.required]],
-    });
-  }
-
   ngOnInit() {
     this.alertService.clear();
 
@@ -38,10 +32,16 @@ export class BookCategoryListComponent implements OnInit {
     this.service.fetch().subscribe(res => {
       this.data = res;
       this.alertService.success(startTime, 'GET');
-      this.ngOnInitForm();
+      this.initForm();
       this.item = new BookCategory();
     }, err => {
       this.alertService.failed(err);
+    });
+  }
+
+  private initForm() {
+    this.form = this.formBuilder.group({
+      name: ['', [Validators.required]],
     });
   }
 
@@ -59,7 +59,7 @@ export class BookCategoryListComponent implements OnInit {
     this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
   }
 
-  clickEdit(item: BookCategory) {
+  onEdit(item: BookCategory) {
     this.itemDialog = true;
 
     if (!item) {
@@ -73,7 +73,7 @@ export class BookCategoryListComponent implements OnInit {
     }
   }
 
-  clickSummit() {
+  onSubmit() {
     if (this.itemEditing === true) { this.updateItem(); } else { this.storeItem(); }
   }
 
@@ -116,13 +116,13 @@ export class BookCategoryListComponent implements OnInit {
     });
   }
 
-  resetSummit() {
+  private resetSummit() {
     this.item = new BookCategory();
     this.itemDialog = false;
-    this.ngOnInitForm();
+    this.initForm();
   }
 
-  clickDelete(id: number) {
+  onDelete(id: number) {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.destroy(id).subscribe(res => {

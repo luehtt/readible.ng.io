@@ -22,18 +22,18 @@ export class LoginComponent implements OnInit {
               private service: AuthService, private alertService: AlertMessageService, private sessionService: SessionService) { }
 
   ngOnInit() {
-    this.ngOnInitForm();
+    this.initForm();
     this.redirect = this.route.snapshot.queryParams.redirect;
   }
 
-  ngOnInitForm() {
+  private initForm() {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
   }
 
-  clickSummit() {
+  onSubmit() {
     if (this.form.invalid) {
       FormFunc.touchControls(this.form.controls);
       return;
