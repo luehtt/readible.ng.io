@@ -38,7 +38,6 @@ export class StatisticOrderComponent implements OnInit {
   selectedRecent: string;
   latestTimestamp: Date;
   oldestTimestamp: Date;
-  error: string;
   data: OrderStatistic[];
 
   constructor(private formBuilder: FormBuilder, private service: StatisticService, private alertService: AlertMessageService) {}
@@ -85,15 +84,17 @@ export class StatisticOrderComponent implements OnInit {
   }
 
   selectRange() {
-    this.error = null;
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
     this.fromDate = new Date(FormFunc.fromNgbDateToJson(this.fromDateNgb));
     this.toDate = new Date(FormFunc.fromNgbDateToJson(this.toDateNgb));
 
-    if (this.fromDate >= this.toDate) { this.error = this.SELECTED_DATE_MISMATCHED; }
-    if (this.selectedReference === 'day' && FormFunc.isSameMonth(this.fromDate, this.toDate)) { this.error = this.DURATION_TOO_SHORT; }
-    if (this.selectedReference === 'year' && FormFunc.isSameYear(this.fromDate, this.toDate)) { this.error = this.DURATION_TOO_SHORT; }
-    if (this.error) { return; }
+    this.alertService.clear();
+    if (this.fromDate >= this.toDate) { this.alertService.set(this.SELECTED_DATE_MISMATCHED, 'warning'); }
+    if (this.selectedReference === 'day' && FormFunc.tooLongDay(this.fromDate, this.toDate)) { this.alertService.set(this.DURATION_TOO_LONG, 'warning'); }
+    if (this.selectedReference === 'month' && FormFunc.tooLongMonth(this.fromDate, this.toDate)) { this.alertService.set(this.DURATION_TOO_LONG, 'warning'); }
+    if (this.selectedReference === 'month' && FormFunc.isSameMonth(this.fromDate, this.toDate)) { this.alertService.set(this.DURATION_TOO_SHORT, 'warning'); }
+    if (this.selectedReference === 'year' && FormFunc.isSameYear(this.fromDate, this.toDate)) { this.alertService.set(this.DURATION_TOO_SHORT, 'warning'); }
+    if (this.alertService.hasMessage()) { return; }
     this.getData();
   }
 
@@ -139,7 +140,7 @@ export class StatisticOrderComponent implements OnInit {
         break;
       case 'item':
         values = this.data.map(x => x.totalItem);
-        borderColor = ColorCode.VIOLET;
+        borderColor = ColorCode.BLUE;
         this.chartTitle = 'Total items sold ';
         break;
       case 'price':

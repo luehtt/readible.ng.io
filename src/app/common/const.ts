@@ -28,8 +28,8 @@ export const Endpoint = {
 };
 
 export const FormMessage = {
-  DURATION_TOO_LONG: 'The selected duration too long to request efficiently.',
-  DURATION_TOO_SHORT: 'The selected duration too short to request efficiently.',
+  DURATION_TOO_LONG: 'The selected duration too long to request.',
+  DURATION_TOO_SHORT: 'The selected duration too short to request.',
   SELECTED_DATE_MISMATCHED: 'The selected date is not optimized.',
   GENERAL_REQUIRED: 'This field is required and cannot be omitted',
   GENERAL_MAX_LENGTH: 'The length of this field has exceeded the requirement',

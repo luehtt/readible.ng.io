@@ -15,6 +15,10 @@ export class AlertMessageService {
     this.data = [];
   }
 
+  public hasMessage() {
+    return this.data.length !== 0;
+  }
+
   public clear() {
     this.data = [];
   }

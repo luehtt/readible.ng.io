@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col-xl-2 col-md-4 mb-1 mb-xl-0">
+<div class="row less-gutters">
+  <div class="col-xl-2 col-md-6 mb-1 mb-xl-0">
     <select class="form-control" [(ngModel)]="selectedValue" (change)="selectValue()">
       <option value="order">Total order</option>
       <option value="item">Total item</option>
@@ -7,7 +7,7 @@
     </select>
   </div>
 
-  <div class="col-xl-2 col-md-4 mb-1 mb-xl-0">
+  <div class="col-xl-2 col-md-6 mb-1 mb-xl-0">
     <select class="form-control" [(ngModel)]="selectedRecent" (change)="selectRecent()">
       <option value="week">Last 7 days</option>
       <option value="fortnight">Last 14 days</option>
@@ -16,15 +16,7 @@
     </select>
   </div>
 
-  <div class="col-xl-2 col-md-4 mb-xl-0 mb-1 mb-md-0">
-    <select class="form-control" [(ngModel)]="selectedReference">
-      <option value="day">Day</option>
-      <option value="month">Month</option>
-      <option value="year">Year</option>
-    </select>
-  </div>
-
-  <div class="col-xl-2 col-md-4 mb-1 mb-md-0">
+  <div class="col-xl-3 col-md-4 mb-1 mb-md-0">
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="fromDateNgb" ngbDatepicker #ngToDate="ngbDatepicker"/>
       <div class="input-group-append">
@@ -33,7 +25,7 @@
     </div>
   </div>
 
-  <div class="col-xl-2 col-md-4 mb-1 mb-md-0">
+  <div class="col-xl-3 col-md-4 mb-1 mb-md-0">
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="toDateNgb" ngbDatepicker #ngFromDate="ngbDatepicker"/>
       <div class="input-group-append">
@@ -42,13 +34,13 @@
     </div>
   </div>
 
-  <div class="col-xl-2 col-md-2">
-    <button class="btn btn-info btn-default my-0 w-100 no-shadow" (click)="selectRange()" type="button"><i class="fas fa-search"></i></button>
+  <div class="col-xl-2 col-md-4 mb-xl-0 mb-1 mb-md-0">
+    <select class="form-control" [(ngModel)]="selectedReference" (change)="selectRange()">
+      <option value="day">Day</option>
+      <option value="month">Month</option>
+      <option value="year">Year</option>
+    </select>
   </div>
-</div>
-
-<div class="mt-2 text-center" *ngIf="error && error != ''">
-  <span class="text-danger">{{error}}</span>
 </div>
 
 <div class="mt-5 chart-container" style="height: 65vh; width: 100%">

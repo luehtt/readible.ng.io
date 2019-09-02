@@ -145,6 +145,29 @@ export class FormFunc {
   static isSameYear(date1: Date, date2: Date): boolean {
     return date1.getFullYear() === date2.getFullYear();
   }
+
+  static tooLongDay(date1: Date, date2: Date): boolean {
+    return this.diffDayBetween(date1, date2) > 60;
+  }
+
+  static tooLongMonth(date1: Date, date2: Date): boolean {
+    return this.diffMonthBetween(date1, date2) > 24;
+  }
+
+  static diffDayBetween(date1: Date, date2: Date): number {
+    const each = 86000000;
+    const difference = Math.abs(date2.getTime() - date1.getTime());
+    return Math.round(difference / each);
+  }
+
+  static diffMonthBetween(date1: Date, date2: Date): number {
+    if (date1.getTime() > date2.getTime()) { [date1, date2] = [date2, date1]; }
+    let months = (date2.getFullYear() - date1.getFullYear()) * 12;
+    months -= date1.getMonth() + 1;
+    months += date2.getMonth();
+    return months <= 0 ? 0 : months;
+  }
+
 }
 
 export class ImageFunc {

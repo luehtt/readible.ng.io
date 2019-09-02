@@ -13,9 +13,6 @@ import {DataFunc, FormFunc} from '../../../common/function';
   templateUrl: './statistic-customer.component.html'
 })
 export class StatisticCustomerComponent implements OnInit {
-
-  DURATION_TOO_LONG = FormMessage.DURATION_TOO_LONG;
-  DURATION_TOO_SHORT = FormMessage.DURATION_TOO_SHORT;
   SELECTED_DATE_MISMATCHED = FormMessage.SELECTED_DATE_MISMATCHED;
 
   ageChart: any;
@@ -37,7 +34,6 @@ export class StatisticCustomerComponent implements OnInit {
   selectedValue: string;
   latestTimestamp: Date;
   oldestTimestamp: Date;
-  error: string;
   ageData: OrderStatistic[];
   genderData: OrderStatistic[];
 
@@ -53,13 +49,13 @@ export class StatisticCustomerComponent implements OnInit {
   }
 
   selectRange() {
-    this.error = null;
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
     this.fromDate = new Date(FormFunc.fromNgbDateToJson(this.fromDateNgb));
     this.toDate = new Date(FormFunc.fromNgbDateToJson(this.toDateNgb));
 
-    if (this.fromDate >= this.toDate) { this.error = this.SELECTED_DATE_MISMATCHED; }
-    if (this.error) { return; }
+    this.alertService.clear();
+    if (this.fromDate >= this.toDate) { this.alertService.set(this.SELECTED_DATE_MISMATCHED, 'warning'); }
+    if (this.alertService.hasMessage()) { return; }
     this.getData();
   }
 
@@ -170,7 +166,7 @@ export class StatisticCustomerComponent implements OnInit {
         labels,
         datasets: [ {
           data: values,
-          backgroundColor: [ColorCode.TEAL, ColorCode.ROSE],
+          backgroundColor: [ColorCode.VIOLET, ColorCode.ROSE],
           steppedLine: 'middle'
         } ]
       },

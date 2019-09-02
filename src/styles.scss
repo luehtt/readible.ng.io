@@ -171,6 +171,11 @@ body {
     border-top-right-radius: 4px;
   }
 
+  .input-group .input-group-append &.btn-outline-secondary {
+    border-color: rgb(206, 212, 218) !important;
+    color: rgb(206, 212, 218) !important;
+  }
+
   // customize etc
   &:disabled {
     opacity: 0.65;
@@ -181,11 +186,14 @@ body {
     margin: 0;
     box-shadow: none;
     color: #fff;
-    background-color: $color-cyan;
+    background-color: $color-blue;
     border-radius: .25rem;
     height: calc(1.5em + .75rem + 2px);
+    width: 2.8rem;
+    padding-left: .25rem;
+    padding-right: .25rem;
 
-    &:hover { background-color: $color-cyan-focus; }
+    &:hover { background-color: $color-blue-focus; }
   }
 
   // customize shape
