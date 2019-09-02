@@ -13,8 +13,9 @@ import {Const} from '../../../common/const';
 export class BookCategoryListComponent implements OnInit {
 
   data: BookCategory[];
-  createDialog = false;
-  create: BookCategory;
+  itemDialog = false;
+  itemEditing = false;
+  item: BookCategory;
   form: FormGroup;
   filter = '';
   page = 1;
@@ -38,7 +39,7 @@ export class BookCategoryListComponent implements OnInit {
       this.data = res;
       this.alertService.success(startTime, 'GET');
       this.ngOnInitForm();
-      this.create = new BookCategory();
+      this.item = new BookCategory();
     }, err => {
       this.alertService.failed(err);
     });
@@ -58,17 +59,34 @@ export class BookCategoryListComponent implements OnInit {
     this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
   }
 
+  clickEdit(item: BookCategory) {
+    this.itemDialog = true;
+
+    if (!item) {
+      this.item = new BookCategory();
+      this.itemEditing = false;
+      this.form.controls.name.setValue('');
+    } else {
+      this.item = item;
+      this.itemEditing = true;
+      this.form.controls.name.setValue(item.name);
+    }
+  }
+
   clickSummit() {
+    if (this.itemEditing === true) { this.updateItem(); } else { this.storeItem(); }
+  }
+
+  private storeItem() {
     if (this.form.invalid) {
       FormFunc.touchControls(this.form.controls);
       return;
     }
 
-    this.create.name = this.form.controls.name.value;
-
+    this.item.name = this.form.controls.name.value;
     this.alertService.clear();
     const startTime = this.alertService.startTime();
-    this.service.post(this.create).subscribe(res => {
+    this.service.post(this.item).subscribe(res => {
       this.data.push(res);
       this.alertService.success(startTime, 'GET');
       this.resetSummit();
@@ -77,10 +95,43 @@ export class BookCategoryListComponent implements OnInit {
     });
   }
 
+  private updateItem() {
+    if (this.form.invalid) {
+      FormFunc.touchControls(this.form.controls);
+      return;
+    }
+
+    this.item.name = this.form.controls.name.value;
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    this.service.put(this.item).subscribe(res => {
+      const update = this.data.find(x => x.id === res.id);
+      update.name = res.name;
+      update.updatedAt = res.updatedAt;
+
+      this.alertService.success(startTime, 'GET');
+      this.resetSummit();
+    }, err => {
+      this.alertService.failed(err);
+    });
+  }
+
   resetSummit() {
-    this.create = new BookCategory();
-    this.createDialog = false;
+    this.item = new BookCategory();
+    this.itemDialog = false;
     this.ngOnInitForm();
   }
 
+  clickDelete(id: number) {
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    this.service.destroy(id).subscribe(res => {
+      this.data = this.data.filter(x => x.id !== res.id);
+
+      this.alertService.success(startTime, 'GET');
+      this.resetSummit();
+    }, err => {
+      this.alertService.failed(err);
+    });
+  }
 }

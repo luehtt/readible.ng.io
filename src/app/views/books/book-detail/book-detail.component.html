@@ -144,8 +144,8 @@
           <div class="form-group text-center mt-3">
             <a [routerLink]="'../'" class="btn btn-secondary mr-1">Back</a>
             <button type="button" class="btn btn-primary mr-1" (click)="clickSummit()">Update</button>
-            <button type="button" class="btn btn-unique mr-1" (click)="clickRefreshButton()">Refresh</button>
-            <button type="button" class="btn btn-danger" ngbTooltip="Not implemented yet">Delete</button>
+            <button type="button" class="btn btn-unique mr-1" (click)="clickRefresh()">Refresh</button>
+            <button type="button" class="btn btn-danger" (click)="clickDelete()">Delete</button>
           </div>
         </form>
       </div>

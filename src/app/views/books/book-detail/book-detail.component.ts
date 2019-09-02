@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Subject, Observable, merge, forkJoin} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
@@ -53,6 +53,7 @@ export class BookDetailComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private service: BookService,
     private alertService: AlertMessageService,
     public placeholderService: PlaceholderService,
@@ -158,7 +159,7 @@ export class BookDetailComponent implements OnInit {
     );
   }
 
-  clickRefreshButton() {
+  clickRefresh() {
     const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
       this.data = res;
@@ -220,6 +221,18 @@ export class BookDetailComponent implements OnInit {
     );
   }
 
+  clickDelete() {
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    this.service.destroy(this.id).subscribe(res => {
+        this.alertService.success(startTime, 'DELETE');
+        this.router.navigate(['/']);
+      },
+      err => {
+        this.alertService.failed(err);
+      }
+    );
+  }
 
   clickDeleteComment(id: number) {
     this.alertService.clear();

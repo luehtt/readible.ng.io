@@ -1,8 +1,8 @@
-<button *ngIf="createDialog == false" type="button" class="btn btn-primary mb-3" (click)="createDialog = true">Create book category</button>
+<button *ngIf="itemDialog == false" type="button" class="btn btn-primary mb-3" (click)="clickEdit(null)">Create book category</button>
 
 <div class="row">
   <div class="col-xl-6 col-lg-8 col-md-10">
-    <div class="card" *ngIf="createDialog == true">
+    <div class="card" *ngIf="itemDialog == true">
       <div class="card-header h5">Create item</div>
       <div class="card-body">
         <form *ngIf="form" [formGroup]="form">
@@ -14,7 +14,7 @@
             </div>
           </div>
           <div class="form-group">
-            <button type="button" class="btn btn-secondary mr-2" (click)="createDialog = false">Close</button>
+            <button type="button" class="btn btn-secondary mr-2" (click)="itemDialog = false">Close</button>
             <button type="button" class="btn btn-primary" (click)="clickSummit()">Save changes</button>
           </div>
         </form>
@@ -47,7 +47,10 @@
           <td><ngb-highlight [result]="item.name" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.updatedAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="filter"></ngb-highlight></td>
-          <td><button class="btn btn-link text-danger" type="button" ngbTooltip="Not implemented yet">Delete</button></td>
+          <td>
+            <button class="btn btn-link text-primary" type="button" (click)="clickEdit(item)">Edit</button>
+            <button class="btn btn-link text-danger" type="button" (click)="clickDelete(item.id)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>

@@ -28,7 +28,7 @@ export class ShopDetailComponent implements OnInit {
   auth = false;
   form: FormGroup;
   commentDialog = false;
-  commentEditting = false;
+  commentEditing = false;
   comment: BookComment;
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
@@ -100,7 +100,7 @@ export class ShopDetailComponent implements OnInit {
   }
 
   clickSummit() {
-    if (this.commentEditting === true) { this.updateComment(); } else { this.storeComment(); }
+    if (this.commentEditing === true) { this.updateComment(); } else { this.storeComment(); }
   }
 
   clickComment(item: BookComment) {
@@ -108,13 +108,13 @@ export class ShopDetailComponent implements OnInit {
 
     if (!item) {
       this.comment = new BookComment();
-      this.commentEditting = false;
+      this.commentEditing = false;
       this.comment.rating = 3;
       this.comment.comment = '';
       this.form.controls.comment.setValue('');
     } else {
       this.comment = item;
-      this.commentEditting = true;
+      this.commentEditing = true;
       this.form.controls.comment.setValue(item.comment);
     }
   }
