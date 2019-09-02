@@ -56,9 +56,9 @@ export class BookDetailComponent implements OnInit {
     private router: Router,
     private service: BookService,
     private alertService: AlertMessageService,
-    public placeholderService: PlaceholderService,
     private categoryService: BookCategoryService,
-    private commentService: BookCommentService
+    private commentService: BookCommentService,
+    public placeholderService: PlaceholderService
   ) {}
 
   ngOnInit() {

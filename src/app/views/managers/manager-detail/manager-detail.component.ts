@@ -8,6 +8,7 @@ import {Const} from '../../../common/const';
 import {Order} from '../../../models/order';
 import {ManagerService} from '../../../services/manager.service';
 import {Manager} from '../../../models/manager';
+import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-manager-detail',
@@ -30,6 +31,7 @@ export class ManagerDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private service: ManagerService,
     private alertService: AlertMessageService,
+    public placeholderService: PlaceholderService
   ) {}
 
   ngOnInit() {

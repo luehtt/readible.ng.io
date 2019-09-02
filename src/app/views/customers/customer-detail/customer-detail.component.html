@@ -7,7 +7,7 @@
           <div class="col-md-4 text-center mb-3 mb-md-0">
             <img *ngIf="data.image && data.image != ''" [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="data.image" />
             <img *ngIf="!data.image || data.image == ''" [alt]="data.fullname" class="img-fluid rounded-circle mt-2"
-                 [src]="'https://via.placeholder.com/200/?text=' + data.fullname.substr(0, 1).toUpperCase()" />
+                 [src]="placeholderService.imgHolder(300, 300, data.fullname)" />
           </div>
 
           <div class="col-md-8">
@@ -123,7 +123,7 @@
           <th scope="col" (click)="onSortComment('bookIsbn')" class="cursor-pointer">ISBN</th>
           <th scope="col" (click)="onSortComment('rating')" class="cursor-pointer">Rating</th>
           <th scope="col" (click)="onSortComment('comment')" class="cursor-pointer">Comment</th>
-          <th scope="col" (click)="onSortComment('createdAt')" class="cursor-pointer">Commented at</th>
+          <th scope="col" (click)="onSortComment('updatedAt')" class="cursor-pointer">Timestamp</th>
           <th scope="col" (click)="onSortOrder(null)" class="cursor-pointer">Action</th>
         </tr>
       </thead>
@@ -132,9 +132,9 @@
           <td><ngb-highlight [result]="item.bookIsbn" [term]="commentFilter"></ngb-highlight></td>
           <td><ngb-rating class="h5 text-warning" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
           <td><ngb-highlight [result]="item.comment" [term]="commentFilter"></ngb-highlight></td>
-          <td><ngb-highlight [result]="item.createdAt | date:'yyyy-MM-dd HH:mm:ss'" [term]="commentFilter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.updatedAt | date:'yyyy-MM-dd HH:mm:ss'" [term]="commentFilter"></ngb-highlight></td>
           <td>
-            <a class="btn btn-link text-primary" [routerLink]="'/admin/books/' + item.bookIsbn">View</a> |
+            <a class="btn btn-link text-primary mr-2" [routerLink]="'/admin/books/' + item.bookIsbn">View</a>
             <button type="button" class="btn btn-link text-danger" ngbTooltip="Not implemented yet">Delete</button>
           </td>
         </tr>

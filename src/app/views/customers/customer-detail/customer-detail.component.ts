@@ -7,6 +7,7 @@ import {CustomerService} from 'src/app/services/customer.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {DataFunc} from '../../../common/function';
 import {Const} from '../../../common/const';
+import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class CustomerDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private service: CustomerService,
     private alertService: AlertMessageService,
+    public placeholderService: PlaceholderService
   ) {}
 
   ngOnInit() {
@@ -44,6 +46,7 @@ export class CustomerDetailComponent implements OnInit {
       res => {
         this.data = res.customer;
         this.account = res.user;
+        console.log(res);
         this.alertService.success(startTime, 'GET');
       },
       err => {
