@@ -16,7 +16,7 @@
         </li>
         <li class="nav-item">
           <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i>
-            {{cartService.totalItem()}} item(s) in Cart</a>
+            Cart [{{cartService.totalItem()}}]</a>
         </li>
         <li class="nav-item">
           <a [routerLink]="'/customer/orders'" class="nav-link active"><i class="fas fa-clipboard-list"></i> Orders</a>
@@ -29,7 +29,7 @@
       <ul *ngIf="loggedIn == false" class="navbar-nav ml-auto pl-3 pl-md-0" style="font-size: 1rem !important">
         <li class="nav-item">
           <a [routerLink]="'/customer/cart'" class="nav-link active"><i class="fas fa-shopping-cart"></i>
-            {{cartService.totalItem()}} item(s) in Cart</a>
+            Cart [{{cartService.totalItem()}}]</a>
         </li>
         <li class="nav-item">
           <a [routerLink]="'/login'" class="nav-link active"><i class="fas fa-sign-in-alt"></i> Log in</a>

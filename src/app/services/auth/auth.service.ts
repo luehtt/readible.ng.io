@@ -28,7 +28,7 @@ export class AuthService {
 
   getToken(value: string): string {
     const token = this.sessionService.getTokenSessionJson();
-    return token[value];
+    return !token || !token[value] ? null : token[value];
   }
 
   isLogged(): boolean {

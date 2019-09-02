@@ -18,8 +18,8 @@ import {PlaceholderService} from '../../../services/common/placeholder.service';
   templateUrl: './shop-detail.component.html'
 })
 export class ShopDetailComponent implements OnInit {
-
   data: Book;
+  customerId: number;
   id: string;
   url: string;
   bookcart: Cart;
@@ -28,6 +28,7 @@ export class ShopDetailComponent implements OnInit {
   auth = false;
   form: FormGroup;
   commentDialog = false;
+  commentEditting = false;
   comment: BookComment;
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
@@ -38,6 +39,7 @@ export class ShopDetailComponent implements OnInit {
     this.url = window.location.href;
     this.id = this.route.snapshot.paramMap.get('id');
     this.auth = this.authService.isLogged();
+    this.customerId = parseInt(this.authService.getToken('nameid'), 10);
     this.alertService.clear();
 
     this.alertService.clear();
@@ -98,7 +100,28 @@ export class ShopDetailComponent implements OnInit {
   }
 
   clickSummit() {
+    if (this.commentEditting === true) { this.updateComment(); } else { this.storeComment(); }
+  }
+
+  clickComment(item: BookComment) {
+    this.commentDialog = true;
+
+    if (!item) {
+      this.comment = new BookComment();
+      this.commentEditting = false;
+      this.comment.rating = 3;
+      this.comment.comment = '';
+      this.form.controls.comment.setValue('');
+    } else {
+      this.comment = item;
+      this.commentEditting = true;
+      this.form.controls.comment.setValue(item.comment);
+    }
+  }
+
+  private storeComment() {
     this.comment.comment = this.form.controls.comment.value;
+    this.comment.customerId = this.customerId;
     this.comment.bookIsbn = this.id;
 
     this.alertService.clear();
@@ -107,9 +130,52 @@ export class ShopDetailComponent implements OnInit {
         this.data.bookComments.unshift(res);
         this.ngOnInitRating();
         this.ngOnInitForm();
+
         this.commentDialog = false;
         this.comment = null;
         this.alertService.success(startTime, 'POST');
+      },
+      err => {
+        this.alertService.failed(err);
+      }
+    );
+  }
+
+  private updateComment() {
+    this.comment.comment = this.form.controls.comment.value;
+    this.comment.customerId = this.customerId;
+
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    this.commentService.put(this.comment).subscribe(res => {
+        const item = this.data.bookComments.find(x => x.id === res.id);
+        item.rating = res.rating;
+        item.comment = res.comment;
+        item.updatedAt = res.updatedAt;
+        this.ngOnInitRating();
+        this.ngOnInitForm();
+
+        this.alertService.success(startTime, 'PUT');
+        this.commentDialog = false;
+        this.comment = null;
+      },
+      err => {
+        this.alertService.failed(err);
+      }
+    );
+  }
+
+  clickDeleteComment(id: number) {
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    this.commentService.destroy(id).subscribe(res => {
+        this.data.bookComments = this.data.bookComments.filter(x => x.id !== res.id);
+        this.ngOnInitRating();
+        this.ngOnInitForm();
+
+        this.alertService.success(startTime, 'DELETE');
+        this.commentDialog = false;
+        this.comment = null;
       },
       err => {
         this.alertService.failed(err);

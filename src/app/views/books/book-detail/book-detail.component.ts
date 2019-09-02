@@ -13,6 +13,7 @@ import {Const} from 'src/app/common/const';
 import {FormFunc, FileFunc, DataFunc, ImageFunc} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
+import {BookCommentService} from '../../../services/comment.service';
 
 @Component({
   selector: 'app-book-detail',
@@ -55,7 +56,8 @@ export class BookDetailComponent implements OnInit {
     private service: BookService,
     private alertService: AlertMessageService,
     public placeholderService: PlaceholderService,
-    private categoryService: BookCategoryService
+    private categoryService: BookCategoryService,
+    private commentService: BookCommentService
   ) {}
 
   ngOnInit() {
@@ -219,4 +221,18 @@ export class BookDetailComponent implements OnInit {
   }
 
 
+  clickDeleteComment(id: number) {
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    this.commentService.destroy(id).subscribe(res => {
+        this.data.bookComments = this.data.bookComments.filter(x => x.id !== res.id);
+        this.data.rating = this.data.bookComments.length === 0 ? 0 : this.data.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / this.data.bookComments.length;
+
+        this.alertService.success(startTime, 'DELETE');
+      },
+      err => {
+        this.alertService.failed(err);
+      }
+    );
+  }
 }

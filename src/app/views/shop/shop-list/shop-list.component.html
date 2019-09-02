@@ -1,12 +1,14 @@
 <div class="row">
   <div class="col-md-3 col-lg-2">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item p-1">
-        <button (click)="onSetFilter('')" class="btn btn-link py-0" type="button">All</button>
-      </li>
-      <li *ngFor="let i of categories" class="list-group-item p-1">
-        <button (click)="onSetFilter(i.name.toLowerCase())" class="btn btn-link py-0 text-left" type="button">{{ i.name }}</button>
-      </li>
+    <ul class="list-group list-group-flush border-0">
+      <div class="row no-gutters">
+          <li class="list-group-item p-1 col-md-12 col-sm-4 col-6">
+            <button (click)="onSetFilter('')" class="btn btn-link py-0" type="button">All</button>
+          </li>
+          <li *ngFor="let i of categories" class="list-group-item p-1 col-md-12 col-sm-4 col-6">
+            <button (click)="onSetFilter(i.name.toLowerCase())" class="btn btn-link py-0 text-left" type="button">{{ i.name }}</button>
+          </li>
+      </div>
     </ul>
   </div>
 

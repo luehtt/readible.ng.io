@@ -180,7 +180,7 @@
           <td><ngb-rating class="h5 text-warning" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
           <td class="text-justify"><ngb-highlight [result]="item.comment" [term]="commentFilter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="commentFilter"></ngb-highlight></td>
-          <td class="text-center"><button type="button" class="btn btn-link text-danger" ngbTooltip="Not implemented yet">Delete</button></td>
+          <td class="text-center"><button type="button" class="btn btn-link text-danger" (click)="clickDeleteComment(item.id)">Delete</button></td>
         </tr>
       </tbody>
     </table>

@@ -34,7 +34,7 @@
       </h6>
 
       <!--3 card section-->
-      <div class="row mt-3">
+      <div class="row my-3">
         <div class="card-group col-sm-4">
           <div class="card bordered bg-success">
             <div class="card-body py-2 px-3">
@@ -47,7 +47,7 @@
           <div class="card bordered bg-unique">
             <div class="card-body py-2 px-3">
               <strong><i class="fas fa-scroll"></i> Paperpack</strong>
-              <div class="h6 my-1">{{ data.page }}</div>
+              <div class="h6 my-1">{{ data.page }} pages</div>
             </div>
           </div>
         </div>
@@ -60,6 +60,7 @@
           </div>
         </div>
       </div>
+
       <!--end 4 card section-->
 
       <div class="mt-2 text-justify">{{ data.info }}</div>
@@ -97,29 +98,30 @@
       <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t2" class="h1 text-warning" max="5" style="margin-left: -.5rem !important"></ngb-rating>
 
       <div *ngFor="let i of ratings" class="row no-gutters">
-        <div class="col-3 pr-2">{{ i.name }} star(s)</div>
-        <div class="col-6 progress mt-1">
+        <div class="col-3 pr-1">{{ i.name }} <span class="h5 text-warning">&#9733;</span></div>
+        <div class="col-5 progress mt-1">
           <div [ngStyle]="{ width: '' + i.percent + '%' }" class="progress-bar bg-warning"></div>
         </div>
-        <div class="col-3 text-right pl-2">{{ i.sum }} vote(s)</div>
+        <div class="col-4 text-right pl-1">{{ i.sum }} votes</div>
       </div>
       <!--end rating section-->
 
       <!--this angular built-in routerLink cannot use with link having backslash or any other special character-->
       <div class="mt-3">
-        <button (click)="commentDialog = true" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
+        <button (click)="clickComment(null)" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
         <a *ngIf="auth == false" [href]="'/login?redirect=' + url" class="btn btn-secondary">Login to comment</a>
       </div>
     </div>
 
     <div class="col-md-8">
       <!--post new comment section-->
-      <div *ngIf="commentDialog == true && comment" class="card">
+      <div *ngIf="commentDialog == true && comment" class="card mb-4">
         <div class="card-body">
           <form [formGroup]="form">
               <div class="mb-2">
                 Select the stars: <ngb-rating (rateChange)="changeRating($event)" [rate]="comment.rating" class="h4 text-warning mb-0" max="5"></ngb-rating>
               </div>
+              <div class="mb-2">Comment</div>
               <textarea class="form-control" formControlName="comment" placeholder="enter the comment" rows="3" type="text"></textarea>
               <div class="form-group text-center mt-3 mb-0">
                   <button (click)="clickSummit()" class="btn btn-primary mr-1" type="button">Submit</button>
@@ -134,11 +136,15 @@
       <div *ngIf="data.bookComments.length == 0" class="text-center">Be the first one to comment!?</div>
       <div *ngFor="let i of data.bookComments" class="mb-3 pb-1 border-bottom">
         <div>
-          <strong>{{ i.customer.fullname }}</strong> commented at {{ i.createdAt | date: "yyyy-MM-dd hh:mm:ss z" }}
+          <strong>{{ i.customer.fullname }}</strong> commented at {{ i.updatedAt | date: "yyyy-MM-dd hh:mm:ss z" }}
         </div>
 
         <ngb-rating [rate]="i.rating" [readonly]="true" class="h5 text-warning mb-0" max="5"></ngb-rating>
         <div class="text-justify">{{ i.comment }}</div>
+        <div *ngIf="i.customerId == customerId">
+          <button class="btn btn-sm btn-pill btn-primary mr-2" (click)="clickComment(i)">Edit</button>
+          <button class="btn btn-sm btn-pill btn-danger" (click)="clickDeleteComment(i.id)">Delete</button>
+        </div>
       </div>
       <!--end list of comment section-->
     </div>

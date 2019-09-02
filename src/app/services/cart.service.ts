@@ -32,7 +32,7 @@ export class CartService {
 
   getCart(isbn: string): Cart {
     const data = this.fetchCart();
-    return data.find(x => x.isbn === isbn);
+    return !data ? null : data.find(x => x.isbn === isbn);
   }
 
   clearCart() {
@@ -97,10 +97,11 @@ export class CartService {
 
   addViewed(item: Book) {
     let data = this.fetchViewed();
-    data = data.filter(x => x.isbn !== item.isbn);
-    data.unshift(item);
-
-    if (data.length > this.LIMIT_VIEWED) { data.pop(); }
+    if (data ) {
+      data = data.filter(x => x.isbn !== item.isbn);
+      data.unshift(item);
+      if (data.length > this.LIMIT_VIEWED) { data.pop(); }
+    }
     this.setViewed(data);
   }
 }

@@ -6,10 +6,10 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { CartService } from '../../../services/cart.service';
 
 @Component({
-  selector: 'app-front',
-  templateUrl: './front.component.html'
+  selector: 'app-shop',
+  templateUrl: './shop.component.html'
 })
-export class FrontComponent implements OnInit {
+export class ShopComponent implements OnInit {
 
   loggedIn = false;
 

@@ -18,6 +18,10 @@ export class BookCommentService {
     return this.httpService.post(this.endpoint, data);
   }
 
+  put(data: BookComment): Observable<BookComment> {
+    return this.httpService.put(this.endpoint + '/' + data.id, data);
+  }
+
   destroy(id: number): Observable<BookComment> {
     return this.httpService.delete(this.endpoint + '/' + id);
   }

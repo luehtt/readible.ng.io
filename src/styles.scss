@@ -176,7 +176,6 @@ body {
     color: rgb(206, 212, 218) !important;
   }
 
-  // customize etc
   &:disabled {
     opacity: 0.65;
     cursor: default !important;
@@ -196,9 +195,18 @@ body {
     &:hover { background-color: $color-blue-focus; }
   }
 
+  &.btn-icon {
+    margin: 0;
+    box-shadow: none;
+    height: calc(1.5em + .75rem + 2px);
+    width: 2.8rem;
+    padding-left: .25rem;
+    padding-right: .25rem;
+  }
+
   // customize shape
   &.btn-normal { border-radius: $border-radius-sm !important; }
-  &.btn-square { border-radius: $border-radius-none !important; }
+  &.btn-btn-square { border-radius: $border-radius-none !important; }
   &.btn-round { border-radius: $border-radius-half !important; }
   &.btn-pill { border-radius: $border-radius-max !important; }
 
@@ -214,7 +222,6 @@ body {
     padding: .65rem 2rem !important;
     border-radius: $border-radius-lg;
   }
-
 
   // customize gradient color
   @mixin btn-color-gradient($color, $color-2, $color-focus, $color-2-focus) {
@@ -287,6 +294,7 @@ body {
     box-shadow: none;
     margin-top: 0;
     margin-bottom: 0;
+    height: auto !important;
   }
 }
 
@@ -458,6 +466,10 @@ svg {
 
   &.p-md .list-group-item {
     padding: .65rem 1.25rem;
+  }
+
+  &.border-0 .list-group-item {
+    border: 0 !important;
   }
 }
 

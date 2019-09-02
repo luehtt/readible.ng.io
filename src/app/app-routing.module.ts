@@ -9,7 +9,7 @@ import {RoleGuardService} from 'src/app/services/auth/role-guard.service';
 import {DashboardComponent} from 'src/app/views/dashboard/dashboard.component';
 import {LoginComponent} from 'src/app/views/auth/login/login.component';
 import {AdminComponent} from 'src/app/views/layouts/admin/admin.component';
-import {FrontComponent} from 'src/app/views/layouts/front/front.component';
+import {ShopComponent} from 'src/app/views/layouts/shop/shop.component';
 import {CustomerCartComponent} from 'src/app/views/users/customer-cart/customer-cart.component';
 import {RegisterComponent} from 'src/app/views/auth/register/register.component';
 import {BookCategoryListComponent} from 'src/app/views/books/book-category-list/book-category-list.component';
@@ -34,7 +34,7 @@ import {StatisticCustomerComponent} from './views/statistic/statistic-customer/s
 const routes: Routes = [
   {
     path: '',
-    component: FrontComponent,
+    component: ShopComponent,
     children: [
       {path: '', redirectTo: 'shop', pathMatch: 'full'},
       {path: 'login', component: LoginComponent},
@@ -71,7 +71,7 @@ const routes: Routes = [
 
   {
     path: 'customer',
-    component: FrontComponent,
+    component: ShopComponent,
     children: [
       {path: 'cart', component: CustomerCartComponent},
       {path: 'orders', component: CustomerOrderListComponent, pathMatch: 'full'},
@@ -97,7 +97,7 @@ const routes: Routes = [
     CustomerCartComponent, CustomerOrderListComponent, CustomerOrderDetailComponent,
     ShopListComponent, ShopDetailComponent,
     LoginComponent, RegisterComponent,
-    AdminComponent, FrontComponent,
+    AdminComponent, ShopComponent,
     AlertMessageComponent, FormErrorComponent, OrderStatusComponent,
     StatisticOrderComponent, StatisticCustomerComponent
   ]
