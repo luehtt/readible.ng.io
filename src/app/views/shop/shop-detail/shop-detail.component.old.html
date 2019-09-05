@@ -1,0 +1,151 @@
+<div *ngIf="data" class="container">
+  <app-alert-message></app-alert-message>
+
+  <div class="row">
+    <!--image section-->
+    <div class="col-md-4 mb-4 mb-md-0">
+      <img *ngIf="data.image && data.image != ''" [alt]="data.title" [src]="data.image" class="img-fluid mt-2" />
+      <img *ngIf="!data.image || data.image == ''" [alt]="data.title" [src]="placeholderService.imgHolder(250, 350, data.title)" class="img-fluid mt-2" />
+    </div>
+    <!--end image section-->
+
+    <!--info section-->
+    <div class="col-md-8">
+      <h3 class="mb-0">{{ data.title }}</h3>
+      <hr class="mb-0" />
+      <div>
+        <ng-template #t let-fill="fill">
+          <span [class.full]="fill === 100" class="star">
+            <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+          </span>
+        </ng-template>
+        <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t" class="h3 text-warning mr-3" max="5"></ngb-rating>
+        <span class="h6">{{ data.bookComments.length }} customer review</span>
+      </div>
+
+      <h6 class="mt-0">from <strong>{{ data.author }}</strong></h6>
+      <h6 class="mt-2"><strong>{{ data.publisher }}</strong> published on <strong>{{ data.published | date: "yyyy-MM-dd" }}</strong></h6>
+      <h6 class="mt-2">
+        <strong>
+          <span *ngIf="data.discount != 0" class="h4">{{ (data.price * (100 - data.discount)) / 100 | currency }} <del class="text-muted h6">({{ data.price | currency }})</del></span>
+          <span *ngIf="data.discount == 0" class="h4">{{ data.price | currency }}</span>
+        </strong>
+        each one
+      </h6>
+
+      <!-- card section-->
+      <div class="row my-3">
+        <div class="card-group col-sm-4">
+          <div class="card bordered bg-success">
+            <div class="card-body py-2 px-3">
+              <strong><i class="fas fa-book"></i> ISBN</strong>
+              <div class="h6 my-1">{{ data.isbn }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-group col-sm-4">
+          <div class="card bordered bg-unique">
+            <div class="card-body py-2 px-3">
+              <strong><i class="fas fa-scroll"></i> Paperpack</strong>
+              <div class="h6 my-1">{{ data.page }} pages</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-group col-sm-4">
+          <div class="card bordered bg-romantic">
+            <div class="card-body py-2 px-3">
+              <strong><i class="fas fa-language"></i> Language</strong>
+              <div class="h6 my-1">{{ data.language }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end card section-->
+
+      <div class="mt-2 text-justify">{{ data.info }}</div>
+      <hr />
+
+      <!--purchase section-->
+      <div class="mt-4">
+        <h3>Purchase this item</h3>
+        <h6 *ngIf="bookcart && bookcart.amount != 0" class="my-1">Total in cart: {{ bookcart.amount }} for {{ bookcart.actualPrice * bookcart.amount | currency }}</h6>
+      </div>
+
+      <div class="input-group mt-3 mb-4">
+        <input (change)="onChangeAmount($event.target.value)" [value]="amount" class="form-control" min="0" step="1" style="max-width: 100px" type="number" />
+        <div class="input-group-append">
+          <button (click)="onAddCart()" class="btn btn-success" type="button">Add to cart</button>
+          <button (click)="onClearCart()" class="btn btn-secondary" type="button">Clear</button>
+        </div>
+      </div>
+      <a [routerLink]="'../'">Back to index</a> | <a [routerLink]="'/customer/cart'">Go to my cart</a>
+      <!--end purchase section-->
+    </div>
+  </div>
+  <hr>
+
+  <!--comments section-->
+  <div class="row mt-5">
+    <div class="col-md-4 mb-3 mb-md-0">
+      <!--rating section-->
+      <h4 class="mb-0">{{ data.bookComments.length }} customer review</h4>
+      <ng-template #t2 let-fill="fill">
+          <span [class.full]="fill === 100" class="star">
+            <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+          </span>
+      </ng-template>
+      <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t2" class="h1 text-warning" max="5" style="margin-left: -.5rem !important"></ngb-rating>
+
+      <div *ngFor="let i of ratings" class="row no-gutters">
+        <div class="col-3 pr-1">{{ i.name }} <span class="h5 text-warning">&#9733;</span></div>
+        <div class="col-5 progress mt-1">
+          <div [ngStyle]="{ width: '' + i.percent + '%' }" class="progress-bar bg-warning"></div>
+        </div>
+        <div class="col-4 text-right pl-1">{{ i.sum }} votes</div>
+      </div>
+      <!--end rating section-->
+
+      <!--this angular built-in routerLink cannot use with link having backslash or any other special character-->
+      <div class="mt-3">
+        <button (click)="onOpenComment(null)" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
+        <a *ngIf="auth == false" [href]="'/login?redirect=' + url" class="btn btn-secondary">Login to comment</a>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <!--post new comment section-->
+      <div *ngIf="commentDialog == true && comment" class="card mb-4">
+        <div class="card-body">
+          <form [formGroup]="form">
+              <div class="mb-2">
+                Select the stars: <ngb-rating (rateChange)="onChangeRating($event)" [rate]="comment.rating" class="h4 text-warning mb-0" max="5"></ngb-rating>
+              </div>
+              <div class="mb-2">Comment</div>
+              <textarea class="form-control" formControlName="comment" placeholder="enter the comment" rows="3" type="text"></textarea>
+              <div class="form-group text-center mt-3 mb-0">
+                  <button (click)="onSubmitComment()" class="btn btn-primary mr-1" type="button">Submit</button>
+                  <button (click)="commentDialog = false" class="btn btn-secondary" type="button">Close</button>
+              </div>
+          </form>
+        </div>
+      </div>
+      <!--end post new comment section-->
+
+      <!--list of comment section-->
+      <div *ngIf="data.bookComments.length == 0" class="text-center">Be the first one to comment!?</div>
+      <div *ngFor="let i of data.bookComments" class="mb-3 pb-1 border-bottom">
+        <div>
+          <strong>{{ i.customer.fullname }}</strong> commented at {{ i.updatedAt | date: "yyyy-MM-dd hh:mm:ss z" }}
+        </div>
+
+        <ngb-rating [rate]="i.rating" [readonly]="true" class="h5 text-warning mb-0" max="5"></ngb-rating>
+        <div class="text-justify">{{ i.comment }}</div>
+        <div *ngIf="i.customerId == customerId">
+          <button class="btn btn-sm btn-pill btn-primary mr-2" (click)="onOpenComment(i)">Edit</button>
+          <button class="btn btn-sm btn-pill btn-danger" (click)="onDeleteComment(i.id)">Delete</button>
+        </div>
+      </div>
+      <!--end list of comment section-->
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ export class BookComment {
   comment: string;
   createdAt: string;
   updatedAt: string;
+  updatedFromNow: string;
 
   customer: Customer;
 }

@@ -1,133 +1,188 @@
-<div class="container" *ngIf="data">
-  <app-alert-message></app-alert-message>
+<section class="section-content bg padding-y-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-10 col-md-9 col-sm-12">
+        <!-- section 1: item info -->
+        <section class="card mb-3">
+          <div class="row no-gutters">
+            <aside class="col-sm-6 border-right">
+              <article class="gallery-wrap">
+                <div class="img-big-wrap">
+                  <div *ngIf="data.image">
+                    <a [href]="data.image" data-fancybox [data-caption]="data.title">
+                      <img [src]="data.image">
+                    </a>
+                  </div>
+                  <div *ngIf="!data.image">
+                    <a [href]="placeholderService.imgHolder(300, 500, data.title)" data-fancybox [data-caption]="data.title">
+                      <img [src]="placeholderService.imgHolder(300, 500, data.title)">
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </aside>
+            <aside class="col-sm-6">
+              <article class="card-body">
 
-  <div *ngIf="data.length == 0">
-    <h3 class="mb-4">Empty Cart</h3>
-    <div>There is no books in your cart! Would you like to pick some!?</div>
-    <div class="mt-1 mb-3"><a [routerLink]="'/shop'">Back to shop</a></div>
-    <div *ngIf="viewed" class="row">
-        <div *ngFor="let i of viewed" class="card-group col-6 col-sm-4 col-lg-2">
-          <div class="card mb-3">
-            <div class="text-center mx-1 mt-2">
-              <img *ngIf="i.image && i.image != ''" [alt]="i.title" [src]="i.image" class="img-fluid mt-2"/>
-              <img *ngIf="!i.image || i.image == ''" [alt]="i.title" [src]="'https://via.placeholder.com/250x350/?text=' + i.title.substr(0, 1).toUpperCase()" class="img-fluid mt-2" />
-            </div>
-  
-            <div class="card-body">
-              <a [routerLink]="'/shop/' + i.isbn">{{ i.title }}</a>
-              <div><strong>{{ i.author }}</strong></div>
-              <div>
-                <ng-template #t let-fill="fill">
-                  <span [class.full]="fill === 100" class="star">
-                    <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
-                  </span>
-                </ng-template>
-                <ngb-rating [rate]="i.rating" [readonly]="true" [starTemplate]="t" class="h4 text-warning my-1" max="5"></ngb-rating>
+                <h3 class="title mb-3">{{ data.title }}</h3>
+
+                <div class="mb-3">
+                  <strong class="price h3 text-warning">
+                    <span class="currency">USD </span>
+                    <span *ngIf="data.discount == 0" class="num">{{ data.price | currency }}</span>
+                    <span *ngIf="data.discount != 0"
+                      class="num">{{ (data.price * (100 - data.discount)) / 100 | currency }}</span>
+                  </strong>
+                  <del *ngIf="data.discount != 0" class="text-muted">{{ data.price | currency }}</span>
+                </div>
+                <dl>
+                  <dt>Description</dt>
+                  <dd class="text-justify">
+                    <p>{{data.info}}</p>
+                  </dd>
+                </dl>
+
+                <dl class="row">
+                  <dt class="col-sm-3">ISBN</dt>
+                  <dd class="col-sm-9">{{ data.isbn }}</dd>
+                  <dt class="col-sm-3">Author</dt>
+                  <dd class="col-sm-9">{{ data.author }}</dd>
+                  <dt class="col-sm-3">Publisher</dt>
+                  <dd class="col-sm-9">{{ data.publisher }}</dd>
+                  <dt class="col-sm-3">Published</dt>
+                  <dd class="col-sm-9">{{ data.published | date: "yyyy-MM-dd" }}</dd>
+                  <dt class="col-sm-3">Language</dt>
+                  <dd class="col-sm-9">{{ data.language }}</dd>
+                  <dt class="col-sm-3">Paperpack</dt>
+                  <dd class="col-sm-9">{{ data.page }} pages</dd>
+                </dl>
+
+                <div class="rating-wrap">
+                  <ng-template #t let-fill="fill">
+                    <span [class.full]="fill === 100" class="star">
+                      <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+                    </span>
+                  </ng-template>
+                  <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t" class="h3 text-warning mr-3"
+                    max="5"></ngb-rating>
+                  <div class="label-rating">{{ data.bookComments.length }} reviews</div>
+                </div>
+                <hr>
+
+                <div class="row">
+                  <div class="col-sm-5">
+                    <dl class="dlist-inline">
+                      <dt>Quantity:</dt>
+                      <dd class="ml-2">
+                        <input (change)="onChangeAmount($event.target.value)" [value]="amount" class="form-control"
+                          min="0" step="1" style="max-width: 100px" type="number" />
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+                <hr>
+
+                <button (click)="onAddCart()" class="btn btn-success" type="button"><i
+                    class="fas fa-cart-plus mr-2"></i>Add to cart</button>
+                <button (click)="onClearCart()" class="btn btn-outline-secondary" type="button"><i
+                    class="fas fa-times mr-2"></i>Clear</button>
+              </article>
+            </aside>
+          </div>
+        </section>
+
+        <!-- section 2: item detail overview -->
+        <article class="card mb-3">
+          <div class="card-body">
+            <p>{{ data.detail }}</p>
+          </div>
+        </article>
+
+        <!-- section 3: item rating -->
+        <div class="card mb-3">
+          <div class="row">
+
+            <!-- rating overview -->
+            <div class="col-sm-6">
+              <div class="card mb-3 mb-sm-0">
+                <div class="card-body">
+                  <h4>User rating</h4>
+                  <h2 class="pb-3">{{ data.rating }}</h2>
+                  <ng-template #t2 let-fill="fill">
+                    <span [class.full]="fill === 100" class="star">
+                      <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+                    </span>
+                  </ng-template>
+                  <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t2" class="h1 text-warning"
+                    max="5"></ngb-rating>
+                  <div class="mt-2">total {{ data.bookComments.length }} user' ratings</div>
+                </div>
               </div>
-              <div>Price:
-                <span *ngIf="i.discount != 0">
-                  <span class="h6 mr-2">{{i.price * (100 - i.discount) / 100 | currency}}</span>
-                  <del class="text-muted">({{i.price | currency}})</del></span>
-                <span *ngIf="i.discount == 0"><span class="h6">{{i.price | currency}}</span></span>
+            </div>
+
+            <!-- rating detail -->
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h4>Rating breakdown</h4>
+                  <div *ngFor="let i of ratings" class="row no-gutters">
+                    <div class="col-3 pr-1">{{ i.name }} <span class="h5 text-warning">&#9733;</span></div>
+                    <div class="col-5 progress mt-1">
+                      <div [ngStyle]="{ width: '' + i.percent + '%' }" class="progress-bar bg-warning"></div>
+                    </div>
+                    <div class="col-4 text-right pl-1">{{ i.sum }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- user rating -->
+          <div class="card">
+            <div class="card-body">
+              <div *ngFor="let i of data.bookComments" class="row mb-2 border-bottom">
+                <div class="col-sm-3">
+                  <img *ngIf="i.customer.photo" [src]="i.customer.photo" [alt]="i.customer.fullname" class="img-rounded">
+                  <img *ngIf="!i.customer.photo" [src]="placeholderService.imgHolder(300, 300, i.customer.fullname)" [alt]="i.customer.fullname" class="img-rounded">
+                  <div>{{ i.updatedAt | date: 'yyyy-MM-dd hh:mm:ss'}}</div>
+                  <div>{{ i.updatedFromNow }}</div>
+                </div>
+
+                <div class="col-sm-9">
+                  <div><strong>{{ i.customer.fullname }}</strong></div>  
+                  <ngb-rating [rate]="i.rating" [readonly]="true" class="h5 text-warning mb-0" max="5"></ngb-rating>
+                  <p class="text-justify">{{ i.comment }}</p>
+                  
+                  <div *ngIf="i.customerId == customerId">
+                    <button class="btn btn-sm btn-pill btn-primary mr-2" (click)="onOpenComment(i)">Edit</button>
+                    <button class="btn btn-sm btn-pill btn-danger" (click)="onDeleteComment(i.id)">Delete</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-    </div>    
-  </div>
-
-  <h3 class="mb-4">Item in cart</h3>
-  <div *ngFor="let i of data" class="row mb-4 mb-sm-2">
-    <div *ngIf="i.meta" class="col-lg-2 col-sm-3 mb-2 mb-sm-0">
-      <img *ngIf="i.meta.image && i.meta.image != ''" [alt]="i.meta.title" [src]="i.meta.image" class="img-fluid mt-2" style="max-height: 100px"/>
-      <img *ngIf="!i.meta.image || i.meta.image == ''" [alt]="i.meta.title" [src]="'https://via.placeholder.com/250x350/?text=' + i.meta.title.substr(0, 1).toUpperCase()" class="img-fluid mt-2" style="max-height: 100px"/>
-    </div>
-
-    <div *ngIf="i.meta" class="col-lg-8 col-sm-8 mb-2 mb-sm-0">
-      <div><a [routerLink]="'/shop/' + i.isbn" class="lead">{{ i.meta.title }}</a></div>
-      <div><strong>{{ i.meta.author }}</strong> | {{ i.meta.published | date: "yyyy-MM-dd" }} | <strong>{{ i.meta.publisher }}</strong></div>
-      <div class="h6 mt-1 mb-0"><strong>{{ i.actualPrice | currency }} x {{ i.amount }}</strong>
-      <div class="h6 mt-1 mb-0">
-        <button class="btn btn-link text-danger" (click)="onRemoveCart(i)">Clear</button>
       </div>
-      </div>
-    </div>
 
-    <div *ngIf="i.meta" class="col-lg-2 col-sm-3 mb-sm-0">
-      <button class="btn btn-primary h4 float-sm-right" type="button">{{ i.amount * i.actualPrice | currency }}</button>
-    </div>
-  </div>
-  <div *ngIf="data.length != 0" class="mt-3">
-    <a class="btn btn-link" [routerLink]="'/shop'">Looking for more</a> | <button class="btn btn-link text-danger" (click)="onClearCart()">Cancel all</button>
-  </div>
-  <hr />
-
-  <div class="row mt-5" [attr.disabled]="data.length == 0 ? '' : null">
-    <div class="col-md-6 mb-md-0 mb-4">
-      <h3 class="mb-4">Customer Information</h3>
-      <form *ngIf="form" [formGroup]="form">
-        <div class="form-group">
-          <label>Full name</label>
-          <input type="text" class="form-control" formControlName="fullname" readonly />
+      <!-- recommended section -->
+      <aside class="col-xl-2 col-md-3 col-sm-12">
+        <div class="card mt-3">
+          <div class="card-header">You might like</div>
+          <div class="card-body row">
+            <div *ngFor="let i of cartService.fetchViewed()" class="col-md-12 col-sm-3">
+              <figure class="item border-bottom mb-3">
+                <a href="#" class="img-wrap"><img src="images/items/2.jpg" class="img-md"></a>
+                <figcaption class="info-wrap">
+                  <a href="#" class="title">The name of product</a>
+                  <div class="price-wrap mb-3">
+                    <span class="price-new">$280</span> <del class="price-old">$280</del>
+                  </div>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Address</label>
-          <input type="text" [attr.readonly]="data.length == 0 ? '' : null" class="form-control" formControlName="address" />
-        </div>
-        <div class="form-group">
-          <label>Phone</label>
-          <input type="text" [attr.readonly]="data.length == 0 ? '' : null" class="form-control" formControlName="phone" />
-        </div>
-        <div class="form-group">
-          <label>Note</label>
-          <textarea class="form-control" [attr.readonly]="data.length == 0 ? '' : null" formControlName="note"></textarea>
-        </div>
-      </form>
-    </div>
-
-    <div class="col-md-6">
-      <h3 class="mb-4">Cart Detail</h3>
-      <h5 style="clear: both">
-        Total items: <span class="h3 float-right">{{ totalItem }}</span>
-      </h5>
-      <h5 style="clear: both">
-        Total price: <span class="h3 float-right">{{ totalPrice | currency }}</span>
-      </h5>
-      <h5 style="clear: both">Payment method</h5>
-      <div class="ml-4">
-        <div class="form-check">
-          <input checked class="form-check-input" type="radio" value="cod"/>
-          <label class="form-check-label">Cash on Delivery</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="ebank" disabled />
-          <label class="form-check-label">Internet Banking</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="ewallet" disabled />
-          <label class="form-check-label">Digital Wallet</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="credit" disabled />
-          <label class="form-check-label">Credit Cart</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="debit" disabled />
-          <label class="form-check-label">Debit Card</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="crypto" disabled />
-          <label class="form-check-label">Crypto Currency</label>
-        </div>
-      </div>
-      <hr />
-      <h5 class="mb-2" style="clear: both">
-        Total final price <span class="h1 float-right bg-primary text-white px-3 py-2 mt-2 mt-sm-0" style="border-radius: 10px">{{ totalPrice | currency }}</span>
-      </h5>
-      <div class="mt-4" style="clear: both">
-        <button type="button" class="btn btn-primary mr-2" [attr.disabled]="data.length == 0 ? '' : null" (click)="onSubmit()">Submit order</button>
-        <button type="button" class="btn btn-danger" [attr.disabled]="data.length == 0 ? '' : null" (click)="onClearCart()">Cancel all</button>
-      </div>
+      </aside>
     </div>
   </div>
-</div>
+</section>

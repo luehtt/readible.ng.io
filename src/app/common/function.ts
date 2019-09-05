@@ -101,13 +101,17 @@ export class FormFunc {
     }
   }
 
-  static toNgbDate(datetime) {
+  static toNgbDate(datetime: string) {
     const date = new Date(datetime);
     return {
       year: date.getFullYear(),
       month: date.getMonth() + 1,
       day: date.getDate()
     };
+  }
+
+  static toJsDate(datetime: string) {
+    return new Date(datetime);
   }
 
   static fromNgbDateToJson(data): string {
@@ -131,18 +135,17 @@ export class FormFunc {
     return yyyy + '-' + MM + '-' + dd + 'T' + hh + ':' + mm + ':' + ss;
   }
 
-
   static radioTrueFalse(bool): string {
     if (bool === true) { return 'true'; }
     if (bool === false) { return 'false'; }
   }
 
-  static isSameMonth(date1: Date, date2: Date): boolean {
+  static isSameMonth(date1: Date, date2: Date = new Date()): boolean {
     if (date1.getFullYear() !== date2.getFullYear()) { return false; }
     return date1.getMonth() === date2.getMonth();
   }
 
-  static isSameYear(date1: Date, date2: Date): boolean {
+  static isSameYear(date1: Date, date2: Date = new Date()): boolean {
     return date1.getFullYear() === date2.getFullYear();
   }
 
@@ -154,18 +157,38 @@ export class FormFunc {
     return this.diffMonthBetween(date1, date2) > 24;
   }
 
-  static diffDayBetween(date1: Date, date2: Date): number {
+  static diffDayBetween(date1: Date, date2: Date = new Date()): number {
     const each = 86000000;
     const difference = Math.abs(date2.getTime() - date1.getTime());
     return Math.round(difference / each);
   }
 
-  static diffMonthBetween(date1: Date, date2: Date): number {
+  static diffMonthBetween(date1: Date, date2: Date = new Date()): number {
     if (date1.getTime() > date2.getTime()) { [date1, date2] = [date2, date1]; }
     let months = (date2.getFullYear() - date1.getFullYear()) * 12;
     months -= date1.getMonth() + 1;
     months += date2.getMonth();
     return months <= 0 ? 0 : months;
+  }
+
+  static diffYearBetween(date1: Date, date2: Date = new Date()): number {
+    if (date1.getTime() > date2.getTime()) { [date1, date2] = [date2, date1]; }
+    return date2.getFullYear() - date1.getFullYear();
+  }
+
+  static diffDateTimeFromNow(date1: Date, date2: Date  = new Date()) {
+    if (date1.getTime() > date2.getTime()) { [date1, date2] = [date2, date1]; }
+    let day = this.diffDayBetween(date1, date2);
+    let month = this.diffMonthBetween(date1, date2);
+    let year = this.diffYearBetween(date1, date2);
+    return { day, month, year };
+  }
+
+  static translateDateTimeFromNow(date1: Date, date2: Date  = new Date()) {
+    let diff = this.diffDateTimeFromNow(date1, date2);
+    if (diff.day < 60) return diff.day + ' days ago';
+    else if (diff.month < 24) return diff.month + ' months ago';
+    else return diff.year + ' years ago'
   }
 
 }
