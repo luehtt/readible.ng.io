@@ -3,10 +3,10 @@ import { FormBuilder } from '@angular/forms';
 import { Chart } from 'chart.js';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {ColorCode, FormMessage} from '../../../common/const';
+import {ChartOption, FormMessage} from '../../../common/const';
 import {StatisticService} from '../../../services/statistic.service';
 import {OrderStatistic} from '../../../models/statistic';
-import {DataFunc, FormFunc} from '../../../common/function';
+import {DataFunc, ControlFunc} from '../../../common/function';
 
 @Component({
   selector: 'app-statistic-customers',
@@ -50,8 +50,8 @@ export class StatisticCustomerComponent implements OnInit {
 
   onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
-    this.fromDate = new Date(FormFunc.fromNgbDateToJson(this.fromDateNgb));
-    this.toDate = new Date(FormFunc.fromNgbDateToJson(this.toDateNgb));
+    this.fromDate = new Date(ControlFunc.fromNgbDateToJson(this.fromDateNgb));
+    this.toDate = new Date(ControlFunc.fromNgbDateToJson(this.toDateNgb));
 
     this.alertService.clear();
     if (this.fromDate >= this.toDate) { this.alertService.set(this.SELECTED_DATE_MISMATCHED, 'warning'); }
@@ -74,8 +74,8 @@ export class StatisticCustomerComponent implements OnInit {
 
   private getData() {
     this.alertService.clear();
-    const fromDate = FormFunc.jsonDate(this.fromDate);
-    const toDate = FormFunc.jsonDate(this.toDate);
+    const fromDate = ControlFunc.jsonDate(this.fromDate);
+    const toDate = ControlFunc.jsonDate(this.toDate);
 
     const startTime1 = this.alertService.startTime();
     this.service.statisticCustomer('age', fromDate, toDate).subscribe(res => {
@@ -116,7 +116,7 @@ export class StatisticCustomerComponent implements OnInit {
     }
 
     // set title with selectedRange
-    this.chartTitle += ' from ' + FormFunc.jsonDate(this.fromDate) + ' to ' + FormFunc.jsonDate(this.toDate);
+    this.chartTitle += ' from ' + ControlFunc.jsonDate(this.fromDate) + ' to ' + ControlFunc.jsonDate(this.toDate);
 
     // init doughnut chart
     this.ageChart = new Chart('ageCanvas', {
@@ -125,7 +125,7 @@ export class StatisticCustomerComponent implements OnInit {
         labels,
         datasets: [ {
           data: values,
-          backgroundColor: [ColorCode.RED, ColorCode.GREEN, ColorCode.BLUE, ColorCode.AMBER],
+          backgroundColor: [Chart.RED, Chart.GREEN, Chart.BLUE, Chart.AMBER],
           steppedLine: 'middle'
         } ]
       },
@@ -157,7 +157,7 @@ export class StatisticCustomerComponent implements OnInit {
     }
 
     // set title with selectedRange
-    this.chartTitle += ' from ' + FormFunc.jsonDate(this.fromDate) + ' to ' + FormFunc.jsonDate(this.toDate);
+    this.chartTitle += ' from ' + ControlFunc.jsonDate(this.fromDate) + ' to ' + ControlFunc.jsonDate(this.toDate);
 
     // init doughnut chart
     this.genderChart = new Chart('genderCanvas', {
@@ -166,7 +166,7 @@ export class StatisticCustomerComponent implements OnInit {
         labels,
         datasets: [ {
           data: values,
-          backgroundColor: [ColorCode.VIOLET, ColorCode.ROSE],
+          backgroundColor: [Chart.VIOLET, Chart.ROSE],
           steppedLine: 'middle'
         } ]
       },

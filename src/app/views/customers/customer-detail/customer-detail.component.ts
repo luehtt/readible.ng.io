@@ -8,6 +8,7 @@ import {AlertMessageService} from 'src/app/services/common/alert-message.service
 import {DataFunc} from '../../../common/function';
 import {Const} from '../../../common/const';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
+import {Order} from 'src/app/models/order';
 
 
 @Component({
@@ -22,13 +23,14 @@ export class CustomerDetailComponent implements OnInit {
   orderPage = 1;
   orderPageSize: number = Const.PAGE_SIZE_DEFAULT;
   orderFilter = '';
-  orderSorted = 'id';
-  orderSortedDirection = 'asc';
+  orderSortColumn = 'id';
+  orderSortDirection = 'asc';
   commentPage = 1;
   commentPageSize: number = Const.PAGE_SIZE_DEFAULT;
   commentFilter = '';
-  commentSorted = 'bookIsbn';
-  commentSortedDirection = 'asc';
+  commentSortColumn = 'bookIsbn';
+  commentSortDirection = 'asc';
+  loaded: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,13 +41,17 @@ export class CustomerDetailComponent implements OnInit {
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
-    this.alertService.clear();
+    this.initData();
+  }
 
+  private initData() {
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res.customer;
         this.account = res.user;
+        this.loaded = true;
         this.alertService.success(startTime, 'GET');
       },
       err => {
@@ -54,55 +60,31 @@ export class CustomerDetailComponent implements OnInit {
     );
   }
 
-  get filterOrder() {
-    return !this.data ? null : this.data.orders.filter(x => x.status.locale.toLowerCase().includes(this.orderFilter.toLowerCase()) ||
-      DataFunc.include(x, this.orderFilter, ['createdAt', 'updatedAt']) ||
-      DataFunc.includeNumber(x, this.orderFilter, ['id', 'totalItem', 'totalPrice'])
-    );
+  get filterOrder(): Order[] {
+    return DataFunc.filter(this.data.orders, this.orderFilter, ['id', 'status.locale', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
 
-  onSortOrder(sorting: string) {
-    if (sorting == null) { return; }
-    this.orderSortedDirection = this.orderSorted !== sorting ? 'asc' : this.orderSortedDirection === 'asc' ? 'desc' : 'asc';
-    this.orderSorted = sorting;
-
-    switch (this.orderSorted) {
-      case 'createdAt': case 'updatedAt':
-        this.data.orders = DataFunc.sortString(this.data.orders, this.orderSorted, this.orderSortedDirection);
-        break;
-      case 'id': case 'totalItem': case 'totalPrice': case 'statusId':
-        this.data.orders = DataFunc.sortNumber(this.data.orders, this.orderSorted, this.orderSortedDirection);
-        break;
-    }
+  onSortOrder(sortColumn: string) {
+    if (!sortColumn) { return; }
+    this.orderSortDirection = DataFunc.sortDirection(this.orderSortColumn, sortColumn);
+    this.orderSortColumn = sortColumn;
+    this.data.orders = DataFunc.sort(this.data.orders, this.orderSortColumn, this.orderSortDirection);
   }
 
   get filterComment() {
     switch (this.commentFilter) {
       case '1 star': case '2 star': case '3 star': case '4 star': case '5 star':
-        const star = parseInt(this.commentFilter.substring(0, 1), 10);
-        return !this.data ? null : this.data.bookComments.filter(x => x.rating === star);
+        return DataFunc.filter(this.data.bookComments, this.commentFilter.substring(0, 1), ['rating']);
       default:
-        return !this.data ? null : this.data.bookComments.filter(x => DataFunc.include(x, this.commentFilter, ['comment', 'createdAt', 'bookIsbn']));
+        return DataFunc.filter(this.data.bookComments, this.commentFilter, ['bookIsbn', 'comment', 'updatedAt']);
     }
   }
 
-  onSortComment(sorting: string) {
-    if (sorting == null) {
-      return;
-    }
-
-    this.commentSortedDirection = this.commentSorted !== sorting ? 'asc' : this.commentSortedDirection === 'asc' ? 'desc' : 'asc';
-    this.commentSorted = sorting;
-
-    switch (this.commentSorted) {
-      case 'comment': case 'createdAt': case 'bookIsbn':
-        this.data.bookComments = DataFunc.sortString(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
-        break;
-      case 'rating':
-        this.data.bookComments = DataFunc.sortNumber(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
-        break;
-    }
+  onSortComment(sortColumn: string) {
+    if (!sortColumn) { return; }
+    this.commentSortDirection = DataFunc.sortDirection(this.orderSortColumn, sortColumn);
+    this.commentSortColumn = sortColumn;
+    this.data.bookComments = DataFunc.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
   }
-
 
 }

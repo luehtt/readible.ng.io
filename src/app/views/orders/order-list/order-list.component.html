@@ -5,7 +5,7 @@
   <button type="button" class="btn btn-success mr-2" (click)="onSelectStatus('success')">Success</button>
 </div>
 
-<div class="card">
+<div *ngIf="loaded" class="card">
   <div class="card-header h5">List of {{status}} orders</div>
   <div class="card-body">
     <div class="input-group mb-4">

@@ -10,21 +10,25 @@ import { Order } from 'src/app/models/order';
   templateUrl: './order-detail.component.html'
 })
 export class OrderDetailComponent implements OnInit {
-
   data: Order;
   id: number;
+  loaded: boolean;
 
   constructor(private route: ActivatedRoute, private service: OrderService, private alertService: AlertMessageService) {
   }
 
   ngOnInit() {
-    this.alertService.clear();
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+    this.initData();
+  }
 
+  private initData() {
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res;
+        this.loaded = true;
         this.alertService.success(startTime, 'GET');
       },
       err => {

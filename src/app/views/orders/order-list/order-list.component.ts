@@ -15,35 +15,35 @@ export class OrderListComponent implements OnInit {
   status = 'pending';
   filter = '';
   page = 1;
-  pageSize: number = Const.PAGE_SIZE_HIGHER;
-  sorted = 'title';
-  sortedDirection = 'asc';
+  pageSize = Const.PAGE_SIZE_HIGHER;
+  sortColumn = 'title';
+  sortDirection = 'asc';
+  loaded: boolean;
 
   constructor(private service: OrderService, private alertService: AlertMessageService) {
   }
 
   get dataFilter() {
-    return !this.data ? null : this.data.filter(x => x.customer.fullname.toLowerCase().includes(this.filter.toLowerCase()) ||
-      DataFunc.include(x, this.filter, ['phone', 'createdAt', 'updatedAt']) ||
-      DataFunc.includeNumber(x, this.filter, ['id', 'totalItem', 'totalPrice']));
+    return DataFunc.includes(this.data, this.filter, ['id', 'customer.fullname', 'phone', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
 
   ngOnInit() {
     this.alertService.clear();
-    this.fetchData();
+    this.initData();
   }
 
   onSelectStatus(value: string) {
     this.status = value;
-    this.fetchData();
+    this.initData();
   }
 
-  private fetchData() {
-    this.alertService.clear();
+  private initData() {
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.fetch(this.status).subscribe(
       res => {
         this.data = res;
+        this.loaded = true;
         this.alertService.success(startTime, 'GET');
       },
       err => {
@@ -52,26 +52,10 @@ export class OrderListComponent implements OnInit {
     );
   }
 
-  onSort(sorting: string) {
-    if (sorting == null) {
-      return;
-    }
-
-    this.sortedDirection = this.sorted !== sorting ? 'asc' : (this.sortedDirection === 'asc' ? 'desc' : 'asc');
-    this.sorted = sorting;
-
-    switch (this.sorted) {
-      case 'phone': case 'createdAt': case 'updatedAt':
-        this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
-        break;
-      case 'id': case 'totalItem': case 'totalPrice':
-        this.data = DataFunc.sortNumber(this.data, this.sorted, this.sortedDirection);
-        break;
-      case 'customer':
-        this.data = this.sortedDirection === 'asc' ?
-          this.data.sort((a, b) => a.customer.fullname.localeCompare(b.customer.fullname)) :
-          this.data = this.data.sort((a, b) => b.customer.fullname.localeCompare(a.customer.fullname));
-        break;
-    }
+  onSort(sortColumn: string) {
+    if (!sortColumn) { return; }
+    this.sortDirection = DataFunc.sortDirection(this.sortColumn, sortColumn);
+    this.sortColumn = sortColumn;
+    this.data = DataFunc.sort(this.data, this.sortColumn, this.sortDirection);
   }
 }

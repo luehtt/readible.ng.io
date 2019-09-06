@@ -46,28 +46,47 @@ export const FormMessage = {
   CONFIRM_PASSWORD_ERROR: 'The two password does not match'
 };
 
-export const ColorCode = {
-  BLUE: '#2196f3',
-  TEAL: '#009688',
-  PURPLE: '#9c27b0',
-  VIOLET: '#673ab7',
-  GREEN: '#4caf50',
-  AMBER: '#ffc107',
-  RED: '#f44336',
-  CYAN: '#00bcd4',
-  ROSE: '#e91e63',
-  BROWN: '#795548',
+
+export const ChartOption = {
+  COLOR_BLUE: '#2196f3',
+  COLOR_TEAL: '#009688',
+  COLOR_PURPLE: '#9c27b0',
+  COLOR_VIOLET: '#673ab7',
+  COLOR_GREEN: '#4caf50',
+  COLOR_AMBER: '#ffc107',
+  COLOR_RED: '#f44336',
+  COLOR_CYAN: '#00bcd4',
+  COLOR_ROSE: '#e91e63',
+  COLOR_BROWN: '#795548',
+
+  COLOR_LIST: [
+    this.COLOR_BLUE,
+    this.COLOR_TEAL,
+    this.COLOR_PURPLE,
+    this.COLOR_VIOLET,
+    this.COLOR_GREEN,
+    this.COLOR_AMBER,
+    this.COLOR_RED,
+    this.COLOR_CYAN,
+    this.COLOR_ROSE,
+    this.COLOR_BROWN
+  ],
+
+  TRANSPARENT: 'transparent',
+  CANVAS: 'canvas',
+
+  CHART_LINE: 'line',
+  CHART_BAR: 'bar',
+
+  STEP_MIDDLE: 'middle',
+
+  DEFAULT_LINE_OPTION: {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: { display: false },
+    scales: { xAxes: [{ display: true }], yAxes: [{ display: true }] },
+    elements: { line: { tension: 0 } },
+    animation: { duration: 0 }
+  };
 };
 
-export const ColorCodeList = [
-  ColorCode.BLUE,
-  ColorCode.TEAL,
-  ColorCode.PURPLE,
-  ColorCode.VIOLET,
-  ColorCode.GREEN,
-  ColorCode.AMBER,
-  ColorCode.RED,
-  ColorCode.CYAN,
-  ColorCode.ROSE,
-  ColorCode.BROWN
-];

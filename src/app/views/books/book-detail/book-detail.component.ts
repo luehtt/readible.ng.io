@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {Subject, Observable, merge, forkJoin} from 'rxjs';
+import {Subject, Observable, merge} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 import {BookService} from 'src/app/services/book.service';
@@ -10,10 +10,11 @@ import {BookCategoryService} from 'src/app/services/category.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Book} from 'src/app/models/book';
 import {Const} from 'src/app/common/const';
-import {FormFunc, FileFunc, DataFunc, ImageFunc} from 'src/app/common/function';
+import {ControlFunc, FileFunc, DataFunc, ImageFunc} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import {BookCommentService} from '../../../services/comment.service';
+import {BookComment} from 'src/app/models/comment';
 
 @Component({
   selector: 'app-book-detail',
@@ -25,12 +26,13 @@ export class BookDetailComponent implements OnInit {
   categories: BookCategory[];
   id: string;
   form: FormGroup;
+  loaded: boolean;
 
   commentPage = 1;
   commentPageSize: number = Const.PAGE_SIZE_DEFAULT;
   commentFilter = '';
-  commentSorted = 'customer';
-  commentSortedDirection = 'asc';
+  commentSortColumn = 'customer';
+  commentSortDirection = 'asc';
 
   // view child for NgbTypeahead
   @ViewChild('ngt', { static: false }) instance: NgbTypeahead;
@@ -65,71 +67,74 @@ export class BookDetailComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.alertService.clear();
 
-    const getBook = this.service.get(this.id);
-    const fetchCategories = this.categoryService.fetch();
+    this.initData();
+    this.initCategories();
+  }
+
+  private initCategories() {
     const startTime = this.alertService.startTime();
-    forkJoin([getBook, fetchCategories]).subscribe(
-      res => {
-        this.data = res[0];
-        this.categories = res[1];
-        this.data.originalImage = res[0].image;
-        this.data.rating = res[0].bookComments.length === 0 ? 0 : res[0].bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / res[0].bookComments.length;
-        this.alertService.success(startTime, 'GET');
-        this.initForm();
-      },
-      err => {
-        this.alertService.failed(err);
-      }
-    );
+    this.categoryService.fetch().subscribe(res => {
+      this.categories = res;
+      this.alertService.success(startTime, 'GET');
+    }, err => {
+      this.alertService.failed(err);
+    })
   }
 
-  private initForm() {
-    this.form = this.formBuilder.group({
-      title: [this.data.title, [Validators.required, Validators.maxLength(255)]],
-      author: [this.data.author, [Validators.required, Validators.maxLength(255)]],
-      publisher: [this.data.publisher, [Validators.required, Validators.maxLength(255)]],
-      published: [FormFunc.toNgbDate(this.data.published), [Validators.required]],
-      price: [this.data.price, [Validators.required, Validators.min(0.0)]],
-      page: [this.data.page, [Validators.required, Validators.min(0)]],
-      language: [this.data.language, [Validators.required, Validators.maxLength(32)]],
-      categoryId: [this.data.categoryId, [Validators.required]],
-      active: [FormFunc.radioTrueFalse(this.data.active), [Validators.required]],
-      info: [this.data.info],
-      discount: [this.data.discount, [Validators.required, Validators.min(0)]]
+  private initData() {
+    const startTime = this.alertService.startTime();
+    this.service.get(this.id).subscribe(res => {
+      this.data = this.initDataOnRes(res);
+      this.form = this.initForm(this.data);
+      this.alertService.success(startTime, 'GET');
+      this.loaded = true;
+    }, err => {
+      this.alertService.failed(err);
+    })
+  }
+
+  private initDataOnRes(res: Book): Book {
+    res.originalImage = res.image;
+    if (res.bookComments) res.rating = this.calcDataRating(res.bookComments);
+    return res;
+  }
+
+  private calcDataRating(comments: BookComment[]): number {
+    const length = comments.length;
+    return length === 0 ? 0 : comments.map(e => e.rating).reduce((a, b) => a + b, 0) / comments.length;
+  }
+
+  private initForm(data: Book): FormGroup {
+    const form = this.formBuilder.group({
+      title: [data.title, [Validators.required, Validators.maxLength(255)]],
+      author: [data.author, [Validators.required, Validators.maxLength(255)]],
+      publisher: [data.publisher, [Validators.required, Validators.maxLength(255)]],
+      published: [DataFunc.toNgbDate(this.data.published), [Validators.required]],
+      price: [data.price, [Validators.required, Validators.min(0.0)]],
+      page: [data.page, [Validators.required, Validators.min(0)]],
+      language: [data.language, [Validators.required, Validators.maxLength(32)]],
+      categoryId: [data.categoryId, [Validators.required]],
+      active: [DataFunc.radioTrueFalse(data.active), [Validators.required]],
+      info: [data.info],
+      discount: [data.discount, [Validators.required, Validators.min(0)]]
     });
+    return form;
   }
 
-  get filterComment() {
+  get filterComment(): BookComment[] {
     switch (this.commentFilter) {
       case '1 star': case '2 star': case '3 star': case '4 star': case '5 star':
-        const star = parseInt(this.commentFilter.substring(0, 1), 10);
-        return !this.data ? null : this.data.bookComments.filter(x => x.rating === star);
+        return DataFunc.filter(this.data.bookComments, this.commentFilter.substring(0, 1), ['rating']);
       default:
-        return !this.data ? null : this.data.bookComments.filter(x => x.customer.fullname.toLowerCase().includes(this.commentFilter.toLowerCase()) ||
-          DataFunc.include(x, this.commentFilter, ['comment', 'createdAt']));
+        return DataFunc.filter(this.data.bookComments, this.commentFilter, ['customer.fullname', 'comment', 'updatedAt']);
     }
   }
 
-  onSortComment(sorting: string) {
-    if (sorting == null) {
-      return;
-    }
-    this.commentSortedDirection = this.commentSorted !== sorting ? 'asc' : (this.commentSortedDirection === 'asc' ? 'desc' : 'asc');
-    this.commentSorted = sorting;
-
-    switch (this.commentSorted) {
-      case 'comment': case 'createdAt':
-        this.data.bookComments = DataFunc.sortString(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
-        break;
-      case 'rating':
-        this.data.bookComments = DataFunc.sortNumber(this.data.bookComments, this.commentSorted, this.commentSortedDirection);
-        break;
-      case 'customer':
-        this.data.bookComments = this.commentSortedDirection === 'asc' ?
-          this.data.bookComments.sort((a, b) => a.customer.fullname.localeCompare(b.customer.fullname)) :
-          this.data.bookComments.sort((a, b) => b.customer.fullname.localeCompare(a.customer.fullname));
-        break;
-    }
+  onSortComment(sortedColumn: string) {
+    if (sortedColumn == null) { return; }
+    this.commentSortDirection = this.commentSortColumn !== sortedColumn ? 'asc' : (this.commentSortDirection === 'asc' ? 'desc' : 'asc');
+    this.commentSortColumn = sortedColumn;
+    this.data.bookComments = DataFunc.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
   }
 
   onChangeImage(event) {
@@ -138,12 +143,12 @@ export class BookDetailComponent implements OnInit {
       FileFunc.convertFileToBase64(file)
         .then(res => {
           this.data.image = res.toString();
-          const orientation = ImageFunc.GetOrientation(this.data.image);
+          const orientation = ImageFunc.getOrientation(this.data.image);
           if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = ImageFunc.TransformCss(orientation);
+            this.imageTransform = ImageFunc.transformCSS(orientation);
           }
         }).catch(err => {
-          this.alertService.failed(err.message);
+          this.alertService.failed(err);
         });
     }
   }
@@ -154,7 +159,7 @@ export class BookDetailComponent implements OnInit {
         this.data.originalImage = res.image;
         this.data.image = res.image;
       }, err => {
-        this.alertService.failed(err.message);
+        this.alertService.failed(err);
       }
     );
   }
@@ -167,63 +172,52 @@ export class BookDetailComponent implements OnInit {
       this.data.image = res.image;
       this.data.rating = res.bookComments.length === 0 ? 0 : res.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / res.bookComments.length;
       this.alertService.success(startTime, 'GET');
-      this.initForm();
+      this.initData();
     }, err => {
       this.alertService.failed(err.message);
     });
   }
 
+  private setItemData(item: Book, form): Book {
+    item.title = form.controls.title.value;
+    item.author = form.controls.author.value;
+    item.categoryId = form.controls.categoryId.value;
+    item.publisher = form.controls.publisher.value;
+    item.published = DataFunc.fromNgbDateToJson(form.controls.published.value);
+    item.language = form.controls.language.value;
+    item.price = form.controls.price.value;
+    item.page = form.controls.page.value;
+    item.discount = form.controls.discount.value;
+    item.active = form.controls.active.value;
+    item.info = form.controls.info.value;
+    return item;
+  }
+
   onSubmit() {
-    if (this.form.invalid) {
-      FormFunc.touchControls(this.form.controls);
-      return;
-    }
+    if (ControlFunc.validateForm(this.form) === false) return;
 
-    const item = new Book();
-    item.isbn = this.data.isbn;
-    item.title = this.form.controls.title.value;
-    item.author = this.form.controls.author.value;
-    item.categoryId = this.form.controls.categoryId.value;
-    item.publisher = this.form.controls.publisher.value;
-    item.published = FormFunc.fromNgbDateToJson(this.form.controls.published.value);
-    item.language = this.form.controls.language.value;
-    item.price = this.form.controls.price.value;
-    item.page = this.form.controls.page.value;
-    item.discount = this.form.controls.discount.value;
-    item.active = this.form.controls.active.value;
-    item.info = this.form.controls.info.value;
-    item.updatedAt = this.data.updatedAt;
-    if (this.data.originalImage !== this.data.image) { item.image = this.data.image; }
+    this.data = this.setItemData(this.data, this.form);
+    this.data = DataFunc.updateTimestamp(this.data);
 
-    this.alertService.clear();
+    if (this.data.image === this.data.originalImage) { delete(this.data.image); }
+
     const startTime = this.alertService.startTime();
-    this.service.put(item).subscribe(
+    this.alertService.clear();
+    this.service.put(this.data).subscribe(
       res => {
-        this.data.title = res.title;
-        this.data.author = res.author;
-        this.data.published = res.published;
-        this.data.publisher = res.publisher;
-        this.data.categoryId = res.categoryId;
-        this.data.price = res.price;
-        this.data.page = res.page;
-        this.data.discount = res.discount;
-        this.data.active = res.active;
-        this.data.language = res.language;
-        this.data.info = res.info;
-        this.data.createdAt = res.createdAt;
-        this.data.updatedAt = res.updatedAt;
-
+        this.initDataOnRes(res);
         this.alertService.success(startTime, 'PUT');
       },
       err => {
+        this.data.image = this.data.originalImage;
         this.alertService.failed(err);
       }
     );
   }
 
   onDelete() {
-    this.alertService.clear();
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.destroy(this.id).subscribe(res => {
         this.alertService.success(startTime, 'DELETE');
         this.router.navigate(['/']);
@@ -235,12 +229,11 @@ export class BookDetailComponent implements OnInit {
   }
 
   onDeleteComment(id: number) {
-    this.alertService.clear();
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.commentService.destroy(id).subscribe(res => {
         this.data.bookComments = this.data.bookComments.filter(x => x.id !== res.id);
-        this.data.rating = this.data.bookComments.length === 0 ? 0 : this.data.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / this.data.bookComments.length;
-
+        this.data.rating = this.calcDataRating(this.data.bookComments);
         this.alertService.success(startTime, 'DELETE');
       },
       err => {

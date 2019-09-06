@@ -31,7 +31,7 @@ export class AlertMessageService {
     return new Date().getTime();
   }
 
-  public success(startTime, method) {
+  public success(startTime, method: string) {
     const a = { type: 'success', message: 'Http success response: 200 ' + method + ' OK! in ' + this.spentTime(startTime) + 'ms' };
     this.data.push(a);
   }

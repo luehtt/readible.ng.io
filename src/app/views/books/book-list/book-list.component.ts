@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { Subject, Observable, merge, forkJoin } from 'rxjs';
+import { Subject, Observable, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-
 import { Book } from 'src/app/models/book';
 import { BookCategory } from 'src/app/models/category';
 import { Const } from 'src/app/common/const';
-import { FormFunc, DataFunc, FileFunc } from 'src/app/common/function';
-
+import { ControlFunc, DataFunc, FileFunc } from 'src/app/common/function';
 import { BookService } from 'src/app/services/book.service';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { BookCategoryService } from 'src/app/services/category.service';
@@ -23,12 +21,13 @@ export class BookListComponent implements OnInit {
   createDialog = false;
   categories: BookCategory[];
   form: FormGroup;
-  create: Book;
-  createFilename: string;
+  upload: string;
+  uploadFilename: string;
   page = 1;
   pageSize: number = Const.PAGE_SIZE_HIGHER;
-  sorted = 'title';
-  sortedDirection = 'asc';
+  sortColumn = 'title';
+  sortDirection = 'asc';
+  loaded: boolean;
 
   // view child for NgbTypeahead
   @ViewChild('ngt', { static: false }) instance: NgbTypeahead;
@@ -54,27 +53,34 @@ export class BookListComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
 
-    const fetchBooks = this.service.fetch();
-    const fetchCategories = this.categoryService.fetch();
+    this.initData();
+    this.initCategories();
+  }
 
+  private initData() {
     const startTime = this.alertService.startTime();
-    forkJoin([fetchBooks, fetchCategories]).subscribe(
-      res => {
-        this.data = res[0];
-        this.categories = res[1];
-        this.alertService.success(startTime, 'GET');
-        this.initForm();
-        this.create = new Book();
-      },
-      err => {
-        this.alertService.failed(err);
-        this.createDialog = null;
-      }
-    );
+    this.service.fetch().subscribe(res => {
+      this.data = res;
+      this.alertService.success(startTime, 'GET');
+      this.loaded = true;
+    }, err => {
+      this.alertService.failed(err);
+    })
+  }
+
+  private initCategories() {
+    const startTime = this.alertService.startTime();
+    this.categoryService.fetch().subscribe(res => {
+      this.categories = res;
+      this.form = this.initForm();
+      this.alertService.success(startTime, 'GET');
+    }, err => {
+      this.alertService.failed(err);
+    })
   }
 
   private initForm() {
-    this.form = this.formBuilder.group({
+    const form = this.formBuilder.group({
       isbn: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       title: ['', [Validators.required, Validators.maxLength(255)]],
       author: ['', [Validators.required, Validators.maxLength(255)]],
@@ -88,34 +94,19 @@ export class BookListComponent implements OnInit {
       discount: [0, [Validators.required]],
       info: ['']
     });
+
+    return form;
   }
 
   get dataFilter() {
-    return !this.data ? null : this.data.filter(x => x.category.name.toLowerCase().includes(this.filter.toLowerCase()) ||
-      DataFunc.include(x, this.filter, ['title', 'author', 'isbn', 'publisher', 'published']) ||
-      DataFunc.includeNumber(x, this.filter, ['price']));
+    return DataFunc.filter(this.data, this.filter, ['title', 'author', 'isbn', 'publisher', 'published', 'price', 'category.name']);
   }
 
-  onSort(sorting: string) {
-    if (sorting == null) {
-      return;
-    }
-    this.sortedDirection = this.sorted !== sorting ? 'asc' : (this.sortedDirection === 'asc' ? 'desc' : 'asc');
-    this.sorted = sorting;
-
-    switch (this.sorted) {
-      case 'isbn': case 'title': case 'author': case 'publisher': case 'published':
-        this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
-        break;
-      case 'price':
-        this.data = DataFunc.sortNumber(this.data, this.sorted, this.sortedDirection);
-        break;
-      case 'category':
-        this.data = this.sortedDirection === 'asc' ?
-          this.data.sort((a, b) => a.category.name.localeCompare(b.category.name)) :
-          this.data.sort((a, b) => b.category.name.localeCompare(a.category.name));
-        break;
-    }
+  onSort(sortedColumn: string) {
+    if (!sortedColumn) { return; }
+    this.sortDirection = DataFunc.sortDirection(this.sortColumn, sortedColumn);
+    this.sortColumn = sortedColumn;
+    this.data = DataFunc.sort(this.data, this.sortColumn, this.sortDirection);
   }
 
   onUploadImage(event) {
@@ -123,8 +114,8 @@ export class BookListComponent implements OnInit {
       const file = event.target.files[0];
       FileFunc.convertFileToBase64(file)
         .then(result => {
-          this.createFilename = event.target.files[0].name;
-          this.create.image = result.toString();
+          this.uploadFilename = event.target.files[0].name;
+          this.upload = result.toString();
         })
         .catch(err => {
           this.alertService.failed(err);
@@ -132,28 +123,33 @@ export class BookListComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    if (this.form.invalid) {
-      FormFunc.touchControls(this.form.controls);
-      return;
-    }
+  private retrieveData(item: Book, form): Book {
+    item.isbn = form.controls.isbn.value;
+    item.title = form.controls.title.value;
+    item.author = form.controls.author.value;
+    item.categoryId = form.controls.categoryId.value;
+    item.publisher = form.controls.publisher.value;
+    item.published = DataFunc.fromNgbDateToJson(form.controls.published.value);
+    item.language = form.controls.language.value;
+    item.price = form.controls.price.value;
+    item.page = form.controls.page.value;
+    item.discount = form.controls.discount.value;
+    item.active = form.controls.active.value;
+    item.info = form.controls.info.value;
+    return item;
+  }
 
-    this.create.isbn = this.form.controls.isbn.value;
-    this.create.title = this.form.controls.title.value;
-    this.create.author = this.form.controls.author.value;
-    this.create.categoryId = this.form.controls.categoryId.value;
-    this.create.publisher = this.form.controls.publisher.value;
-    this.create.published = FormFunc.fromNgbDateToJson(this.form.controls.published.value);
-    this.create.language = this.form.controls.language.value;
-    this.create.price = this.form.controls.price.value;
-    this.create.page = this.form.controls.page.value;
-    this.create.discount = this.form.controls.discount.value;
-    this.create.info = this.form.controls.info.value;
-    this.create.active = this.form.controls.active.value;
+  onSubmit() {
+    if (ControlFunc.validateForm(this.form)) { return; }
+
+    let item = new Book()
+    item = this.retrieveData(item, this.form);
+    item = DataFunc.updateTimestamp(item);
+    if (this.upload && this.uploadFilename) item.image = this.upload;
 
     this.alertService.clear();
     const startTime = this.alertService.startTime();
-    this.service.post(this.create).subscribe(
+    this.service.post(item).subscribe(
       res => {
         this.data.push(res);
         this.alertService.success(startTime, 'POST');
@@ -167,9 +163,8 @@ export class BookListComponent implements OnInit {
 
   private resetSummit() {
     this.initForm();
-    this.create = new Book();
-    this.createDialog = false;
-    this.createFilename = '';
+    this.upload = '';
+    this.uploadFilename = '';
   }
 
 }

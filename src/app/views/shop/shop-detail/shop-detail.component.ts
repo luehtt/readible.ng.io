@@ -13,7 +13,7 @@ import {BookCommentService} from 'src/app/services/comment.service';
 import {CartService} from '../../../services/cart.service';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import { isNgTemplate } from '@angular/compiler';
-import { FormFunc } from 'src/app/common/function';
+import { ControlFunc } from 'src/app/common/function';
 
 @Component({
   selector: 'app-shop-detail',
@@ -68,7 +68,7 @@ export class ShopDetailComponent implements OnInit {
   private initBookRating() {
     this.data.rating = this.data.bookComments.length === 0 ? 0 : this.data.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / this.data.bookComments.length;
     this.ratings = this.service.mapRating(this.data.bookComments, 5, 'rating');
-    for (let rating of this.data.bookComments) rating.updatedFromNow = FormFunc.translateDateTimeFromNow(FormFunc.toJsDate(rating.updatedAt));
+    for (let rating of this.data.bookComments) rating.updatedFromNow = ControlFunc.translateDateTimeFromNow(ControlFunc.jsDate(rating.updatedAt));
   }
 
   private initBookViewed() {

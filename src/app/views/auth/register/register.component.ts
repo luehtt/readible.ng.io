@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 import {AuthService} from 'src/app/services/auth/auth.service';
-import {FormFunc} from 'src/app/common/function';
+import {ControlFunc} from 'src/app/common/function';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Const, FormMessage} from 'src/app/common/const';
 
@@ -57,13 +57,13 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     // validate built-in validator
     if (this.form.invalid) {
-      FormFunc.touchControls(this.form.controls);
+      ControlFunc.touchControls(this.form.controls);
       return;
     }
     // validate custom validator
     for (const f in this.customValidator) {
       if (this.customValidator[f] === false) {
-        FormFunc.touchControls(this.form.controls);
+        ControlFunc.touchControls(this.form.controls);
         return;
       }
     }

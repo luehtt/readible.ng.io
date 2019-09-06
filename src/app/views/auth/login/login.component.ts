@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { User } from 'src/app/models/user';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { SessionService } from 'src/app/services/auth/session.service';
-import { FormFunc } from 'src/app/common/function';
+import { ControlFunc } from 'src/app/common/function';
 import { Const } from 'src/app/common/const';
 
 @Component({
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.form.invalid) {
-      FormFunc.touchControls(this.form.controls);
+      ControlFunc.touchControls(this.form.controls);
       return;
     }
 

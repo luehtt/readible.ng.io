@@ -1,8 +1,8 @@
 <button *ngIf="itemDialog == false" type="button" class="btn btn-primary mb-3" (click)="onEdit(null)">Create book category</button>
 
-<div class="row">
+<div *ngIf="itemDialog == true" class="row">
   <div class="col-xl-6 col-lg-8 col-md-10">
-    <div class="card" *ngIf="itemDialog == true">
+    <div class="card">
       <div class="card-header h5">Create item</div>
       <div class="card-body">
         <form *ngIf="form" [formGroup]="form">
@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<div class="card">
+<div *ngIf="loaded" class="card">
   <div class="card-header h5">List of all book categories</div>
   <div class="card-body">
     <div class="input-group mb-4">

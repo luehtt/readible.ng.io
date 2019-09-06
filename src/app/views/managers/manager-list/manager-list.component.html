@@ -11,7 +11,7 @@
             <div>
               <input type="text" class="form-control" formControlName="username" />
               <app-form-error [(input)]="form.controls.username"></app-form-error>
-              <div class="text-danger" *ngIf="customValidator.username == false">
+              <div class="text-danger" *ngIf="customRule.username == false">
                 <small>{{USERNAME_EXISTED}}</small>
               </div>
             </div>
@@ -21,7 +21,7 @@
             <div>
               <input type="email" class="form-control" formControlName="email" />
               <app-form-error [(input)]="form.controls.email"></app-form-error>
-              <div class="text-danger" *ngIf="customValidator.email == false">
+              <div class="text-danger" *ngIf="customRule.email == false">
                 <small>{{EMAIL_EXISTED}}</small>
               </div>
             </div>
@@ -47,7 +47,7 @@
                 <div>
                   <input type="number" style="max-width: 200px" class="form-control" formControlName="birth" (change)="validateBirth()"/>
                   <app-form-error [(input)]="form.controls.birth"></app-form-error>
-                  <div class="text-danger" *ngIf="customValidator.birth == false">
+                  <div class="text-danger" *ngIf="customRule.birth == false">
                     <small>{{REGISTER_AGE_LIMIT}}</small>
                   </div>
                 </div>

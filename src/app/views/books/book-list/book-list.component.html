@@ -1,6 +1,6 @@
 <button *ngIf="createDialog == false" type="button" class="btn btn-primary mb-3" (click)="createDialog = true">Create book</button>
 
-<div class="card" *ngIf="createDialog == true">
+<div *ngIf="createDialog == true" class="card">
   <div class="card-header h5">Create item</div>
   <div class="card-body">
     <form *ngIf="form" [formGroup]="form">
@@ -68,7 +68,7 @@
             <div class="col-sm-8">
               <div class="custom-file">
                 <input type="file" class="custom-file-input" (change)="onUploadImage($event)"/>
-                <label class="custom-file-label">{{ createFilename }}</label>
+                <label class="custom-file-label">{{ uploadFilename }}</label>
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@
   </div>
 </div>
 
-<div class="card">
+<div *ngIf="loaded" class="card">
   <div class="card-header h5">List of all books</div>
   <div class="card-body">
     <div class="input-group mb-4">
@@ -146,7 +146,7 @@
           <th scope="col" class="cursor-pointer" (click)="onSort('isbn')">Isbn</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('title')">Title</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('author')">Author</th>
-          <th scope="col" class="cursor-pointer" (click)="onSort('category')">Category</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('category.name')">Category</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('publisher')">Publisher</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('published')">Published</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('price')">Price</th>

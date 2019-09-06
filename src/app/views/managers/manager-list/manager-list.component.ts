@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {DataFunc, FormFunc} from 'src/app/common/function';
+import {DataFunc, ControlFunc} from 'src/app/common/function';
 import {Const, FormMessage} from '../../../common/const';
 import {ManagerService} from '../../../services/manager.service';
 import {Manager} from '../../../models/manager';
@@ -22,11 +22,12 @@ export class ManagerListComponent implements OnInit {
   data: Manager[];
   filter = '';
   page = 1;
-  pageSize: number = Const.PAGE_SIZE_HIGHER;
-  sorted = 'title';
-  sortedDirection = 'asc';
-  customValidator: CustomValidator;
+  pageSize = Const.PAGE_SIZE_HIGHER;
+  sortColumn = 'title';
+  sortDirection = 'asc';
+  customRule: CustomValidator;
   createDialog = false;
+  loaded: boolean;
 
   form: FormGroup;
   USERNAME_EXISTED = FormMessage.USERNAME_EXISTED;
@@ -37,14 +38,17 @@ export class ManagerListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.alertService.clear();
-    this.customValidator = { confirm: true, birth: true, username: true, email: true };
+    this.initData();
+  }
 
-    this.alertService.clear();
+  private initData() {
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.fetch().subscribe(
       res => {
         this.data = res;
+        this.loaded = true;
+        this.initForm();
         this.alertService.success(startTime, 'GET');
       },
       err => {
@@ -52,11 +56,11 @@ export class ManagerListComponent implements OnInit {
       }
     );
 
-    this.initForm();
   }
 
   private initForm() {
-    const recommendedYear = new Date().getFullYear() - 40;
+    this.customRule = { confirm: true, birth: true, username: true, email: true };
+    const recommendedYear = new Date().getFullYear() - 20;
 
     this.form = this.formBuilder.group({
       username: ['', [Validators.required, Validators.maxLength(128), Validators.minLength(4)]],
@@ -71,68 +75,54 @@ export class ManagerListComponent implements OnInit {
   }
 
   get dataFilter() {
-    return !this.data ? null : this.data.filter(x => x.birth.toString().toLowerCase().includes(this.filter.toLowerCase()) ||
-      (x.male === true && this.filter.toLowerCase() === 'male') ||
-      (x.male === false && this.filter.toLowerCase() === 'female') ||
-      DataFunc.include(x, this.filter, ['fullname', 'phone', 'createdAt']));
+    switch (this.filter) {
+      case 'male': case 'female':
+        return DataFunc.filter(this.data, this.filter === 'male' ? 'true' : 'false', ['male']);
+      default:
+        return DataFunc.filter(this.data, this.filter, ['fullname', 'birth', 'phone', 'createdAt']);
+    }
   }
 
-  onSort(sorting: string) {
-    if (sorting == null) { return; }
-    this.sortedDirection = this.sorted !== sorting ? 'asc' : (this.sortedDirection === 'asc' ? 'desc' : 'asc');
-    this.sorted = sorting;
-
-    switch (this.sorted) {
-      case 'fullname': case 'phone': case 'createdAt':
-        this.data = DataFunc.sortString(this.data, this.sorted, this.sortedDirection);
-        break;
-      case 'birth': case 'male':
-        this.data = DataFunc.sortNumber(this.data, this.sorted, this.sortedDirection);
-        break;
-    }
+  onSort(sortColumn: string) {
+    if (!sortColumn) { return; }
+    this.sortDirection = DataFunc.sortDirection(this.sortColumn, sortColumn);
+    this.sortColumn = sortColumn;
+    this.data = DataFunc.sort(this.data, this.sortColumn, this.sortDirection);
   }
 
   validateBirth() {
-    this.customValidator.birth = true;
+    this.customRule.birth = true;
     const year = new Date().getFullYear() - this.form.controls.birth.value;
-    if (year > Const.REGISTER_UPPER_LIMIT) { this.customValidator.birth = false; }
-    if (year < Const.REGISTER_LOWER_LIMIT) { this.customValidator.birth = false; }
+    if (year > Const.REGISTER_UPPER_LIMIT) { this.customRule.birth = false; }
+    if (year < Const.REGISTER_LOWER_LIMIT) { this.customRule.birth = false; }
+  }
+
+  private retrieveData(form: FormGroup) {
+    return {
+      username: form.controls.username.value,
+      password: form.controls.password.value,
+      email: form.controls.email.value,
+      birth: form.controls.birth.value,
+      fullname: form.controls.fullname.value,
+      male: form.controls.gender.value === 'male',
+      address: form.controls.address.value,
+      phone: form.controls.phone.value
+    };
   }
 
   onSubmit() {
-    // validate built-in validator
-    if (this.form.invalid) {
-      FormFunc.touchControls(this.form.controls);
-      return;
-    }
-    // validate custom validator
-    for (const f in this.customValidator) {
-      if (this.customValidator[f] === false) {
-        FormFunc.touchControls(this.form.controls);
-        return;
-      }
-    }
+    if (ControlFunc.validateForm(this.form, this.customRule)) { return; }
 
-    const data = {
-      username: this.form.controls.username.value,
-      password: this.form.controls.password.value,
-      email: this.form.controls.email.value,
-      birth: this.form.controls.birth.value,
-      fullname: this.form.controls.fullname.value,
-      male: this.form.controls.gender.value === 'male',
-      address: this.form.controls.address.value,
-      phone: this.form.controls.phone.value
-    };
-
-    this.alertService.clear();
+    const data = this.retrieveData(this.form);
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.register(data).subscribe(res => {
       if (res.success === true) {
         this.ngOnInit();
         this.alertService.success(startTime, 'POST');
       } else {
-        if (data.username) { this.customValidator.username = false; }
-        if (data.email) { this.customValidator.email = false; }
+        if (data.username) { this.customRule.username = false; }
+        if (data.email) { this.customRule.email = false; }
       }
     }, err => {
       this.alertService.failed(err);

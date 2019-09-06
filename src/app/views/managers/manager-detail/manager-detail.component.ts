@@ -24,8 +24,9 @@ export class ManagerDetailComponent implements OnInit {
   orderPage = 1;
   orderPageSize: number = Const.PAGE_SIZE_HIGHER;
   orderFilter = '';
-  orderSorted = 'id';
-  orderSortedDirection = 'asc';
+  orderSortColumn = 'id';
+  orderSortDirection = 'asc';
+  loaded: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,19 +37,17 @@ export class ManagerDetailComponent implements OnInit {
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
-    this.alertService.clear();
+    this.initData();
+  }
 
-    this.alertService.clear();
+  private initData() {
     const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res.manager;
         this.account = res.user;
-
-        // this method is to join n list into 1 list and remove duplication
-        // do NOT freak out, read more here:
-        // https://medium.com/dailyjs/how-to-remove-array-duplicates-in-es6-5daa8789641c
-        this.orders = [...new Set([...this.data.confirmedOrders, ...this.data.completedOrders])];
+        this.orders = DataFunc.removeDuplicate(this.data.confirmedOrders, this.data.completedOrders);
         this.alertService.success(startTime, 'GET');
       },
       err => {
@@ -58,25 +57,14 @@ export class ManagerDetailComponent implements OnInit {
   }
 
   get filterOrder() {
-    return !this.data ? null : this.orders.filter(x => x.status.locale.toLowerCase().includes(this.orderFilter.toLowerCase()) ||
-      DataFunc.include(x, this.orderFilter, ['createdAt', 'updatedAt']) ||
-      DataFunc.includeNumber(x, this.orderFilter, ['id', 'totalItem', 'totalPrice'])
-    );
+    return DataFunc.filter(this.orders, this.orderFilter, ['id', 'statusId', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
 
-  onSortOrder(sorting: string) {
-    if (sorting == null) { return; }
-    this.orderSortedDirection = this.orderSorted !== sorting ? 'asc' : (this.orderSortedDirection === 'asc' ? 'desc' : 'asc');
-    this.orderSorted = sorting;
-
-    switch (this.orderSorted) {
-      case 'createdAt': case 'updatedAt':
-        this.orders = DataFunc.sortString(this.orders, this.orderSorted, this.orderSortedDirection);
-        break;
-      case 'id': case 'totalItem': case 'totalPrice': case 'statusId':
-        this.orders = DataFunc.sortNumber(this.orders, this.orderSorted, this.orderSortedDirection);
-        break;
-    }
+  onSortOrder(sortColumn: string) {
+    if (!sortColumn) { return; }
+    this.orderSortDirection = DataFunc.sortDirection(this.orderSortColumn, sortColumn);
+    this.orderSortColumn = sortColumn;
+    this.orders = DataFunc.sort(this.orders, this.orderSortColumn, this.orderSortDirection);
   }
 
 

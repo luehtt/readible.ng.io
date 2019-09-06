@@ -7,7 +7,7 @@ import {AlertMessageService} from 'src/app/services/common/alert-message.service
 import {AccountService} from 'src/app/services/account.service';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 
-import {FileFunc, FormFunc, ImageFunc} from 'src/app/common/function';
+import {FileFunc, ControlFunc, ImageFunc} from 'src/app/common/function';
 import {Const, FormMessage} from 'src/app/common/const';
 
 @Component({
@@ -62,7 +62,7 @@ export class AccountComponent implements OnInit {
       fullname: [this.data.fullname, [Validators.required, Validators.maxLength(255)]],
       address: [this.data.address ? this.data.address : '', [Validators.maxLength(255)]],
       phone: [this.data.phone ? this.data.phone : '', [Validators.maxLength(16)]],
-      male: [FormFunc.radioTrueFalse(this.data.male), [Validators.required]],
+      male: [ControlFunc.radioTrueFalse(this.data.male), [Validators.required]],
       birth: [this.data.birth, [Validators.required, Validators.min(minYear), Validators.max(maxYear)]]
     });
   }
@@ -96,9 +96,9 @@ export class AccountComponent implements OnInit {
       FileFunc.convertFileToBase64(file)
         .then(res => {
           this.data.image = res.toString();
-          const orientation = ImageFunc.GetOrientation(this.data.image);
+          const orientation = ImageFunc.getOrientation(this.data.image);
           if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = ImageFunc.TransformCss(orientation);
+            this.imageTransform = ImageFunc.transformCSS(orientation);
           }
           this.infoDialog = true;
         }).catch(err => {
@@ -116,7 +116,7 @@ export class AccountComponent implements OnInit {
   onChangePassword() {
     this.alertService.clear();
     if (this.passwordForm.invalid) {
-      FormFunc.touchControls(this.passwordForm.controls);
+      ControlFunc.touchControls(this.passwordForm.controls);
       return;
     }
 
@@ -142,7 +142,7 @@ export class AccountComponent implements OnInit {
   onChangeInfo() {
     this.alertService.clear();
     if (this.infoForm.invalid) {
-      FormFunc.touchControls(this.passwordForm.controls);
+      ControlFunc.touchControls(this.passwordForm.controls);
       return;
     }
 
