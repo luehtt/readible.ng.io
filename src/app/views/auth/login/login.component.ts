@@ -44,21 +44,24 @@ export class LoginComponent implements OnInit {
     this.service.login(user).subscribe(res => {
       this.sessionService.setTokenSession(res.token);
       const json = this.sessionService.decodeToken(res.token);
-
-      // this angular built-in redirect cannot use with link having backslash or any other special character
-      // better use window.location.href to hot fix redirect
-      if (json.role === 'MANAGER' || json.role === 'ADMIN') {
-        this.router.navigate(['admin/dashboard']);
-        this.alertService.set('Login succeeded!!', 'success');
-      } else if (json.role === 'CUSTOMER') {
-        if (!this.redirect || this.redirect === '') {
-          window.location.href = Common.THIS_URL;
-        } else {
-          window.location.href = this.redirect;
-        }
-      }
+      this.navigateOnRole(json.role);
     }, err => {
       this.alertService.failed(err);
     });
+  }
+
+  // this angular built-in redirect cannot use with link having backslash or any other special character
+  // better use window.location.href to hot fix redirect
+  private navigateOnRole(userRole: string) {
+    if (userRole === 'MANAGER' || userRole === 'ADMIN') {
+      this.router.navigate(['admin/dashboard']);
+      this.alertService.set('Login succeeded!!', 'success');
+    } else if (userRole === 'CUSTOMER') {
+      if (!this.redirect || this.redirect === '') {
+        window.location.href = Common.THIS_URL;
+      } else {
+        window.location.href = this.redirect;
+      }
+    }
   }
 }

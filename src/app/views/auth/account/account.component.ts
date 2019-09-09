@@ -96,7 +96,7 @@ export class AccountComponent implements OnInit {
           this.data.image = res.toString();
           const orientation = FileControl.getOrientation(this.data.image);
           if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = FileControl.transformCSS(orientation);
+            this.imageTransform = FileControl.transformCss(orientation);
           }
           this.infoDialog = true;
         }).catch(err => {

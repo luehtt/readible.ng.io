@@ -9,6 +9,7 @@ import { Book } from 'src/app/models/book';
 import { Common } from '../../../common/const';
 import { Order } from '../../../models/order';
 import { CartService } from '../../../services/cart.service';
+import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-customer-cart',
@@ -20,7 +21,8 @@ export class CustomerCartComponent implements OnInit {
   form: FormGroup;
   customer: Customer;
 
-  constructor(private formBuilder: FormBuilder, private service: ShopService, private cartService: CartService, private alertService: AlertMessageService) {}
+  constructor(private formBuilder: FormBuilder, public placeholderService: PlaceholderService, private service: ShopService,
+              private cartService: CartService, private alertService: AlertMessageService) {}
 
   get totalPrice() {
     return !this.data ? 0 : this.data.map(x => x ? x.actualPrice * x.amount : 0).reduce((a, b) => a + b, 0);

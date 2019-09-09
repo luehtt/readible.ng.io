@@ -1,6 +1,6 @@
 <div class="mb-3" *ngIf="service.data && service.data.length != 0">
   <div *ngFor="let i of service.data">
-    <div [class]="'mb-1 alert alert-' i.type">
+    <div [class]="'mb-1 alert alert-' + i.type">
       <strong>Success!</strong> {{i.message}}
       <button type="button" class="close float-right" aria-label="Close" (click)="service.clear()">
         <span aria-hidden="true">&times;</span>

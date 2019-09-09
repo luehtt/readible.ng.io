@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {Book} from '../models/book';
 import {Cart} from '../models/cart';
-import {Common} from '../common/common';
+import {Common} from '../common/const';
 
 @Injectable({
   providedIn: 'root'

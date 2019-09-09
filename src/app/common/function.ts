@@ -1,5 +1,5 @@
-import { FormGroup } from '@angular/forms';
-import { piexif } from 'piexifjs';
+import {FormGroup} from '@angular/forms';
+import {piexif} from 'piexifjs';
 
 export class DataControl {
   static createTimestamp<T>(item: T): T {
@@ -20,7 +20,7 @@ export class DataControl {
   }
 
   static fillDigit(n: number, length: number = 2, char: string = '0'): string {
-    return n >= Math.pow(10, length) ? n.toString() : (char.repeat(length) + length).slice(-length);
+    return n >= Math.pow(10, length - 1) ? n.toString() : (char.repeat(length) + n.toString()).slice(-length);
   }
 
   static jsDate(datetime: string): Date {
@@ -32,12 +32,15 @@ export class DataControl {
   }
 
   static jsonDate(data: Date = new Date()): string {
+    console.log(data.getMonth() + 1);
+    console.log(data.getDate());
+
     return data.getFullYear().toString() + '-' + this.fillDigit(data.getMonth() + 1) + '-' + this.fillDigit(data.getDate());
   }
 
   static jsonDatetime(data: Date = new Date()): string {
     const date = this.jsonDate(data);
-    const time = this.fillDigit(data.getHours()) + ':' + this.fillDigit(data.getMinutes()) + ":" + this.fillDigit(data.getSeconds());
+    const time = this.fillDigit(data.getHours()) + ':' + this.fillDigit(data.getMinutes()) + ':' + this.fillDigit(data.getSeconds());
     return date + 'T' + time;
   }
 
@@ -46,7 +49,7 @@ export class DataControl {
   }
 
   static isSameDay(date1: Date, date2: Date = new Date()): boolean {
-    return this.isSameMonth(date1, date2) == false ? false : date1.getDate() !== date2.getDate();
+    return this.isSameMonth(date1, date2) === false ? false : date1.getDate() !== date2.getDate();
   }
 
   static isSameMonth(date1: Date, date2: Date = new Date()): boolean {
@@ -104,7 +107,7 @@ export class DataControl {
 
   static includes(data, search: string, properties: string[]): boolean {
     const s = search.toLocaleLowerCase();
-    for (let p of properties) {
+    for (const p of properties) {
       const a = p.split('.');
       const d = this.readObject(data, a).toString();
       if (d.toLocaleLowerCase().includes(s)) { return true; }
@@ -116,8 +119,9 @@ export class DataControl {
     return properties.length === 1 ? data[properties[0]] : this.readObject(data[properties[0]], properties.slice(1));
   }
 
-  static sortDirection = (currentSort: string, sort: string): string =>
-    currentSort !== sort ? 'asc' : currentSort === 'asc' ? 'desc' : 'asc';
+  static sortDirection (currentSort: string, sort: string, currentDirection: string): string {
+    return currentSort !== sort ? 'asc' : currentDirection === 'asc' ? 'desc' : 'asc';
+  }
 
   static sort<T>(data: T[], property: string, direction: string): T[] {
     if (data.length === 0) { return data; }
@@ -136,13 +140,13 @@ export class DataControl {
     if (typeof ad !== typeof bd) { return 0; }
     switch (typeof ad) {
       case 'number': return ad - bd;
-      case 'boolean': return ad === bd? 0 : ad? -1 : 1;
+      case 'boolean': return ad === bd ? 0 : ad ? -1 : 1;
       case 'string': return ad.localeCompare(bd);
     }
   }
 
   // this method is to join n list into 1 list and remove duplication
-  // https://medium.com/dailyjs/how-to-remove-array-duplicates-in-es6-5daa8789641c  
+  // https://medium.com/dailyjs/how-to-remove-array-duplicates-in-es6-5daa8789641c
   static removeDuplicate<T>(list1: T[], list2: T[]): T[] {
     return [...new Set([...list1, ...list2])];
   }
@@ -172,20 +176,20 @@ export class FileControl {
     });
   }
 
-  static checkBase64File (imageString: string, filetype: string): boolean {
-    return imageString.includes(filetype + ';base64');
+  static checkBase64File(imageString: string, fileType: string): boolean {
+    return imageString.includes(fileType + ';base64');
   }
-  
-  static getExif (imageString: string, group: string, code: number) {
+
+  static getExif(imageString: string, group: string, code: number) {
     const exif = piexif.load(imageString);
     return exif ? exif[group][code] : null;
   }
 
-  static getOrientation (imageString: string): number {
-    return this.checkBase64File(imageString, 'jpeg') === false ? null : parseInt(this.getExif(imageString, '0th', 271));
+  static getOrientation(imageString: string): number {
+    return this.checkBase64File(imageString, 'jpeg') === false ? null : parseInt(this.getExif(imageString, '0th', 271), 10);
   }
 
-  static transformCSS = (orientation: number): string => {
+  static transformCss = (orientation: number): string => {
     switch (orientation) {
       case 2: return 'rotateY(180deg)';
       case 3: return 'rotate(180deg)';

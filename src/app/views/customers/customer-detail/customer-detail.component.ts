@@ -66,7 +66,7 @@ export class CustomerDetailComponent implements OnInit {
 
   onSortOrder(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.orderSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn);
+    this.orderSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn, this.orderSortDirection);
     this.orderSortColumn = sortColumn;
     this.data.orders = DataControl.sort(this.data.orders, this.orderSortColumn, this.orderSortDirection);
   }
@@ -82,7 +82,7 @@ export class CustomerDetailComponent implements OnInit {
 
   onSortComment(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.commentSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn);
+    this.commentSortDirection = DataControl.sortDirection(this.commentSortColumn, sortColumn, this.commentSortDirection);
     this.commentSortColumn = sortColumn;
     this.data.bookComments = DataControl.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
   }

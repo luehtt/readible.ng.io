@@ -3,13 +3,14 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
 import {Customer, CustomerUser} from '../models/customer';
+import {Endpoint} from '../common/const';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
 
-  private endpoint = 'customers';
+  private endpoint = Endpoint.CUSTOMER;
 
   constructor(private httpService: HttpClientService) { }
 

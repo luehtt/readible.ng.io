@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
 import {BookCategory} from '../models/category';
-import {Endpoint} from '../common/common';
+import {Endpoint} from '../common/const';
 
 @Injectable({
   providedIn: 'root'

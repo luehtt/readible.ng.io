@@ -66,7 +66,7 @@ export class ShopDetailComponent implements OnInit {
 
   private initBookRating() {
     this.data.rating = this.data.bookComments.length === 0 ? 0 : this.data.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / this.data.bookComments.length;
-    this.ratings = this.service.mapRating(this.data.bookComments, 5, 'rating');
+    this.ratings = this.service.calcRating(this.data.bookComments, 5, 'rating');
     for (let rating of this.data.bookComments) rating.updatedFromNow = DataControl.translateDateTimeFromNow(DataControl.jsDate(rating.updatedAt));
   }
 

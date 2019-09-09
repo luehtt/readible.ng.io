@@ -56,7 +56,7 @@ export class BookCategoryListComponent implements OnInit {
 
   onSort(sortedColumn: string) {
     if (!sortedColumn) { return; }
-    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortedColumn);
+    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortedColumn, this.sortDirection);
     this.sortColumn = sortedColumn;
     this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }

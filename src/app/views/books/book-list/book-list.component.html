@@ -147,7 +147,6 @@
           <th scope="col" class="cursor-pointer" (click)="onSort('title')">Title</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('author')">Author</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('category.name')">Category</th>
-          <th scope="col" class="cursor-pointer" (click)="onSort('publisher')">Publisher</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('published')">Published</th>
           <th scope="col" class="cursor-pointer" (click)="onSort('price')">Price</th>
           <th scope="col" class="cursor-pointer" (click)="onSort(null)">Action</th>
@@ -159,7 +158,6 @@
           <td><ngb-highlight [result]="item.title" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.author" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.category.name" [term]="filter"></ngb-highlight></td>
-          <td><ngb-highlight [result]="item.publisher" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.published | date: 'yyyy-MM-dd'" [term]="filter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.price | currency" [term]="filter"></ngb-highlight>
           <td><a [routerLink]="'./' + item.isbn">Detail</a></td>

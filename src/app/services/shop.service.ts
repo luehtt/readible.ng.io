@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
 import {Book, BookPagination} from '../models/book';
-import {Endpoint} from '../common/common';
+import {Endpoint} from '../common/const';
 import {Customer} from '../models/customer';
 import {BookComment} from '../models/comment';
 import {Order} from '../models/order';
@@ -24,21 +24,16 @@ export class ShopService {
   }
 
   fetchPage(page: number, limit: number, category: string): Observable<BookPagination> {
-    const endpoint = category && category !== '' ?
-      `${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}` :
-      `${this.endpoint}?page=${page}&pageSize=${limit}`;
-    return this.httpService.get(endpoint);
+    return category ?
+      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}`) :
+      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}`);
   }
 
   fetchSearchPage(page: number, limit: number, category: string, search: string): Observable<BookPagination> {
-    if (!search || search === '') {
-      return this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}`);
-    }
-
-    const endpoint = category && category !== '' ?
-      `${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}&search=${search.toLowerCase()}` :
-      `${this.endpoint}?page=${page}&pageSize=${limit}&search=${search.toLowerCase()}`;
-    return this.httpService.get(endpoint);
+    return !search ?
+      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}`) : category ?
+      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}&search=${search.toLowerCase()}`) :
+      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&search=${search.toLowerCase()}`);
   }
 
   get(isbn: string): Observable<Book> {
@@ -53,7 +48,7 @@ export class ShopService {
     return this.httpService.post(this.customerEndpoint, {});
   }
 
-  mapRating(data: BookComment[], amount: number, property: string) {
+  calcRating(data: BookComment[], amount: number, property: string) {
     if (!data || !property || amount < 1 ) { return null; }
     const a = [];
 

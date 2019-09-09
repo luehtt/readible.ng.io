@@ -21,39 +21,25 @@
         <thead>
           <tr>
             <th scope="col" class="cursor-pointer" (click)="onSort('id')">Id</th>
-            <th scope="col" class="cursor-pointer" (click)="onSort('customer')">Customer</th>
+            <th scope="col" class="cursor-pointer" (click)="onSort('customer.fullname')">Customer</th>
             <th scope="col" class="cursor-pointer" (click)="onSort('phone')">Phone</th>
             <th scope="col" class="cursor-pointer" (click)="onSort('totalItem')">Items</th>
             <th scope="col" class="cursor-pointer" (click)="onSort('totalPrice')">Total</th>
             <th scope="col" class="cursor-pointer" (click)="onSort('createdAt')">Created at</th>
-            <th scope="col" class="cursor-pointer" (click)="onSort('updatedAt')">Last Updated</th>
+            <th scope="col" class="cursor-pointer" (click)="onSort('updatedAt')">Updated at</th>
             <th scope="col" class="cursor-pointer" (click)="onSort(null)">Action</th>
           </tr>
         </thead>
         <tbody>
         <tr *ngFor="let item of dataFilter | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-          <td>
-            <ngb-highlight [result]="item.id" [term]="filter"></ngb-highlight>
-          </td>
-          <td>
-            <ngb-highlight [result]="item.customer.fullname" [term]="filter"></ngb-highlight>
-          </td>
-          <td>
-            <ngb-highlight [result]="item.phone" [term]="filter"></ngb-highlight>
-          </td>
-          <td>
-            <ngb-highlight [result]="item.totalItem" [term]="filter"></ngb-highlight>
-          </td>
-          <td>
-            <ngb-highlight [result]="item.totalPrice | currency" [term]="filter"></ngb-highlight>
-          </td>
-          <td>
-            <ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd hh:mm:ss'" [term]="filter"></ngb-highlight>
-          </td>
-          <td>
-            <ngb-highlight [result]="item.updatedAt | date: 'yyyy-MM-dd hh:mm:ss'" [term]="filter"></ngb-highlight>
-          </td>
-            <td><a [routerLink]="'./' + item.id">Detail</a></td>
+          <td><ngb-highlight [result]="item.id" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.customer.fullname" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.phone" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.totalItem" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.totalPrice | currency" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd hh:mm:ss'" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.updatedAt | date: 'yyyy-MM-dd hh:mm:ss'" [term]="filter"></ngb-highlight></td>
+          <td><a [routerLink]="'./' + item.id">Detail</a></td>
           </tr>
         </tbody>
       </table>

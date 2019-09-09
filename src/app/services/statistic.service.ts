@@ -3,13 +3,14 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
 import {OrderStatistic} from '../models/statistic';
+import {Endpoint} from '../common/const';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatisticService {
 
-  private endpoint = 'statistic';
+  private endpoint = Endpoint.STATISTIC;
 
   constructor(private httpService: HttpClientService) { }
 

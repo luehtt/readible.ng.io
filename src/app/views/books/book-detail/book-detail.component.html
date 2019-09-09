@@ -5,9 +5,8 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 text-center mb-3 mb-md-0">
-            <img *ngIf="data.image && data.image != ''" [alt]="data.title" class="img-fluid mt-2" [src]="data.image" [ngStyle]="{'transform': imageTransform}"/>
-            <img *ngIf="!data.image || data.image == ''" [alt]="data.title" class="img-fluid mt-2" 
-                 [src]="placeholderService.imgHolder(500, 700, data.title)" />
+            <img *ngIf="data.image" [alt]="data.title" class="img-fluid mt-2" [src]="data.image" [ngStyle]="{'transform': imageTransform}"/>
+            <img *ngIf="!data.image" [alt]="data.title" class="img-fluid mt-2"  [src]="placeholderService.imgHolder(500, 700, data.title)" />
 
             <div class="mt-2">
               <input class="d-none" id="file" type="file" accept="image/*" #fileInput (change)="onChangeImage($event)" />
@@ -69,7 +68,7 @@
             <label class="col-sm-4">Category</label>
             <div class="col-sm-8">
               <select class="form-control" formControlName="categoryId">
-                <option *ngIf="categories" *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+                <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
               </select>
               <app-form-error [(input)]="form.controls.categoryId"></app-form-error>
             </div>
@@ -153,7 +152,7 @@
   </div>
 </div>
 
-<div *ngIf="loaded" class="card" *ngIf="data">
+<div *ngIf="loaded" class="card">
   <div class="card-header h5">List of comments</div>
   <div class="card-body">
     <div class="input-group mb-4">

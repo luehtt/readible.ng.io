@@ -49,6 +49,7 @@ export class ManagerDetailComponent implements OnInit {
         this.account = res.user;
         this.orders = DataControl.removeDuplicate(this.data.confirmedOrders, this.data.completedOrders);
         this.alertService.success(startTime, 'GET');
+        this.loaded = true;
       },
       err => {
         this.alertService.failed(err);
@@ -62,7 +63,7 @@ export class ManagerDetailComponent implements OnInit {
 
   onSortOrder(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.orderSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn);
+    this.orderSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn, this.orderSortDirection);
     this.orderSortColumn = sortColumn;
     this.orders = DataControl.sort(this.orders, this.orderSortColumn, this.orderSortDirection);
   }

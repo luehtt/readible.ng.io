@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {retry} from 'rxjs/operators';
 
-import {Common} from '../../common/common';
+import {Common} from '../../common/const';
 import {SessionService} from '../auth/session.service';
 
 @Injectable({

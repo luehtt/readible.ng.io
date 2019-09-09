@@ -96,12 +96,12 @@ export class BookListComponent implements OnInit {
   }
 
   get dataFilter() {
-    return DataControl.filter(this.data, this.filter, ['title', 'author', 'isbn', 'publisher', 'published', 'price', 'category.name']);
+    return DataControl.filter(this.data, this.filter, ['title', 'author', 'isbn', 'published', 'price', 'category.name']);
   }
 
   onSort(sortedColumn: string) {
     if (!sortedColumn) { return; }
-    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortedColumn);
+    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortedColumn, this.sortDirection);
     this.sortColumn = sortedColumn;
     this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }

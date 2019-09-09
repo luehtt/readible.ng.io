@@ -5,9 +5,8 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 text-center mb-3 mb-md-0">
-            <img *ngIf="data.image && data.image != ''" [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="data.image" />
-            <img *ngIf="!data.image || data.image == ''" [alt]="data.fullname" class="img-fluid rounded-circle mt-2"
-                 [src]="placeholderService.imgHolder(300, 300, data.fullname)" />
+            <img *ngIf="data.image" [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="data.image" />
+            <img *ngIf="!data.image" [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="placeholderService.imgHolder(300, 300, data.fullname)" />
           </div>
 
           <div class="col-md-8">
@@ -15,7 +14,7 @@
               <li class="list-group-item"><strong>Fullname:</strong> {{ data.fullname }}</li>
               <li class="list-group-item"><strong>Gender:</strong> {{ data.male == true ? 'Male' : 'Female' }}</li>
               <li class="list-group-item"><strong>Year of birth:</strong> {{ data.birth }}</li>
-              <li class="list-group-item"><strong>Address</strong> {{ data.address }}</li>
+              <li class="list-group-item"><strong>Address:</strong> {{ data.address }}</li>
               <li class="list-group-item"><strong>Phone:</strong> {{ data.phone }}</li>
               <li class="list-group-item"><strong>Registered at:</strong> {{ data.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
               <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>

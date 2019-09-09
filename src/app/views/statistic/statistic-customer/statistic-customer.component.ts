@@ -25,8 +25,8 @@ export class StatisticCustomerComponent implements OnInit {
   ageChart: any;
   genderChart: any;
   chartTitle: string;
-  ageChartColor = [Chart.RED, Chart.GREEN, Chart.BLUE, Chart.AMBER];
-  genderChartColor = [Chart.VIOLET, Chart.ROSE];
+  ageChartColor = [ChartOption.COLOR_RED, ChartOption.COLOR_GREEN, ChartOption.COLOR_BLUE, ChartOption.COLOR_AMBER];
+  genderChartColor = [ChartOption.COLOR_GREEN, ChartOption.COLOR_ROSE];
 
   constructor(private service: StatisticService, private alertService: AlertMessageService) {}
 

@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from '../common/http-client.service';
 import {SessionService} from './session.service';
-import {Common} from 'src/app/common/common';
+import {Common} from 'src/app/common/const';
 
 @Injectable({
   providedIn: 'root'

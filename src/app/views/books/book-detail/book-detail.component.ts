@@ -130,7 +130,7 @@ export class BookDetailComponent implements OnInit {
 
   onSortComment(sortedColumn: string) {
     if (sortedColumn == null) { return; }
-    this.commentSortDirection = this.commentSortColumn !== sortedColumn ? 'asc' : (this.commentSortDirection === 'asc' ? 'desc' : 'asc');
+    this.commentSortDirection = DataControl.sortDirection(this.commentSortColumn, sortedColumn, this.commentSortDirection);
     this.commentSortColumn = sortedColumn;
     this.data.bookComments = DataControl.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
   }
@@ -143,7 +143,7 @@ export class BookDetailComponent implements OnInit {
           this.data.image = res.toString();
           const orientation = FileControl.getOrientation(this.data.image);
           if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = FileControl.transformCSS(orientation);
+            this.imageTransform = FileControl.transformCss(orientation);
           }
         }).catch(err => {
           this.alertService.failed(err);

@@ -8,7 +8,7 @@
           <li class="list-group-item"><strong>Delivery phone:</strong> {{ data.phone }}</li>
           <li class="list-group-item"><strong>Total items:</strong> {{ data.totalItem }}</li>
           <li class="list-group-item"><strong>Total price:</strong> {{ data.totalPrice | currency }}</li>
-          <li class="list-group-item"><strong>Status:</strong>
+          <li class="list-group-item"><strong class="mr-2">Status:</strong>
             <app-order-status [(input)]="data.status"></app-order-status>
           </li>
           <li class="list-group-item" *ngIf="data.confirmedManager"><strong>Confirmed manager:</strong> {{ data.confirmedManager.fullname }}</li>

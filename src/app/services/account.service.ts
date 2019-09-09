@@ -3,13 +3,14 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
 import {SessionService} from './auth/session.service';
+import {Endpoint} from '../common/const';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
 
-  private endpoint = 'accounts';
+  private endpoint = Endpoint.ACCOUNT;
 
   constructor(private httpService: HttpClientService, private sessionService: SessionService) { }
 
@@ -17,7 +18,7 @@ export class AccountService {
     return this.httpService.get(this.endpoint);
   }
 
-  put(data: any): Observable<any> {
+  put(data): Observable<any> {
     const json = this.sessionService.getTokenSessionJson();
     return this.httpService.put(this.endpoint + '/' + json.role.toLowerCase(), data);
   }

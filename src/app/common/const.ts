@@ -22,9 +22,12 @@ export const Endpoint = {
   ORDER: 'orders',
   USER: 'users',
   CUSTOMER: 'customers',
+  MANAGER: 'managers',
   LOGIN: 'login',
   REGISTER: 'register',
-  DASHBOARD: 'dashboard'
+  DASHBOARD: 'dashboard',
+  ACCOUNT: 'account',
+  STATISTIC: 'statistic'
 };
 
 export const FormMessage = {
@@ -59,16 +62,16 @@ export const ChartOption = {
   COLOR_BROWN: '#795548',
 
   COLOR_LIST: [
-    this.COLOR_BLUE,
-    this.COLOR_TEAL,
-    this.COLOR_PURPLE,
-    this.COLOR_VIOLET,
-    this.COLOR_GREEN,
-    this.COLOR_AMBER,
-    this.COLOR_RED,
-    this.COLOR_CYAN,
-    this.COLOR_ROSE,
-    this.COLOR_BROWN
+    '#2196f3',
+    '#009688',
+    '#9c27b0',
+    '#673ab7',
+    '#4caf50',
+    '#ffc107',
+    '#f44336',
+    '#00bcd4',
+    '#e91e63',
+    '#795548'
   ],
 
   TRANSPARENT: 'transparent',

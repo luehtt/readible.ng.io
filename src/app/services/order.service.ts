@@ -3,22 +3,19 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
 import {Order} from '../models/order';
+import {Endpoint} from '../common/const';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
 
-  private endpoint = 'orders';
+  private endpoint = Endpoint.ORDER;
 
   constructor(private httpService: HttpClientService) { }
 
   fetch(status: string): Observable<Order[]> {
-    if (!status || status === '') {
-      return this.httpService.fetch(this.endpoint);
-    } else {
-      return this.httpService.fetch(this.endpoint + '?status=' + status);
-    }
+    return status ? this.httpService.fetch(this.endpoint + '?status=' + status) : this.httpService.fetch(this.endpoint);
   }
 
   get(id: number): Observable<Order> {

@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 import {AuthService} from 'src/app/services/auth/auth.service';
-import {FormGroupControl} from 'src/app/common/function';
+import {DataControl, FormGroupControl} from 'src/app/common/function';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {Common, FormMessage} from 'src/app/common/common';
+import {Common, FormMessage} from 'src/app/common/const';
 
 @Component({
   selector: 'app-register',
@@ -22,10 +22,10 @@ export class RegisterComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private service: AuthService, private alertService: AlertMessageService) { }
 
   ngOnInit() {
-    this.ngOnInitForm();
+    this.initForm();
   }
 
-  ngOnInitForm() {
+  initForm() {
     const recommendedYear = new Date().getFullYear() - 40;
 
     this.form = this.formBuilder.group({
@@ -54,31 +54,25 @@ export class RegisterComponent implements OnInit {
     if (year < Common.REGISTER_LOWER_LIMIT) { this.customValidator.birth = false; }
   }
 
-  onSubmit() {
-    // validate built-in validator
-    if (this.form.invalid) {
-      FormGroupControl.touchControls(this.form.controls);
-      return;
-    }
-    // validate custom validator
-    for (const f in this.customValidator) {
-      if (this.customValidator[f] === false) {
-        FormGroupControl.touchControls(this.form.controls);
-        return;
-      }
-    }
-
-    const data = {
+  private retrieveInfo(form: FormGroup) {
+    return {
       username: this.form.controls.username.value,
       password: this.form.controls.password.value,
       email: this.form.controls.email.value,
-      birth: this.form.controls.birth.value,
-      fullname: this.form.controls.fullname.value,
-      male: this.form.controls.gender.value === 'male',
-      address: this.form.controls.address.value,
-      phone: this.form.controls.phone.value
+      fullname: form.controls.fullname.value,
+      birth: form.controls.birth.value,
+      male: form.controls.male.value,
+      address: form.controls.address.value,
+      phone: form.controls.phone.value,
+      createdAt: DataControl.jsonDate(),
     };
+  }
 
+  onSubmit() {
+    this.alertService.clear();
+    if (FormGroupControl.validateForm(this.form, this.customValidator)) { return; }
+
+    const data = this.retrieveInfo(this.form);
     this.service.register(data).subscribe(res => {
       if (res.success === true) {
         window.location.href = Common.THIS_URL + '/login';

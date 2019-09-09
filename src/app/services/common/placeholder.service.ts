@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {ColorCodeList, Common} from '../../common/common';
+import {ChartOption, Common} from '../../common/const';
 
 @Injectable({
   providedIn: 'root'
@@ -8,13 +8,14 @@ import {ColorCodeList, Common} from '../../common/common';
 export class PlaceholderService {
 
   private url = Common.PLACEHOLDER_URL;
+  private colors = ChartOption.COLOR_LIST;
 
   constructor() {
   }
 
   public imgHolder(width: number, height: number, text: string): string {
     const iter = text[0].toLocaleLowerCase().charCodeAt(0);
-    const color = ColorCodeList[iter % ColorCodeList.length].substring(1);
+    const color = this.colors[iter % this.colors.length].substring(1);
     const initial = text[0].toLocaleUpperCase();
 
     return `${this.url}${width}x${height}/${color}/ffffff/?text=${initial}`;

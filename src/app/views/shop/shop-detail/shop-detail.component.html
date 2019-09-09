@@ -4,8 +4,8 @@
   <div class="row">
     <!--image section-->
     <div class="col-md-4 mb-4 mb-md-0">
-      <img *ngIf="data.image && data.image != ''" [alt]="data.title" [src]="data.image" class="img-fluid mt-2" />
-      <img *ngIf="!data.image || data.image == ''" [alt]="data.title" [src]="placeholderService.imgHolder(250, 350, data.title)" class="img-fluid mt-2" />
+      <img *ngIf="data.image" [alt]="data.title" [src]="data.image" class="img-fluid mt-2" />
+      <img *ngIf="!data.image" [alt]="data.title" [src]="placeholderService.imgHolder(250, 350, data.title)" class="img-fluid mt-2" />
     </div>
     <!--end image section-->
 

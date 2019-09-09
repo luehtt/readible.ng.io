@@ -52,7 +52,7 @@ export class CustomerListComponent implements OnInit {
 
   onSort(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortColumn);
+    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortColumn, this.sortDirection);
     this.sortColumn = sortColumn;
     this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }

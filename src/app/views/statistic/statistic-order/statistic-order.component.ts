@@ -55,12 +55,19 @@ export class StatisticOrderComponent implements OnInit {
     this.fromDate = new Date();
 
     switch (this.selectedRecent) {
-      case 'week': return this.setRecentDuration(this.selectedRecent, 7);
-      case 'fortnight': return this.setRecentDuration(this.selectedRecent, 14);
-      case 'month': return this.setRecentDuration(this.selectedRecent, 30);
-      case 'year': return this.setRecentDuration(this.selectedRecent, 365);
+      case 'week': return this.setRecentDuration('day', 7);
+      case 'fortnight': return this.setRecentDuration('day', 14);
+      case 'month': return this.setRecentDuration('day', 30);
+      case 'year': return this.setRecentDuration('month', 365);
       default: return this.initData();
     }
+  }
+
+  private setRecentDuration(reference: string, offset: number) {
+    this.selectedReference = reference;
+    this.fromDate.setDate(this.toDate.getDate() - offset);
+    if (this.fromDate < this.oldestTimestamp) { this.fromDate = this.oldestTimestamp; }
+    return this.initData();
   }
 
   onSelectRange() {
@@ -71,14 +78,8 @@ export class StatisticOrderComponent implements OnInit {
     this.initData();
   }
 
-  private setRecentDuration(reference: string, offset: number) {
-    this.selectedReference = reference;
-    this.fromDate.setDate(this.toDate.getDate() - offset);
-    if (this.fromDate < this.oldestTimestamp) { this.fromDate = this.oldestTimestamp; }
-    return this.initData();
-  }
-
   private validateReference(reference: string, fromDate: Date, toDate: Date) {
+    this.alertService.clear();
     let message: string;
     if (fromDate > toDate) { message = FormMessage.SELECTED_DATE_MISMATCHED; }
     if (reference === 'day' && DataControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
@@ -108,16 +109,16 @@ export class StatisticOrderComponent implements OnInit {
 
   private initChartData(data: OrderStatistic[], value: string) {
     switch (value) {
-      case 'order': return this.initChartDataExtend(data, 'totalOrder', Chart.BLUE, 'Total orders');
-      case 'item': return this.initChartDataExtend(data, 'totalItem', Chart.GREEN, 'Total items sold');
-      case 'price': return this.initChartDataExtend(data, 'totalPrice', Chart.YELLOW, 'Total price sold');
+      case 'order': return this.initChartDataExtend(data, 'totalOrder', ChartOption.COLOR_BLUE, 'Total orders');
+      case 'item': return this.initChartDataExtend(data, 'totalItem', ChartOption.COLOR_GREEN, 'Total items sold');
+      case 'price': return this.initChartDataExtend(data, 'totalPrice', ChartOption.COLOR_AMBER, 'Total price sold');
       default: return null;
     }
   }
 
   private initChartDataExtend(data: OrderStatistic[], property: string, borderColor: string, chartTitle: string) {
     return {
-      labels: this.selectedReference === 'day' ? this.data.map(x => x.key.substr(0, 10)) : this.data.map(x => x.key),
+      labels: this.selectedReference === 'day' ? this.data.map(x => x.key.substr(5, 5)) : this.data.map(x => x.key),
       data: data.map(x => x[property]),
       borderColor,
       chartTitle: chartTitle + ' from ' + DataControl.jsonDate(this.fromDate) + ' to ' + DataControl.jsonDate(this.toDate)

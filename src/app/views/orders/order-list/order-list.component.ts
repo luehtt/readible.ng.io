@@ -16,7 +16,7 @@ export class OrderListComponent implements OnInit {
   filter = '';
   page = 1;
   pageSize = Common.PAGE_SIZE_HIGHER;
-  sortColumn = 'title';
+  sortColumn = 'id';
   sortDirection = 'asc';
   loaded: boolean;
 
@@ -24,7 +24,7 @@ export class OrderListComponent implements OnInit {
   }
 
   get dataFilter() {
-    return DataControl.includes(this.data, this.filter, ['id', 'customer.fullname', 'phone', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
+    return DataControl.filter(this.data, this.filter, ['id', 'customer.fullname', 'phone', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
 
   ngOnInit() {
@@ -54,7 +54,7 @@ export class OrderListComponent implements OnInit {
 
   onSort(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortColumn);
+    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortColumn, this.sortDirection);
     this.sortColumn = sortColumn;
     this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }
