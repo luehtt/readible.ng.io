@@ -1,16 +1,16 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {Subject, Observable, merge} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {merge, Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 import {BookService} from 'src/app/services/book.service';
 import {BookCategoryService} from 'src/app/services/category.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Book} from 'src/app/models/book';
-import {Const} from 'src/app/common/const';
-import {ControlFunc, FileFunc, DataFunc, ImageFunc} from 'src/app/common/function';
+import {Common} from 'src/app/common/const';
+import {ControlFunc, DataFunc, FileFunc, ImageFunc} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import {BookCommentService} from '../../../services/comment.service';
@@ -29,7 +29,7 @@ export class BookDetailComponent implements OnInit {
   loaded: boolean;
 
   commentPage = 1;
-  commentPageSize: number = Const.PAGE_SIZE_DEFAULT;
+  commentPageSize: number = Common.PAGE_SIZE_DEFAULT;
   commentFilter = '';
   commentSortColumn = 'customer';
   commentSortDirection = 'asc';
@@ -39,7 +39,7 @@ export class BookDetailComponent implements OnInit {
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
-  search = (text$: Observable<string>) => {
+  search(text$: Observable<string>) {
     const debouncedText$ = text$.pipe(
       debounceTime(200),
       distinctUntilChanged()
@@ -48,7 +48,7 @@ export class BookDetailComponent implements OnInit {
     const inputFocus$ = this.focus$;
 
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term => (term === '' ? Const.LANGUAGE : Const.LANGUAGE.filter(e => e.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+      map(term => (term === '' ? Common.LANGUAGE : Common.LANGUAGE.filter(e => e.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
   }
 
@@ -78,7 +78,7 @@ export class BookDetailComponent implements OnInit {
       this.alertService.success(startTime, 'GET');
     }, err => {
       this.alertService.failed(err);
-    })
+    });
   }
 
   private initData() {
@@ -90,12 +90,12 @@ export class BookDetailComponent implements OnInit {
       this.loaded = true;
     }, err => {
       this.alertService.failed(err);
-    })
+    });
   }
 
   private initDataOnRes(res: Book): Book {
     res.originalImage = res.image;
-    if (res.bookComments) res.rating = this.calcDataRating(res.bookComments);
+    if (res.bookComments) { res.rating = this.calcDataRating(res.bookComments); }
     return res;
   }
 
@@ -105,7 +105,7 @@ export class BookDetailComponent implements OnInit {
   }
 
   private initForm(data: Book): FormGroup {
-    const form = this.formBuilder.group({
+    return this.formBuilder.group({
       title: [data.title, [Validators.required, Validators.maxLength(255)]],
       author: [data.author, [Validators.required, Validators.maxLength(255)]],
       publisher: [data.publisher, [Validators.required, Validators.maxLength(255)]],
@@ -118,7 +118,6 @@ export class BookDetailComponent implements OnInit {
       info: [data.info],
       discount: [data.discount, [Validators.required, Validators.min(0)]]
     });
-    return form;
   }
 
   get filterComment(): BookComment[] {
@@ -194,7 +193,7 @@ export class BookDetailComponent implements OnInit {
   }
 
   onSubmit() {
-    if (ControlFunc.validateForm(this.form) === false) return;
+    if (ControlFunc.validateForm(this.form) === false) { return; }
 
     this.data = this.setItemData(this.data, this.form);
     this.data = DataFunc.updateTimestamp(this.data);

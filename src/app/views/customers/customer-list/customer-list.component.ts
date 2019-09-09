@@ -4,7 +4,7 @@ import { AlertMessageService } from 'src/app/services/common/alert-message.servi
 import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/models/customer';
 import { DataFunc } from 'src/app/common/function';
-import { Const } from '../../../common/const';
+import { Common } from '../../../common/const';
 
 @Component({
   selector: 'app-customer-list',
@@ -14,7 +14,7 @@ export class CustomerListComponent implements OnInit {
   data: Customer[];
   filter = '';
   page = 1;
-  pageSize: number = Const.PAGE_SIZE_HIGHER;
+  pageSize: number = Common.PAGE_SIZE_HIGHER;
   sortColumn = 'title';
   sortDirection = 'asc';
   loaded: boolean;
@@ -23,7 +23,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initData()
+    this.initData();
   }
 
   private initData() {

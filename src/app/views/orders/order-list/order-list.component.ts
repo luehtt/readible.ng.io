@@ -3,7 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {OrderService} from 'src/app/services/order.service';
 import {Order} from 'src/app/models/order';
-import {Const} from '../../../common/const';
+import {Common} from '../../../common/const';
 import {DataFunc} from '../../../common/function';
 
 @Component({
@@ -15,7 +15,7 @@ export class OrderListComponent implements OnInit {
   status = 'pending';
   filter = '';
   page = 1;
-  pageSize = Const.PAGE_SIZE_HIGHER;
+  pageSize = Common.PAGE_SIZE_HIGHER;
   sortColumn = 'title';
   sortDirection = 'asc';
   loaded: boolean;

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {DataFunc, ControlFunc} from 'src/app/common/function';
-import {Const, FormMessage} from '../../../common/const';
+import {Common, FormMessage} from '../../../common/const';
 import {ManagerService} from '../../../services/manager.service';
 import {Manager} from '../../../models/manager';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -22,7 +22,7 @@ export class ManagerListComponent implements OnInit {
   data: Manager[];
   filter = '';
   page = 1;
-  pageSize = Const.PAGE_SIZE_HIGHER;
+  pageSize = Common.PAGE_SIZE_HIGHER;
   sortColumn = 'title';
   sortDirection = 'asc';
   customRule: CustomValidator;
@@ -93,8 +93,8 @@ export class ManagerListComponent implements OnInit {
   validateBirth() {
     this.customRule.birth = true;
     const year = new Date().getFullYear() - this.form.controls.birth.value;
-    if (year > Const.REGISTER_UPPER_LIMIT) { this.customRule.birth = false; }
-    if (year < Const.REGISTER_LOWER_LIMIT) { this.customRule.birth = false; }
+    if (year > Common.REGISTER_UPPER_LIMIT) { this.customRule.birth = false; }
+    if (year < Common.REGISTER_LOWER_LIMIT) { this.customRule.birth = false; }
   }
 
   private retrieveData(form: FormGroup) {

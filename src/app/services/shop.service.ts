@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
 import {Book, BookPagination} from '../models/book';
-import {Endpoint} from '../common/const';
+import {Endpoint} from '../common/common';
 import {Customer} from '../models/customer';
 import {BookComment} from '../models/comment';
 import {Order} from '../models/order';

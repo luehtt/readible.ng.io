@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { Subject, Observable, merge } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { Book } from 'src/app/models/book';
-import { BookCategory } from 'src/app/models/category';
-import { Const } from 'src/app/common/const';
-import { ControlFunc, DataFunc, FileFunc } from 'src/app/common/function';
-import { BookService } from 'src/app/services/book.service';
-import { AlertMessageService } from 'src/app/services/common/alert-message.service';
-import { BookCategoryService } from 'src/app/services/category.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
+import {merge, Observable, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {Book} from 'src/app/models/book';
+import {BookCategory} from 'src/app/models/category';
+import {Common} from 'src/app/common/const';
+import {ControlFunc, DataFunc, FileFunc} from 'src/app/common/function';
+import {BookService} from 'src/app/services/book.service';
+import {AlertMessageService} from 'src/app/services/common/alert-message.service';
+import {BookCategoryService} from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-book-list',
@@ -24,7 +24,7 @@ export class BookListComponent implements OnInit {
   upload: string;
   uploadFilename: string;
   page = 1;
-  pageSize: number = Const.PAGE_SIZE_HIGHER;
+  pageSize: number = Common.PAGE_SIZE_HIGHER;
   sortColumn = 'title';
   sortDirection = 'asc';
   loaded: boolean;
@@ -34,7 +34,7 @@ export class BookListComponent implements OnInit {
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
-  search = (text$: Observable<string>) => {
+  search(text$: Observable<string>) {
     const debouncedText$ = text$.pipe(
       debounceTime(200),
       distinctUntilChanged()
@@ -43,7 +43,7 @@ export class BookListComponent implements OnInit {
     const inputFocus$ = this.focus$;
 
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term => (term === '' ? Const.LANGUAGE : Const.LANGUAGE.filter(e => e.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+      map(term => (term === '' ? Common.LANGUAGE : Common.LANGUAGE.filter(e => e.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
   }
 
@@ -65,7 +65,7 @@ export class BookListComponent implements OnInit {
       this.loaded = true;
     }, err => {
       this.alertService.failed(err);
-    })
+    });
   }
 
   private initCategories() {
@@ -76,11 +76,11 @@ export class BookListComponent implements OnInit {
       this.alertService.success(startTime, 'GET');
     }, err => {
       this.alertService.failed(err);
-    })
+    });
   }
 
   private initForm() {
-    const form = this.formBuilder.group({
+    return this.formBuilder.group({
       isbn: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       title: ['', [Validators.required, Validators.maxLength(255)]],
       author: ['', [Validators.required, Validators.maxLength(255)]],
@@ -94,8 +94,6 @@ export class BookListComponent implements OnInit {
       discount: [0, [Validators.required]],
       info: ['']
     });
-
-    return form;
   }
 
   get dataFilter() {

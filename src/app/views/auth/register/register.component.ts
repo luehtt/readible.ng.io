@@ -4,7 +4,7 @@ import {Validators, FormGroup, FormBuilder} from '@angular/forms';
 import {AuthService} from 'src/app/services/auth/auth.service';
 import {ControlFunc} from 'src/app/common/function';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {Const, FormMessage} from 'src/app/common/const';
+import {Common, FormMessage} from 'src/app/common/common';
 
 @Component({
   selector: 'app-register',
@@ -50,8 +50,8 @@ export class RegisterComponent implements OnInit {
   validateBirth() {
     this.customValidator.birth = true;
     const year = new Date().getFullYear() - this.form.controls.birth.value;
-    if (year > Const.REGISTER_UPPER_LIMIT) { this.customValidator.birth = false; }
-    if (year < Const.REGISTER_LOWER_LIMIT) { this.customValidator.birth = false; }
+    if (year > Common.REGISTER_UPPER_LIMIT) { this.customValidator.birth = false; }
+    if (year < Common.REGISTER_LOWER_LIMIT) { this.customValidator.birth = false; }
   }
 
   onSubmit() {
@@ -81,7 +81,7 @@ export class RegisterComponent implements OnInit {
 
     this.service.register(data).subscribe(res => {
       if (res.success === true) {
-        window.location.href = Const.THIS_URL + '/login';
+        window.location.href = Common.THIS_URL + '/login';
       } else {
         if (data.username) { this.customValidator.username = false; }
         if (data.email) { this.customValidator.email = false; }

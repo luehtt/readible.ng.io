@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 
-import {ColorCodeList, Const} from '../../common/const';
+import {ColorCodeList, Common} from '../../common/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaceholderService {
 
-  private url = Const.PLACEHOLDER_URL;
+  private url = Common.PLACEHOLDER_URL;
 
   constructor() {
   }

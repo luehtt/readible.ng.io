@@ -6,7 +6,7 @@ import {User} from '../../../models/user';
 import {CustomerService} from 'src/app/services/customer.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {DataFunc} from '../../../common/function';
-import {Const} from '../../../common/const';
+import {Common} from '../../../common/common';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import {Order} from 'src/app/models/order';
 
@@ -21,12 +21,12 @@ export class CustomerDetailComponent implements OnInit {
   id: number;
 
   orderPage = 1;
-  orderPageSize: number = Const.PAGE_SIZE_DEFAULT;
+  orderPageSize: number = Common.PAGE_SIZE_DEFAULT;
   orderFilter = '';
   orderSortColumn = 'id';
   orderSortDirection = 'asc';
   commentPage = 1;
-  commentPageSize: number = Const.PAGE_SIZE_DEFAULT;
+  commentPageSize: number = Common.PAGE_SIZE_DEFAULT;
   commentFilter = '';
   commentSortColumn = 'bookIsbn';
   commentSortDirection = 'asc';

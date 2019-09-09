@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 
 import {HttpClientService} from '../common/http-client.service';
 import {SessionService} from './session.service';
-import {Const} from 'src/app/common/const';
+import {Common} from 'src/app/common/common';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class AuthService {
 
   logout() {
     this.sessionService.clearTokenSession();
-    window.location.href = Const.THIS_URL;
+    window.location.href = Common.THIS_URL;
   }
 
   getToken(value: string): string {

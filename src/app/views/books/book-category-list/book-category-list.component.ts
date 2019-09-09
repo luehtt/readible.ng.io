@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {BookCategoryService} from '../../../services/category.service';
 import {AlertMessageService} from '../../../services/common/alert-message.service';
 import {ControlFunc, DataFunc} from '../../../common/function';
-import {Const} from '../../../common/const';
+import {Common} from '../../../common/const';
 
 @Component({
   selector: 'app-book-category-list',
@@ -17,11 +17,11 @@ export class BookCategoryListComponent implements OnInit {
   form: FormGroup;
   itemDialog = false;
   itemEditing = false;
-  
+
   filter = '';
   loaded: boolean;
   page = 1;
-  pageSize = Const.PAGE_SIZE_SMALLER;
+  pageSize = Common.PAGE_SIZE_SMALLER;
   sortColumn = 'name';
   sortDirection = 'asc';
 
@@ -45,11 +45,9 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   private initForm() {
-    const form = this.formBuilder.group({
+    return this.formBuilder.group({
       name: ['', [Validators.required]],
     });
-
-    return form;
   }
 
   get dataFilter(): BookCategory[] {
@@ -65,7 +63,7 @@ export class BookCategoryListComponent implements OnInit {
 
   onEdit(item: BookCategory) {
     this.itemDialog = true;
-    item ? this.editUpdateItem(item) : this.editStoreItem;
+    item ? this.editUpdateItem(item) : this.editStoreItem();
   }
 
   private editStoreItem() {
@@ -98,7 +96,7 @@ export class BookCategoryListComponent implements OnInit {
   private storeItem() {
     if (ControlFunc.validateForm(this.form) === false) { return; }
 
-    this.item = this.retrieveData(this.item, this.form)
+    this.item = this.retrieveData(this.item, this.form);
     this.item = DataFunc.createTimestamp(this.item);
 
     const startTime = this.alertService.startTime();
@@ -115,7 +113,7 @@ export class BookCategoryListComponent implements OnInit {
   private updateItem() {
     if (ControlFunc.validateForm(this.form) === false) { return; }
 
-    this.item = this.retrieveData(this.item, this.form)
+    this.item = this.retrieveData(this.item, this.form);
     this.item = DataFunc.updateTimestamp(this.item);
 
     const startTime = this.alertService.startTime();

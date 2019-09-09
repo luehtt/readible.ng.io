@@ -6,7 +6,7 @@ import { Cart } from 'src/app/models/cart';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { Customer } from 'src/app/models/customer';
 import { Book } from 'src/app/models/book';
-import { Const } from '../../../common/const';
+import { Common } from '../../../common/common';
 import { Order } from '../../../models/order';
 import { CartService } from '../../../services/cart.service';
 
@@ -100,7 +100,7 @@ export class CustomerCartComponent implements OnInit {
     this.service.postOrder(data).subscribe(res => {
       this.alertService.success(startTime, 'POST');
       this.cartService.clearCart();
-      window.location.href = Const.THIS_URL + 'customer/orders';
+      window.location.href = Common.THIS_URL + 'customer/orders';
     }, err => {
       this.alertService.failed(err);
     });

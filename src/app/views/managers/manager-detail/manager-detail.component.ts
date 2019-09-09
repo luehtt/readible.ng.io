@@ -4,7 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {User} from '../../../models/user';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {DataFunc} from '../../../common/function';
-import {Const} from '../../../common/const';
+import {Common} from '../../../common/const';
 import {Order} from '../../../models/order';
 import {ManagerService} from '../../../services/manager.service';
 import {Manager} from '../../../models/manager';
@@ -22,7 +22,7 @@ export class ManagerDetailComponent implements OnInit {
   // this.orders is a combine list of confirmedOrders and completedOrders
   orders: Order[];
   orderPage = 1;
-  orderPageSize: number = Const.PAGE_SIZE_HIGHER;
+  orderPageSize: number = Common.PAGE_SIZE_HIGHER;
   orderFilter = '';
   orderSortColumn = 'id';
   orderSortDirection = 'asc';

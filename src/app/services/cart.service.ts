@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 
 import {Book} from '../models/book';
 import {Cart} from '../models/cart';
-import {Const} from '../common/const';
+import {Common} from '../common/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  private LIMIT_VIEWED = Const.LIMIT_VIEWED_BOOK;
+  private LIMIT_VIEWED = Common.LIMIT_VIEWED_BOOK;
   private VIEWED_SESSION = 'viewed';
   private CART_SESSION = 'cart';
 

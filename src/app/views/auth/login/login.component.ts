@@ -7,7 +7,7 @@ import { User } from 'src/app/models/user';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { SessionService } from 'src/app/services/auth/session.service';
 import { ControlFunc } from 'src/app/common/function';
-import { Const } from 'src/app/common/const';
+import { Common } from 'src/app/common/common';
 
 @Component({
   selector: 'app-login',
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
         this.alertService.set('Login succeeded!!', 'success');
       } else if (json.role === 'CUSTOMER') {
         if (!this.redirect || this.redirect === '') {
-          window.location.href = Const.THIS_URL;
+          window.location.href = Common.THIS_URL;
         } else {
           window.location.href = this.redirect;
         }

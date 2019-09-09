@@ -8,7 +8,7 @@ import {AccountService} from 'src/app/services/account.service';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 import {FileFunc, ControlFunc, ImageFunc} from 'src/app/common/function';
-import {Const, FormMessage} from 'src/app/common/const';
+import {Common, FormMessage} from 'src/app/common/common';
 
 @Component({
   selector: 'app-account',
@@ -55,8 +55,8 @@ export class AccountComponent implements OnInit {
   }
 
   private initInfoForm() {
-    const minYear = new Date().getFullYear() - Const.REGISTER_UPPER_LIMIT;
-    const maxYear = new Date().getFullYear() - Const.REGISTER_LOWER_LIMIT;
+    const minYear = new Date().getFullYear() - Common.REGISTER_UPPER_LIMIT;
+    const maxYear = new Date().getFullYear() - Common.REGISTER_LOWER_LIMIT;
 
     this.infoForm = this.formBuilder.group({
       fullname: [this.data.fullname, [Validators.required, Validators.maxLength(255)]],

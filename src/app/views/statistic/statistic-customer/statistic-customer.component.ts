@@ -13,20 +13,6 @@ import {DataFunc, ControlFunc} from '../../../common/function';
   templateUrl: './statistic-customer.component.html'
 })
 export class StatisticCustomerComponent implements OnInit {
-  SELECTED_DATE_MISMATCHED = FormMessage.SELECTED_DATE_MISMATCHED;
-
-  ageChart: any;
-  genderChart: any;
-  chartTitle: string;
-  chartOption = {
-    responsive: true,
-    maintainAspectRatio: false,
-    legend: { display: true, position: 'bottom' },
-    scales: { xAxes: [{ display: false }], yAxes: [{ display: false }] },
-    elements: { line: { tension: 0 } },
-    animation: { duration: 0 }
-  };
-
   fromDate: Date;
   toDate: Date;
   fromDateNgb: any;
@@ -37,15 +23,37 @@ export class StatisticCustomerComponent implements OnInit {
   ageData: OrderStatistic[];
   genderData: OrderStatistic[];
 
+  ageChart: any;
+  genderChart: any;
+  chartTitle: string;
+  ageChartColor = [Chart.RED, Chart.GREEN, Chart.BLUE, Chart.AMBER];
+  genderChartColor = [Chart.VIOLET, Chart.ROSE];
+
   constructor(private formBuilder: FormBuilder, private service: StatisticService, private alertService: AlertMessageService) {}
 
   ngOnInit() {
     this.selectedValue = 'item';
-    this.initOrderTimestamp();
+    this.initTimestamp();
+  }
+
+  private initTimestamp() {
+    this.service.statisticOrderTimestamp().subscribe(res => {
+      this.latestTimestamp = new Date(res.latestOrder.createdAt);
+      this.oldestTimestamp = new Date(res.oldestOrder.createdAt);
+      this.initDatetime();
+    });
+  }
+
+  private initDatetime() {
+    this.toDate = new Date();
+    this.toDate = this.toDate < this.latestTimestamp ? this.toDate : this.latestTimestamp;
+    this.fromDate = new Date();
+    this.fromDate.setDate(this.toDate.getDate() - 30);
+    this.onSelectValue();
   }
 
   onSelectValue() {
-    this.getData();
+    this.initData();
   }
 
   onSelectRange() {
@@ -54,123 +62,70 @@ export class StatisticCustomerComponent implements OnInit {
     this.toDate = new Date(ControlFunc.fromNgbDateToJson(this.toDateNgb));
 
     this.alertService.clear();
-    if (this.fromDate >= this.toDate) { this.alertService.set(this.SELECTED_DATE_MISMATCHED, 'warning'); }
+    if (this.fromDate >= this.toDate) { this.alertService.set(FormMessage.SELECTED_DATE_MISMATCHED, 'warning'); }
     if (this.alertService.hasMessage()) { return; }
-    this.getData();
+    this.initData();
   }
 
-  private initOrderTimestamp() {
-    this.service.statisticOrderTimestamp().subscribe(res => {
-      this.latestTimestamp = new Date(res.latestOrder.createdAt);
-      this.oldestTimestamp = new Date(res.oldestOrder.createdAt);
-
-      const toDate = new Date();
-      this.toDate = toDate < this.latestTimestamp ? toDate : this.latestTimestamp;
-      this.fromDate = new Date();
-      this.fromDate.setDate(this.toDate.getDate() - 30);
-      this.onSelectValue();
-    });
-  }
-
-  private getData() {
-    this.alertService.clear();
+  private initData() {
     const fromDate = ControlFunc.jsonDate(this.fromDate);
     const toDate = ControlFunc.jsonDate(this.toDate);
+    this.initAgeData(fromDate, toDate);
+    this.initGenderData(fromDate, toDate);
+  }
 
-    const startTime1 = this.alertService.startTime();
+  private initAgeData(fromDate, toDate) {
+    const startTime = this.alertService.startTime();
+    this.alertService.clear();
     this.service.statisticCustomer('age', fromDate, toDate).subscribe(res => {
       this.ageData = res;
-      this.renderAgeChart();
-      this.alertService.success(startTime1, 'GET');
-    });
-
-    const startTime2 = this.alertService.startTime();
-    this.service.statisticCustomer('gender', fromDate, toDate).subscribe(res => {
-      this.genderData = res;
-      this.renderGenderChart();
-      this.alertService.success(startTime2, 'GET');
+      this.alertService.success(startTime, 'GET');
+      this.initChart(this.ageChart, this.ageData, this.ageChartColor);
     });
   }
 
-  private renderAgeChart() {
-    if (this.ageChart) { this.ageChart.destroy(); }
+  private initGenderData(fromDate, toDate) {
+    const startTime = this.alertService.startTime();
+    this.service.statisticCustomer('gender', fromDate, toDate).subscribe(res => {
+      this.genderData = res;
+      this.alertService.success(startTime, 'GET');
+      this.initChart(this.genderChart, this.genderData, this.genderChartColor);
+    });
+  }
 
-    const labels = [];
-    const values = [];
-    for (const i in this.ageData) { if (this.ageData[i]) { labels.push(DataFunc.normalize(i, true)); } }
-
-    // set title with selectedValue
-    switch (this.selectedValue) {
-      case 'order':
-        for (const i in this.ageData) { if (this.ageData[i]) { values.push(this.ageData[i].totalOrder); } }
-        this.chartTitle = 'Total order ';
-        break;
-      case 'item':
-        for (const i in this.ageData) { if (this.ageData[i]) { values.push(this.ageData[i].totalItem); } }
-        this.chartTitle = 'Total items sold ';
-        break;
-      case 'price':
-        for (const i in this.ageData) { if (this.ageData[i]) { values.push(this.ageData[i].totalPrice); } }
-        this.chartTitle = 'Total price sold ';
-        break;
+  private initChartData(data: OrderStatistic[], value: string) {
+    switch (value) {
+      case 'order': return this.initChartDataExtend(data, 'totalOrder', 'Total orders');
+      case 'item': return this.initChartDataExtend(data, 'totalItem', 'Total items sold');
+      case 'price': return this.initChartDataExtend(data, 'totalPrice', 'Total price sold');
+      default: return null;
     }
+  }
 
-    // set title with selectedRange
-    this.chartTitle += ' from ' + ControlFunc.jsonDate(this.fromDate) + ' to ' + ControlFunc.jsonDate(this.toDate);
+  private initChartDataExtend(data, property: string, chartTitle: string) {
+    return {
+      labels: data.map(x => x.key),
+      data: data.map(x => x[property]),
+      chartTitle: chartTitle + ' from ' + ControlFunc.jsonDate(this.fromDate) + ' to ' + ControlFunc.jsonDate(this.toDate)
+    };
+  }
+
+  private initChart(chart, data: OrderStatistic[], colors: string[]) {
+    if (chart) { chart.destroy(); }
+    const chartData = this.initChartData(data, this.selectedValue);
 
     // init doughnut chart
+    this.chartTitle = chartData.chartTitle;
     this.ageChart = new Chart('ageCanvas', {
       type: 'doughnut',
       data: {
-        labels,
+        labels: chartData.labels,
         datasets: [ {
-          data: values,
-          backgroundColor: [Chart.RED, Chart.GREEN, Chart.BLUE, Chart.AMBER],
-          steppedLine: 'middle'
+          data: chartData.data,
+          backgroundColor: colors,
         } ]
       },
-      options: this.chartOption
-    });
-  }
-
-  private renderGenderChart() {
-    if (this.genderChart) { this.genderChart.destroy(); }
-
-    const labels = [];
-    const values = [];
-    for (const i in this.genderData) { if (this.genderData[i]) { labels.push(DataFunc.normalize(i, true)); } }
-
-    // set title with selectedValue
-    switch (this.selectedValue) {
-      case 'order':
-        for (const i in this.genderData) { if (this.genderData[i]) { values.push(this.genderData[i].totalOrder); } }
-        this.chartTitle = 'Total order ';
-        break;
-      case 'item':
-        for (const i in this.genderData) { if (this.genderData[i]) { values.push(this.genderData[i].totalItem); } }
-        this.chartTitle = 'Total items sold ';
-        break;
-      case 'price':
-        for (const i in this.genderData) { if (this.genderData[i]) { values.push(this.genderData[i].totalPrice); } }
-        this.chartTitle = 'Total price sold ';
-        break;
-    }
-
-    // set title with selectedRange
-    this.chartTitle += ' from ' + ControlFunc.jsonDate(this.fromDate) + ' to ' + ControlFunc.jsonDate(this.toDate);
-
-    // init doughnut chart
-    this.genderChart = new Chart('genderCanvas', {
-      type: 'doughnut',
-      data: {
-        labels,
-        datasets: [ {
-          data: values,
-          backgroundColor: [Chart.VIOLET, Chart.ROSE],
-          steppedLine: 'middle'
-        } ]
-      },
-      options: this.chartOption
+      options: ChartOption.DEFAULT_PIE_OPTION
     });
   }
 

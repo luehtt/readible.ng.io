@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormMessage} from '../../../common/const';
+import {FormMessage} from '../../../common/common';
 
 @Component({
   selector: 'app-form-error',

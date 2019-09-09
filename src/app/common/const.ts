@@ -1,4 +1,4 @@
-export const Const = {
+export const Common = {
   SERVER_URL: 'https://localhost:5001/api/',
   THIS_URL: 'http://localhost:4200/',
   PLACEHOLDER_URL: 'https://via.placeholder.com/',
@@ -42,10 +42,9 @@ export const FormMessage = {
   USERNAME_EXISTED: 'The username has existed in the database',
   EMAIL_EXISTED: 'The email has existed in the database',
   CONFIRM_PASSWORD_MISMATCHED: 'The confirm password is not the same as password',
-  REGISTER_AGE_LIMIT: 'The age must be higher than ' + Const.REGISTER_LOWER_LIMIT + ' and lower than ' + Const.REGISTER_UPPER_LIMIT,
+  REGISTER_AGE_LIMIT: 'The age must be higher than ' + Common.REGISTER_LOWER_LIMIT + ' and lower than ' + Common.REGISTER_UPPER_LIMIT,
   CONFIRM_PASSWORD_ERROR: 'The two password does not match'
 };
-
 
 export const ChartOption = {
   COLOR_BLUE: '#2196f3',
@@ -73,11 +72,8 @@ export const ChartOption = {
   ],
 
   TRANSPARENT: 'transparent',
-  CANVAS: 'canvas',
-
   CHART_LINE: 'line',
   CHART_BAR: 'bar',
-
   STEP_MIDDLE: 'middle',
 
   DEFAULT_LINE_OPTION: {
@@ -87,6 +83,15 @@ export const ChartOption = {
     scales: { xAxes: [{ display: true }], yAxes: [{ display: true }] },
     elements: { line: { tension: 0 } },
     animation: { duration: 0 }
-  };
+  },
+
+  DEFAULT_PIE_OPTION: {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: { display: true, position: 'bottom' },
+    scales: { xAxes: [{ display: false }], yAxes: [{ display: false }] },
+    elements: { line: { tension: 0 } },
+    animation: { duration: 0 }
+  }
 };
 

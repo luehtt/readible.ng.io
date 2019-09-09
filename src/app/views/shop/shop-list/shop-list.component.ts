@@ -7,7 +7,7 @@ import { AlertMessageService } from 'src/app/services/common/alert-message.servi
 import { ShopService } from 'src/app/services/shop.service';
 import { BookCategory } from 'src/app/models/category';
 import { BookCategoryService } from 'src/app/services/category.service';
-import { Const } from '../../../common/const';
+import { Common } from '../../../common/common';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class ShopListComponent implements OnInit {
 
   filter = '';
   currentPage = 1;
-  defaultLimit = Const.PAGE_SIZE_DEFAULT;
+  defaultLimit = Common.PAGE_SIZE_DEFAULT;
 
   constructor(private service: ShopService, private categoryService: BookCategoryService,
               private alertService: AlertMessageService, public placeholderService: PlaceholderService) {

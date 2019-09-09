@@ -13,13 +13,8 @@ import {DataFunc} from '../../../common/function';
 })
 export class StatisticOrderComponent implements OnInit {
 
-  DURATION_TOO_LONG = FormMessage.DURATION_TOO_LONG;
-  DURATION_TOO_SHORT = FormMessage.DURATION_TOO_SHORT;
-  SELECTED_DATE_MISMATCHED = FormMessage.SELECTED_DATE_MISMATCHED;
-
   chart: any;
   chartTitle: string;
-  chartOption = ChartOption.DEFAULT_LINE_OPTION;
 
   loaded: boolean;
   fromDate: Date;
@@ -68,13 +63,6 @@ export class StatisticOrderComponent implements OnInit {
     }
   }
 
-  private setRecentDuration(reference: string, offset: number) {
-    this.selectedReference = reference;
-    this.fromDate.setDate(this.toDate.getDate() - offset);
-    if (this.fromDate < this.oldestTimestamp) { this.fromDate = this.oldestTimestamp; }
-    return this.initData();
-  }
-
   onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
     this.fromDate = new Date(DataFunc.fromNgbDateToJson(this.fromDateNgb));
@@ -83,15 +71,23 @@ export class StatisticOrderComponent implements OnInit {
     this.initData();
   }
 
-  private validateReference(reference: string, from: Date, to: Date) {
-    let message: string;
-    if (reference === 'day' && DataFunc.tooLongDay(from, to)) { message = this.DURATION_TOO_LONG };
-    if (reference === 'day' && DataFunc.tooLongDay(from, to)) { message = this.DURATION_TOO_LONG };
-    if (reference === 'month' && DataFunc.tooLongMonth(from, to)) { message = this.DURATION_TOO_LONG };
-    if (reference === 'month' && DataFunc.isSameMonth(from, to)) { message = this.DURATION_TOO_SHORT };
-    if (reference === 'year' && DataFunc.isSameYear(from, to)) { message = this.DURATION_TOO_SHORT };
+  private setRecentDuration(reference: string, offset: number) {
+    this.selectedReference = reference;
+    this.fromDate.setDate(this.toDate.getDate() - offset);
+    if (this.fromDate < this.oldestTimestamp) { this.fromDate = this.oldestTimestamp; }
+    return this.initData();
+  }
 
-    if (!message) return true;
+  private validateReference(reference: string, fromDate: Date, toDate: Date) {
+    let message: string;
+    if (fromDate > toDate) { message = FormMessage.SELECTED_DATE_MISMATCHED; }
+    if (reference === 'day' && DataFunc.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'day' && DataFunc.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && DataFunc.tooLongMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && DataFunc.isSameMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
+    if (reference === 'year' && DataFunc.isSameYear(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
+
+    if (!message) { return true; }
     this.alertService.set(message, 'danger');
     return false;
   }
@@ -110,11 +106,11 @@ export class StatisticOrderComponent implements OnInit {
     });
   }
 
-  private initChartData(value: string) {
+  private initChartData(data: OrderStatistic[], value: string) {
     switch (value) {
-      case 'order': return this.initChartDataExtend(this.data, 'totalOrder', Chart.BLUE, 'Total orders');
-      case 'item': return this.initChartDataExtend(this.data, 'totalItem', Chart.BLUE, 'Total items sold');
-      case 'price': return this.initChartDataExtend(this.data, 'totalPrice', Chart.BLUE, 'Total price sold');
+      case 'order': return this.initChartDataExtend(data, 'totalOrder', Chart.BLUE, 'Total orders');
+      case 'item': return this.initChartDataExtend(data, 'totalItem', Chart.GREEN, 'Total items sold');
+      case 'price': return this.initChartDataExtend(data, 'totalPrice', Chart.YELLOW, 'Total price sold');
       default: return null;
     }
   }
@@ -123,18 +119,18 @@ export class StatisticOrderComponent implements OnInit {
     return {
       labels: this.selectedReference === 'day' ? this.data.map(x => x.key.substr(0, 10)) : this.data.map(x => x.key),
       data: data.map(x => x[property]),
-      borderColor: borderColor,
+      borderColor,
       chartTitle: chartTitle + ' from ' + DataFunc.jsonDate(this.fromDate) + ' to ' + DataFunc.jsonDate(this.toDate)
-    }
+    };
   }
 
   private initChart() {
     if (this.chart) { this.chart.destroy(); }
-    const chartData = this.initChartData(this.selectedValue);
+    const chartData = this.initChartData(this.data, this.selectedValue);
 
     // init line chart
     this.chartTitle = chartData.chartTitle;
-    this.chart = new Chart(ChartOption.CANVAS, {
+    this.chart = new Chart('canvas', {
       type: ChartOption.CHART_LINE,
       data: {
         labels: chartData.labels,
@@ -145,7 +141,7 @@ export class StatisticOrderComponent implements OnInit {
             steppedLine: ChartOption.STEP_MIDDLE
           } ]
       },
-      options: this.chartOption
+      options: ChartOption.DEFAULT_LINE_OPTION
     });
   }
 
