@@ -19,12 +19,12 @@ export class OrderDetailComponent implements OnInit {
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+    this.alertService.clear();
     this.initData();
   }
 
   private initData() {
     const startTime = this.alertService.startTime();
-    this.alertService.clear();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res;
@@ -37,7 +37,7 @@ export class OrderDetailComponent implements OnInit {
     );
   }
 
-  onChangeStatus(value) {
+  onChangeStatus(value: string) {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.putStatus(this.data, value).subscribe(

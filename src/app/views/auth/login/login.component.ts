@@ -6,8 +6,8 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { User } from 'src/app/models/user';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { SessionService } from 'src/app/services/auth/session.service';
-import { ControlFunc } from 'src/app/common/function';
-import { Common } from 'src/app/common/common';
+import { FormGroupControl } from 'src/app/common/function';
+import { Common } from 'src/app/common/const';
 
 @Component({
   selector: 'app-login',
@@ -34,10 +34,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.invalid) {
-      ControlFunc.touchControls(this.form.controls);
-      return;
-    }
+    if (FormGroupControl.validateForm(this.form)) { return; }
 
     const user = new User();
     user.email = this.form.controls.email.value;

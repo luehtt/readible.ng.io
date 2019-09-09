@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { Chart } from 'chart.js';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {ChartOption, FormMessage} from '../../../common/const';
 import {StatisticService} from '../../../services/statistic.service';
 import {OrderStatistic} from '../../../models/statistic';
-import {DataFunc, ControlFunc} from '../../../common/function';
+import {DataControl,} from '../../../common/function';
 
 @Component({
   selector: 'app-statistic-customers',
@@ -29,7 +28,7 @@ export class StatisticCustomerComponent implements OnInit {
   ageChartColor = [Chart.RED, Chart.GREEN, Chart.BLUE, Chart.AMBER];
   genderChartColor = [Chart.VIOLET, Chart.ROSE];
 
-  constructor(private formBuilder: FormBuilder, private service: StatisticService, private alertService: AlertMessageService) {}
+  constructor(private service: StatisticService, private alertService: AlertMessageService) {}
 
   ngOnInit() {
     this.selectedValue = 'item';
@@ -58,8 +57,8 @@ export class StatisticCustomerComponent implements OnInit {
 
   onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
-    this.fromDate = new Date(ControlFunc.fromNgbDateToJson(this.fromDateNgb));
-    this.toDate = new Date(ControlFunc.fromNgbDateToJson(this.toDateNgb));
+    this.fromDate = new Date(DataControl.fromNgbDateToJson(this.fromDateNgb));
+    this.toDate = new Date(DataControl.fromNgbDateToJson(this.toDateNgb));
 
     this.alertService.clear();
     if (this.fromDate >= this.toDate) { this.alertService.set(FormMessage.SELECTED_DATE_MISMATCHED, 'warning'); }
@@ -68,15 +67,15 @@ export class StatisticCustomerComponent implements OnInit {
   }
 
   private initData() {
-    const fromDate = ControlFunc.jsonDate(this.fromDate);
-    const toDate = ControlFunc.jsonDate(this.toDate);
+    this.alertService.clear();
+    const fromDate = DataControl.jsonDate(this.fromDate);
+    const toDate = DataControl.jsonDate(this.toDate);
     this.initAgeData(fromDate, toDate);
     this.initGenderData(fromDate, toDate);
   }
 
-  private initAgeData(fromDate, toDate) {
+  private initAgeData(fromDate: string, toDate: string) {
     const startTime = this.alertService.startTime();
-    this.alertService.clear();
     this.service.statisticCustomer('age', fromDate, toDate).subscribe(res => {
       this.ageData = res;
       this.alertService.success(startTime, 'GET');
@@ -84,7 +83,7 @@ export class StatisticCustomerComponent implements OnInit {
     });
   }
 
-  private initGenderData(fromDate, toDate) {
+  private initGenderData(fromDate: string, toDate: string) {
     const startTime = this.alertService.startTime();
     this.service.statisticCustomer('gender', fromDate, toDate).subscribe(res => {
       this.genderData = res;
@@ -102,15 +101,15 @@ export class StatisticCustomerComponent implements OnInit {
     }
   }
 
-  private initChartDataExtend(data, property: string, chartTitle: string) {
+  private initChartDataExtend(data: OrderStatistic[], property: string, chartTitle: string) {
     return {
       labels: data.map(x => x.key),
       data: data.map(x => x[property]),
-      chartTitle: chartTitle + ' from ' + ControlFunc.jsonDate(this.fromDate) + ' to ' + ControlFunc.jsonDate(this.toDate)
+      chartTitle: chartTitle + ' from ' + DataControl.jsonDate(this.fromDate) + ' to ' + DataControl.jsonDate(this.toDate)
     };
   }
 
-  private initChart(chart, data: OrderStatistic[], colors: string[]) {
+  private initChart(chart: Chart, data: OrderStatistic[], colors: string[]) {
     if (chart) { chart.destroy(); }
     const chartData = this.initChartData(data, this.selectedValue);
 

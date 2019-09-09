@@ -10,7 +10,7 @@ import {BookCategoryService} from 'src/app/services/category.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Book} from 'src/app/models/book';
 import {Common} from 'src/app/common/const';
-import {ControlFunc, DataFunc, FileFunc, ImageFunc} from 'src/app/common/function';
+import {FormGroupControl, DataControl, FileControl} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import {BookCommentService} from '../../../services/comment.service';
@@ -66,7 +66,6 @@ export class BookDetailComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
     this.alertService.clear();
-
     this.initData();
     this.initCategories();
   }
@@ -109,12 +108,12 @@ export class BookDetailComponent implements OnInit {
       title: [data.title, [Validators.required, Validators.maxLength(255)]],
       author: [data.author, [Validators.required, Validators.maxLength(255)]],
       publisher: [data.publisher, [Validators.required, Validators.maxLength(255)]],
-      published: [DataFunc.toNgbDate(this.data.published), [Validators.required]],
+      published: [DataControl.toNgbDate(this.data.published), [Validators.required]],
       price: [data.price, [Validators.required, Validators.min(0.0)]],
       page: [data.page, [Validators.required, Validators.min(0)]],
       language: [data.language, [Validators.required, Validators.maxLength(32)]],
       categoryId: [data.categoryId, [Validators.required]],
-      active: [DataFunc.radioTrueFalse(data.active), [Validators.required]],
+      active: [DataControl.radioTrueFalse(data.active), [Validators.required]],
       info: [data.info],
       discount: [data.discount, [Validators.required, Validators.min(0)]]
     });
@@ -123,9 +122,9 @@ export class BookDetailComponent implements OnInit {
   get filterComment(): BookComment[] {
     switch (this.commentFilter) {
       case '1 star': case '2 star': case '3 star': case '4 star': case '5 star':
-        return DataFunc.filter(this.data.bookComments, this.commentFilter.substring(0, 1), ['rating']);
+        return DataControl.filter(this.data.bookComments, this.commentFilter.substring(0, 1), ['rating']);
       default:
-        return DataFunc.filter(this.data.bookComments, this.commentFilter, ['customer.fullname', 'comment', 'updatedAt']);
+        return DataControl.filter(this.data.bookComments, this.commentFilter, ['customer.fullname', 'comment', 'updatedAt']);
     }
   }
 
@@ -133,18 +132,18 @@ export class BookDetailComponent implements OnInit {
     if (sortedColumn == null) { return; }
     this.commentSortDirection = this.commentSortColumn !== sortedColumn ? 'asc' : (this.commentSortDirection === 'asc' ? 'desc' : 'asc');
     this.commentSortColumn = sortedColumn;
-    this.data.bookComments = DataFunc.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
+    this.data.bookComments = DataControl.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
   }
 
   onChangeImage(event) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      FileFunc.convertFileToBase64(file)
+      FileControl.convertFileToBase64(file)
         .then(res => {
           this.data.image = res.toString();
-          const orientation = ImageFunc.getOrientation(this.data.image);
+          const orientation = FileControl.getOrientation(this.data.image);
           if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = ImageFunc.transformCSS(orientation);
+            this.imageTransform = FileControl.transformCSS(orientation);
           }
         }).catch(err => {
           this.alertService.failed(err);
@@ -177,12 +176,12 @@ export class BookDetailComponent implements OnInit {
     });
   }
 
-  private setItemData(item: Book, form): Book {
+  private setItemData(item: Book, form: FormGroup): Book {
     item.title = form.controls.title.value;
     item.author = form.controls.author.value;
     item.categoryId = form.controls.categoryId.value;
     item.publisher = form.controls.publisher.value;
-    item.published = DataFunc.fromNgbDateToJson(form.controls.published.value);
+    item.published = DataControl.fromNgbDateToJson(form.controls.published.value);
     item.language = form.controls.language.value;
     item.price = form.controls.price.value;
     item.page = form.controls.page.value;
@@ -193,11 +192,10 @@ export class BookDetailComponent implements OnInit {
   }
 
   onSubmit() {
-    if (ControlFunc.validateForm(this.form) === false) { return; }
+    if (FormGroupControl.validateForm(this.form) === false) { return; }
 
     this.data = this.setItemData(this.data, this.form);
-    this.data = DataFunc.updateTimestamp(this.data);
-
+    this.data = DataControl.updateTimestamp(this.data);
     if (this.data.image === this.data.originalImage) { delete(this.data.image); }
 
     const startTime = this.alertService.startTime();

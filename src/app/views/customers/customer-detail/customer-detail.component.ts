@@ -5,8 +5,8 @@ import {Customer} from 'src/app/models/customer';
 import {User} from '../../../models/user';
 import {CustomerService} from 'src/app/services/customer.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {DataFunc} from '../../../common/function';
-import {Common} from '../../../common/common';
+import {DataControl} from '../../../common/function';
+import {Common} from '../../../common/const';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import {Order} from 'src/app/models/order';
 
@@ -41,12 +41,12 @@ export class CustomerDetailComponent implements OnInit {
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+    this.alertService.clear();
     this.initData();
   }
 
   private initData() {
     const startTime = this.alertService.startTime();
-    this.alertService.clear();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res.customer;
@@ -61,30 +61,30 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   get filterOrder(): Order[] {
-    return DataFunc.filter(this.data.orders, this.orderFilter, ['id', 'status.locale', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
+    return DataControl.filter(this.data.orders, this.orderFilter, ['id', 'status.locale', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
 
   onSortOrder(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.orderSortDirection = DataFunc.sortDirection(this.orderSortColumn, sortColumn);
+    this.orderSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn);
     this.orderSortColumn = sortColumn;
-    this.data.orders = DataFunc.sort(this.data.orders, this.orderSortColumn, this.orderSortDirection);
+    this.data.orders = DataControl.sort(this.data.orders, this.orderSortColumn, this.orderSortDirection);
   }
 
   get filterComment() {
     switch (this.commentFilter) {
       case '1 star': case '2 star': case '3 star': case '4 star': case '5 star':
-        return DataFunc.filter(this.data.bookComments, this.commentFilter.substring(0, 1), ['rating']);
+        return DataControl.filter(this.data.bookComments, this.commentFilter.substring(0, 1), ['rating']);
       default:
-        return DataFunc.filter(this.data.bookComments, this.commentFilter, ['bookIsbn', 'comment', 'updatedAt']);
+        return DataControl.filter(this.data.bookComments, this.commentFilter, ['bookIsbn', 'comment', 'updatedAt']);
     }
   }
 
   onSortComment(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.commentSortDirection = DataFunc.sortDirection(this.orderSortColumn, sortColumn);
+    this.commentSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn);
     this.commentSortColumn = sortColumn;
-    this.data.bookComments = DataFunc.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
+    this.data.bookComments = DataControl.sort(this.data.bookComments, this.commentSortColumn, this.commentSortDirection);
   }
 
 }

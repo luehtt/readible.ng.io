@@ -6,7 +6,7 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {Book} from 'src/app/models/book';
 import {BookCategory} from 'src/app/models/category';
 import {Common} from 'src/app/common/const';
-import {ControlFunc, DataFunc, FileFunc} from 'src/app/common/function';
+import {FormGroupControl, DataControl, FileControl} from 'src/app/common/function';
 import {BookService} from 'src/app/services/book.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {BookCategoryService} from 'src/app/services/category.service';
@@ -52,7 +52,6 @@ export class BookListComponent implements OnInit {
 
   ngOnInit() {
     this.alertService.clear();
-
     this.initData();
     this.initCategories();
   }
@@ -97,20 +96,20 @@ export class BookListComponent implements OnInit {
   }
 
   get dataFilter() {
-    return DataFunc.filter(this.data, this.filter, ['title', 'author', 'isbn', 'publisher', 'published', 'price', 'category.name']);
+    return DataControl.filter(this.data, this.filter, ['title', 'author', 'isbn', 'publisher', 'published', 'price', 'category.name']);
   }
 
   onSort(sortedColumn: string) {
     if (!sortedColumn) { return; }
-    this.sortDirection = DataFunc.sortDirection(this.sortColumn, sortedColumn);
+    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortedColumn);
     this.sortColumn = sortedColumn;
-    this.data = DataFunc.sort(this.data, this.sortColumn, this.sortDirection);
+    this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }
 
   onUploadImage(event) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      FileFunc.convertFileToBase64(file)
+      FileControl.convertFileToBase64(file)
         .then(result => {
           this.uploadFilename = event.target.files[0].name;
           this.upload = result.toString();
@@ -121,13 +120,13 @@ export class BookListComponent implements OnInit {
     }
   }
 
-  private retrieveData(item: Book, form): Book {
+  private retrieveData(item: Book, form: FormGroup): Book {
     item.isbn = form.controls.isbn.value;
     item.title = form.controls.title.value;
     item.author = form.controls.author.value;
     item.categoryId = form.controls.categoryId.value;
     item.publisher = form.controls.publisher.value;
-    item.published = DataFunc.fromNgbDateToJson(form.controls.published.value);
+    item.published = DataControl.fromNgbDateToJson(form.controls.published.value);
     item.language = form.controls.language.value;
     item.price = form.controls.price.value;
     item.page = form.controls.page.value;
@@ -138,11 +137,11 @@ export class BookListComponent implements OnInit {
   }
 
   onSubmit() {
-    if (ControlFunc.validateForm(this.form)) { return; }
+    if (FormGroupControl.validateForm(this.form)) { return; }
 
     let item = new Book()
     item = this.retrieveData(item, this.form);
-    item = DataFunc.updateTimestamp(item);
+    item = DataControl.updateTimestamp(item);
     if (this.upload && this.uploadFilename) item.image = this.upload;
 
     this.alertService.clear();
@@ -151,7 +150,7 @@ export class BookListComponent implements OnInit {
       res => {
         this.data.push(res);
         this.alertService.success(startTime, 'POST');
-        this.resetSummit();
+        this.resetForm();
       },
       err => {
         this.alertService.failed(err);
@@ -159,7 +158,7 @@ export class BookListComponent implements OnInit {
     );
   }
 
-  private resetSummit() {
+  private resetForm() {
     this.initForm();
     this.upload = '';
     this.uploadFilename = '';

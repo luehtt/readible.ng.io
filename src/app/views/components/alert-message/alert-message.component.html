@@ -1,32 +1,10 @@
 <div class="mb-3" *ngIf="service.data && service.data.length != 0">
   <div *ngFor="let i of service.data">
-    <div *ngIf="i.type == 'success'" class="alert alert-success mb-1">
+    <div [class]="'mb-1 alert alert-' i.type">
       <strong>Success!</strong> {{i.message}}
       <button type="button" class="close float-right" aria-label="Close" (click)="service.clear()">
         <span aria-hidden="true">&times;</span>
       </button>
-    </div>
-
-    <div *ngIf="i.type == 'info'" class="alert alert-info mb-1">
-      <strong>Info!</strong> {{i.message}}
-      <button type="button" class="close float-right" aria-label="Close" (click)="service.clear()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-
-    <div *ngIf="i.type == 'warning'" class="alert alert-warning mb-1">
-      <strong>Warning!</strong> {{i.message}}
-      <button type="button" class="close float-right" aria-label="Close" (click)="service.clear()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-
-    <div *ngIf="i.type == 'danger'" class="alert alert-danger mb-1">
-      <strong>Danger!</strong> {{i.message}}
-      <button type="button" class="close float-right" aria-label="Close" (click)="service.clear()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <span *ngIf="i.error"><br/><strong>Detail errors:</strong> {{i.error}}</span>
     </div>
   </div>
 </div>

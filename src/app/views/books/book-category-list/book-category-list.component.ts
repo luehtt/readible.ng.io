@@ -3,7 +3,7 @@ import {BookCategory} from '../../../models/category';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {BookCategoryService} from '../../../services/category.service';
 import {AlertMessageService} from '../../../services/common/alert-message.service';
-import {ControlFunc, DataFunc} from '../../../common/function';
+import {FormGroupControl, DataControl} from '../../../common/function';
 import {Common} from '../../../common/const';
 
 @Component({
@@ -28,12 +28,12 @@ export class BookCategoryListComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private service: BookCategoryService, private alertService: AlertMessageService) { }
 
   ngOnInit() {
+    this.alertService.clear();
     this.initData();
   }
 
   private initData() {
     const startTime = this.alertService.startTime();
-    this.alertService.clear();
     this.service.fetch().subscribe(res => {
       this.data = res;
       this.form = this.initForm();
@@ -51,14 +51,14 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   get dataFilter(): BookCategory[] {
-    return DataFunc.filter(this.data, this.filter, ['name', 'createdAt', 'updatedAt']);
+    return DataControl.filter(this.data, this.filter, ['name', 'createdAt', 'updatedAt']);
   }
 
   onSort(sortedColumn: string) {
     if (!sortedColumn) { return; }
-    this.sortDirection = DataFunc.sortDirection(this.sortColumn, sortedColumn);
+    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortedColumn);
     this.sortColumn = sortedColumn;
-    this.data = DataFunc.sort(this.data, this.sortColumn, this.sortDirection);
+    this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }
 
   onEdit(item: BookCategory) {
@@ -94,10 +94,10 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   private storeItem() {
-    if (ControlFunc.validateForm(this.form) === false) { return; }
+    if (FormGroupControl.validateForm(this.form) === false) { return; }
 
     this.item = this.retrieveData(this.item, this.form);
-    this.item = DataFunc.createTimestamp(this.item);
+    this.item = DataControl.createTimestamp(this.item);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();
@@ -111,10 +111,10 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   private updateItem() {
-    if (ControlFunc.validateForm(this.form) === false) { return; }
+    if (FormGroupControl.validateForm(this.form) === false) { return; }
 
     this.item = this.retrieveData(this.item, this.form);
-    this.item = DataFunc.updateTimestamp(this.item);
+    this.item = DataControl.updateTimestamp(this.item);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();

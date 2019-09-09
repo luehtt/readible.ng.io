@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 
 import {User} from '../../../models/user';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {DataFunc} from '../../../common/function';
+import {DataControl} from '../../../common/function';
 import {Common} from '../../../common/const';
 import {Order} from '../../../models/order';
 import {ManagerService} from '../../../services/manager.service';
@@ -37,17 +37,17 @@ export class ManagerDetailComponent implements OnInit {
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+    this.alertService.clear();
     this.initData();
   }
 
   private initData() {
     const startTime = this.alertService.startTime();
-    this.alertService.clear();
     this.service.get(this.id).subscribe(
       res => {
         this.data = res.manager;
         this.account = res.user;
-        this.orders = DataFunc.removeDuplicate(this.data.confirmedOrders, this.data.completedOrders);
+        this.orders = DataControl.removeDuplicate(this.data.confirmedOrders, this.data.completedOrders);
         this.alertService.success(startTime, 'GET');
       },
       err => {
@@ -57,14 +57,14 @@ export class ManagerDetailComponent implements OnInit {
   }
 
   get filterOrder() {
-    return DataFunc.filter(this.orders, this.orderFilter, ['id', 'statusId', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
+    return DataControl.filter(this.orders, this.orderFilter, ['id', 'statusId', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
 
   onSortOrder(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.orderSortDirection = DataFunc.sortDirection(this.orderSortColumn, sortColumn);
+    this.orderSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn);
     this.orderSortColumn = sortColumn;
-    this.orders = DataFunc.sort(this.orders, this.orderSortColumn, this.orderSortDirection);
+    this.orders = DataControl.sort(this.orders, this.orderSortColumn, this.orderSortDirection);
   }
 
 

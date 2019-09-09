@@ -6,9 +6,8 @@ import {User} from 'src/app/models/user';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {AccountService} from 'src/app/services/account.service';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
-
-import {FileFunc, ControlFunc, ImageFunc} from 'src/app/common/function';
-import {Common, FormMessage} from 'src/app/common/common';
+import {FileControl, FormGroupControl, DataControl} from 'src/app/common/function';
+import {Common, FormMessage} from 'src/app/common/const';
 
 @Component({
   selector: 'app-account',
@@ -33,7 +32,10 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
     this.alertService.clear();
+    this.initData();
+  }
 
+  private initData() {
     const startTime = this.alertService.startTime();
     this.service.get().subscribe(
       res => {
@@ -41,17 +43,13 @@ export class AccountComponent implements OnInit {
         this.data.originalImage = res.data.image;
         this.account = res.user;
         this.alertService.success(startTime, 'GET');
-        this.ngOnInitForm();
+        this.initInfoForm();
+        this.initPasswordForm();
       },
       err => {
         this.alertService.failed(err);
       }
     );
-  }
-
-  ngOnInitForm() {
-    this.initInfoForm();
-    this.initPasswordForm();
   }
 
   private initInfoForm() {
@@ -62,7 +60,7 @@ export class AccountComponent implements OnInit {
       fullname: [this.data.fullname, [Validators.required, Validators.maxLength(255)]],
       address: [this.data.address ? this.data.address : '', [Validators.maxLength(255)]],
       phone: [this.data.phone ? this.data.phone : '', [Validators.maxLength(16)]],
-      male: [ControlFunc.radioTrueFalse(this.data.male), [Validators.required]],
+      male: [DataControl.radioTrueFalse(this.data.male), [Validators.required]],
       birth: [this.data.birth, [Validators.required, Validators.min(minYear), Validators.max(maxYear)]]
     });
   }
@@ -93,12 +91,12 @@ export class AccountComponent implements OnInit {
   onChangeImage(event) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      FileFunc.convertFileToBase64(file)
+      FileControl.convertFileToBase64(file)
         .then(res => {
           this.data.image = res.toString();
-          const orientation = ImageFunc.getOrientation(this.data.image);
+          const orientation = FileControl.getOrientation(this.data.image);
           if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = ImageFunc.transformCSS(orientation);
+            this.imageTransform = FileControl.transformCSS(orientation);
           }
           this.infoDialog = true;
         }).catch(err => {
@@ -113,25 +111,23 @@ export class AccountComponent implements OnInit {
     this.confirmPasswordError = password !== confirmPassword;
   }
 
+  validateConfirmPasswordExtend() {
+    this.passwordForm.controls.confirmPassword.markAsTouched();
+    return this.confirmPasswordError;
+  }
+
   onChangePassword() {
     this.alertService.clear();
-    if (this.passwordForm.invalid) {
-      ControlFunc.touchControls(this.passwordForm.controls);
-      return;
-    }
-
-    if (this.confirmPasswordError === true) {
-      this.passwordForm.controls.confirmPassword.markAsTouched();
-      return;
-    }
+    if (FormGroupControl.validateForm(this.passwordForm)) { return; }
+    if (this.validateConfirmPasswordExtend()) { return; }
 
     const currentPassword = this.passwordForm.controls.currentPassword.value;
     const updatePassword = this.passwordForm.controls.updatePassword.value;
     const startTime = this.alertService.startTime();
     this.service.postPassword(currentPassword, updatePassword).subscribe(res => {
         this.alertService.success(startTime, 'POST');
-        this.initPasswordForm();
         this.passwordDialog = false;
+        this.initPasswordForm();
       },
       err => {
         this.alertService.failed(err);
@@ -139,23 +135,24 @@ export class AccountComponent implements OnInit {
     );
   }
 
+  private retrieveInfo(form: FormGroup, originalImage: string, image: string) {
+    return {
+      fullname: form.controls.fullname.value,
+      birth: form.controls.birth.value,
+      male: form.controls.male.value,
+      address: form.controls.address.value,
+      phone: form.controls.phone.value,
+      image: originalImage !== image ? image : null,
+      updatedAt: DataControl.jsonDate(),
+    };
+  }
+
   onChangeInfo() {
     this.alertService.clear();
-    if (this.infoForm.invalid) {
-      ControlFunc.touchControls(this.passwordForm.controls);
-      return;
-    }
+    const form = this.infoForm;
+    if (FormGroupControl.validateForm(form)) { return; }
 
-    const item: any = {};
-    item.fullname = this.infoForm.controls.fullname.value;
-    item.birth = this.infoForm.controls.birth.value;
-    item.male = this.infoForm.controls.male.value;
-    item.address = this.infoForm.controls.address.value;
-    item.phone = this.infoForm.controls.phone.value;
-    item.updatedAt = this.data.updatedAt;
-
-    if (this.data.originalImage !== this.data.image) { item.image = this.data.image; }
-
+    const item = this.retrieveInfo(form, this.data.originalImage, this.data.image);
     const startTime = this.alertService.startTime();
     this.service.put(item).subscribe(res => {
         this.alertService.success(startTime, 'PUT');

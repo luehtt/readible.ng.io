@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {DataFunc, ControlFunc} from 'src/app/common/function';
+import {DataControl, FormGroupControl} from 'src/app/common/function';
 import {Common, FormMessage} from '../../../common/const';
 import {ManagerService} from '../../../services/manager.service';
 import {Manager} from '../../../models/manager';
@@ -38,12 +38,12 @@ export class ManagerListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.alertService.clear();
     this.initData();
   }
 
   private initData() {
     const startTime = this.alertService.startTime();
-    this.alertService.clear();
     this.service.fetch().subscribe(
       res => {
         this.data = res;
@@ -77,17 +77,17 @@ export class ManagerListComponent implements OnInit {
   get dataFilter() {
     switch (this.filter) {
       case 'male': case 'female':
-        return DataFunc.filter(this.data, this.filter === 'male' ? 'true' : 'false', ['male']);
+        return DataControl.filter(this.data, this.filter === 'male' ? 'true' : 'false', ['male']);
       default:
-        return DataFunc.filter(this.data, this.filter, ['fullname', 'birth', 'phone', 'createdAt']);
+        return DataControl.filter(this.data, this.filter, ['fullname', 'birth', 'phone', 'createdAt']);
     }
   }
 
   onSort(sortColumn: string) {
     if (!sortColumn) { return; }
-    this.sortDirection = DataFunc.sortDirection(this.sortColumn, sortColumn);
+    this.sortDirection = DataControl.sortDirection(this.sortColumn, sortColumn);
     this.sortColumn = sortColumn;
-    this.data = DataFunc.sort(this.data, this.sortColumn, this.sortDirection);
+    this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }
 
   validateBirth() {
@@ -111,7 +111,7 @@ export class ManagerListComponent implements OnInit {
   }
 
   onSubmit() {
-    if (ControlFunc.validateForm(this.form, this.customRule)) { return; }
+    if (FormGroupControl.validateForm(this.form, this.customRule)) { return; }
 
     const data = this.retrieveData(this.form);
     const startTime = this.alertService.startTime();

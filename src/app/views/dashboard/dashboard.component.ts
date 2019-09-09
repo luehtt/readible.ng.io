@@ -20,23 +20,27 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.alertService.clear();
-
-    const startTime1 = this.alertService.startTime();
-    this.service.fetchCount().subscribe(res => {
-      this.count = res;
-      this.alertService.success(startTime1, 'GET');
-    }, err => {
-      this.alertService.failed(err);
-    });
-
-    const startTime2 = this.alertService.startTime();
-    this.service.fetchTop().subscribe(res => {
-      this.top = res;
-      this.alertService.success(startTime2, 'GET');
-    }, err => {
-      this.alertService.failed(err);
-    });
-
+    this.initTopBook();
+    this.initSummary();
   }
 
+  private initTopBook() {
+    const startTime = this.alertService.startTime();
+    this.service.fetchCount().subscribe(res => {
+      this.count = res;
+      this.alertService.success(startTime, 'GET');
+    }, err => {
+      this.alertService.failed(err);
+    });
+  }
+
+  private initSummary() {
+    const startTime = this.alertService.startTime();
+    this.service.fetchTop().subscribe(res => {
+      this.top = res;
+      this.alertService.success(startTime, 'GET');
+    }, err => {
+      this.alertService.failed(err);
+    });
+  }
 }

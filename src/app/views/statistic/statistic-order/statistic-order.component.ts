@@ -5,7 +5,7 @@ import {AlertMessageService} from 'src/app/services/common/alert-message.service
 import {ChartOption, FormMessage} from '../../../common/const';
 import {StatisticService} from '../../../services/statistic.service';
 import {OrderStatistic} from '../../../models/statistic';
-import {DataFunc} from '../../../common/function';
+import {DataControl} from '../../../common/function';
 
 @Component({
   selector: 'app-statistic-orders',
@@ -65,8 +65,8 @@ export class StatisticOrderComponent implements OnInit {
 
   onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
-    this.fromDate = new Date(DataFunc.fromNgbDateToJson(this.fromDateNgb));
-    this.toDate = new Date(DataFunc.fromNgbDateToJson(this.toDateNgb));
+    this.fromDate = new Date(DataControl.fromNgbDateToJson(this.fromDateNgb));
+    this.toDate = new Date(DataControl.fromNgbDateToJson(this.toDateNgb));
     if (!this.validateReference(this.selectedReference, this.fromDate, this.toDate)) { return; }
     this.initData();
   }
@@ -81,11 +81,11 @@ export class StatisticOrderComponent implements OnInit {
   private validateReference(reference: string, fromDate: Date, toDate: Date) {
     let message: string;
     if (fromDate > toDate) { message = FormMessage.SELECTED_DATE_MISMATCHED; }
-    if (reference === 'day' && DataFunc.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'day' && DataFunc.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'month' && DataFunc.tooLongMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'month' && DataFunc.isSameMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
-    if (reference === 'year' && DataFunc.isSameYear(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
+    if (reference === 'day' && DataControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'day' && DataControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && DataControl.tooLongMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && DataControl.isSameMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
+    if (reference === 'year' && DataControl.isSameYear(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
 
     if (!message) { return true; }
     this.alertService.set(message, 'danger');
@@ -94,8 +94,8 @@ export class StatisticOrderComponent implements OnInit {
 
   private initData() {
     this.alertService.clear();
-    const fromDate = DataFunc.jsonDate(this.fromDate);
-    const toDate = DataFunc.jsonDate(this.toDate);
+    const fromDate = DataControl.jsonDate(this.fromDate);
+    const toDate = DataControl.jsonDate(this.toDate);
 
     const startTime = this.alertService.startTime();
     this.service.statisticOrder(this.selectedReference, fromDate, toDate).subscribe(res => {
@@ -115,12 +115,12 @@ export class StatisticOrderComponent implements OnInit {
     }
   }
 
-  private initChartDataExtend(data, property: string, borderColor: string, chartTitle: string) {
+  private initChartDataExtend(data: OrderStatistic[], property: string, borderColor: string, chartTitle: string) {
     return {
       labels: this.selectedReference === 'day' ? this.data.map(x => x.key.substr(0, 10)) : this.data.map(x => x.key),
       data: data.map(x => x[property]),
       borderColor,
-      chartTitle: chartTitle + ' from ' + DataFunc.jsonDate(this.fromDate) + ' to ' + DataFunc.jsonDate(this.toDate)
+      chartTitle: chartTitle + ' from ' + DataControl.jsonDate(this.fromDate) + ' to ' + DataControl.jsonDate(this.toDate)
     };
   }
 
@@ -128,7 +128,6 @@ export class StatisticOrderComponent implements OnInit {
     if (this.chart) { this.chart.destroy(); }
     const chartData = this.initChartData(this.data, this.selectedValue);
 
-    // init line chart
     this.chartTitle = chartData.chartTitle;
     this.chart = new Chart('canvas', {
       type: ChartOption.CHART_LINE,

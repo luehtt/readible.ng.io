@@ -6,7 +6,7 @@ import { Cart } from 'src/app/models/cart';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { Customer } from 'src/app/models/customer';
 import { Book } from 'src/app/models/book';
-import { Common } from '../../../common/common';
+import { Common } from '../../../common/const';
 import { Order } from '../../../models/order';
 import { CartService } from '../../../services/cart.service';
 
