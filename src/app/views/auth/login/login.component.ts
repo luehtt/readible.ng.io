@@ -5,9 +5,9 @@ import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { User } from 'src/app/models/user';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
-import { SessionService } from 'src/app/services/auth/session.service';
 import { FormGroupControl } from 'src/app/common/function';
 import { Common } from 'src/app/common/const';
+import { SessionService } from 'src/app/services/common/session.service';
 
 @Component({
   selector: 'app-login',

@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
-import {SessionService} from './auth/session.service';
 import {Endpoint} from '../common/const';
+import {SessionService} from './common/session.service';
 
 @Injectable({
   providedIn: 'root'

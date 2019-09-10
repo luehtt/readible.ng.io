@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {retry} from 'rxjs/operators';
 
 import {Common} from '../../common/const';
-import {SessionService} from '../auth/session.service';
+import {SessionService} from './session.service';
 
 @Injectable({
   providedIn: 'root'

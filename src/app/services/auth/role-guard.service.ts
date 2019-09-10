@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 
-import {SessionService} from './session.service';
 import {AuthService} from './auth.service';
+import {SessionService} from '../common/session.service';
 
 @Injectable({
   providedIn: 'root'
