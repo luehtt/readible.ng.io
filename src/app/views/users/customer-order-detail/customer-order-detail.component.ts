@@ -21,7 +21,7 @@ export class CustomerOrderDetailComponent implements OnInit {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
     this.alertService.clear();
     const startTime = this.alertService.startTime();
-    this.service.getCustomer(this.id).subscribe(
+    this.service.get(this.id).subscribe(
       res => {
         this.data = res;
         this.alertService.success(startTime, 'GET');

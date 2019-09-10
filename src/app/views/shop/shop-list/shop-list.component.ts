@@ -51,7 +51,7 @@ export class ShopListComponent implements OnInit {
     } else {
       this.alertService.clear();
       const startTime = this.alertService.startTime();
-      this.service.fetchPage(page, this.defaultLimit, this.filter).subscribe(res => {
+      this.service.fetchCategory(page, this.defaultLimit, this.filter).subscribe(res => {
         this.pagination = res.pagination;
         this.data = res.data;
         this.alertService.success(startTime, 'GET');
@@ -75,7 +75,7 @@ export class ShopListComponent implements OnInit {
   onFilter() {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
-    this.service.fetchPage(this.currentPage, this.defaultLimit, this.filter).subscribe(res => {
+    this.service.fetchCategory(this.currentPage, this.defaultLimit, this.filter).subscribe(res => {
       this.pagination = res.pagination;
       this.data = res.data;
       this.alertService.success(startTime, 'GET');
@@ -93,7 +93,7 @@ export class ShopListComponent implements OnInit {
   onSearch() {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
-    this.service.fetchSearchPage(this.currentPage, this.defaultLimit, this.filter, this.search).subscribe(res => {
+    this.service.fetchSearchCategory(this.currentPage, this.defaultLimit, this.filter, this.search).subscribe(res => {
       this.pagination = res.pagination;
       this.data = res.data;
       this.alertService.success(startTime, 'GET');

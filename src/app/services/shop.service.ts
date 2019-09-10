@@ -15,7 +15,8 @@ export class ShopService {
 
   private endpoint = Endpoint.SHOP;
   private customerEndpoint = Endpoint.CUSTOMER;
-
+  private orderEndpoint = Endpoint.ORDER;
+  
   constructor(private httpService: HttpClientService) {
   }
 
@@ -23,13 +24,13 @@ export class ShopService {
     return this.httpService.get(this.endpoint);
   }
 
-  fetchPage(page: number, limit: number, category: string): Observable<BookPagination> {
+  fetchCategory(page: number, limit: number, category: string): Observable<BookPagination> {
     return category ?
       this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}`) :
       this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}`);
   }
 
-  fetchSearchPage(page: number, limit: number, category: string, search: string): Observable<BookPagination> {
+  fetchSearchCategory(page: number, limit: number, category: string, search: string): Observable<BookPagination> {
     return !search ?
       this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}`) : category ?
       this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}&search=${search.toLowerCase()}`) :
@@ -41,7 +42,7 @@ export class ShopService {
   }
 
   postOrder(data: Order): Observable<Order> {
-    return this.httpService.post('orders', data);
+    return this.httpService.post(this.orderEndpoint, data);
   }
 
   getCustomer(): Observable<Customer> {

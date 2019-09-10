@@ -30,11 +30,4 @@ export class OrderService {
     return this.httpService.put(this.endpoint + '/' + data.id + '?status=' + status, data);
   }
 
-  fetchCustomer(status: string): Observable<Order[]> {
-    return this.httpService.fetch(this.endpoint + '?status=' + status);
-  }
-
-  getCustomer(id: number): Observable<Order> {
-    return this.httpService.get(this.endpoint + '/' + id);
-  }
 }
