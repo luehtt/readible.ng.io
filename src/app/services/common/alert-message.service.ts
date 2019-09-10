@@ -19,6 +19,10 @@ export class AlertMessageService {
     return this.data.length !== 0;
   }
 
+  public remove(index: number) {
+    this.data = this.data.length != 1 ? this.data.splice(index - 1, 1) : [];
+  }
+
   public clear() {
     this.data = [];
   }

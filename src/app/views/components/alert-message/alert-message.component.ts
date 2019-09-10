@@ -12,5 +12,4 @@ export class AlertMessageComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

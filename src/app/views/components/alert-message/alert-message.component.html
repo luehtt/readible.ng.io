@@ -1,8 +1,8 @@
 <div class="mb-3" *ngIf="service.data && service.data.length != 0">
-  <div *ngFor="let i of service.data">
+  <div *ngFor="let i of service.data; let it = index">
     <div [class]="'mb-1 alert alert-' + i.type">
-      <strong>Success!</strong> {{i.message}}
-      <button type="button" class="close float-right" aria-label="Close" (click)="service.clear()">
+      <strong>{{i.type | uppercase}}!</strong> {{i.message}}
+      <button type="button" class="close float-right" aria-label="Close" (click)="service.remove(it)">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

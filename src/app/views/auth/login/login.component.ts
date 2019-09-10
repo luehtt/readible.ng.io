@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
               private service: AuthService, private alertService: AlertMessageService, private sessionService: SessionService) { }
 
   ngOnInit() {
+    this.alertService.clear();
     this.initForm();
     this.redirect = this.route.snapshot.queryParams.redirect;
   }

@@ -31,6 +31,7 @@ import {OrderStatusComponent} from './views/components/order-status/order-status
 import {StatisticOrderComponent} from './views/statistic/statistic-order/statistic-order.component';
 import {StatisticCustomerComponent} from './views/statistic/statistic-customer/statistic-customer.component';
 import {AccountComponent} from './views/auth/account/account.component';
+import { HttpLoader } from './views/components/loader/http-loader';
 
 const routes: Routes = [
   {
@@ -100,7 +101,7 @@ const routes: Routes = [
     ShopListComponent, ShopDetailComponent,
     LoginComponent, RegisterComponent, AccountComponent,
     AdminComponent, ShopComponent,
-    AlertMessageComponent, FormErrorComponent, OrderStatusComponent,
+    AlertMessageComponent, FormErrorComponent, OrderStatusComponent, HttpLoader,
     StatisticOrderComponent, StatisticCustomerComponent
   ]
 })

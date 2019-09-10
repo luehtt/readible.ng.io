@@ -36,7 +36,6 @@ export class ShopListComponent implements OnInit {
       this.categories = res;
       this.alertService.success(startTime, 'GET');
     }, err => {
-      console.log(err);
       this.alertService.failed(err);
     });
 

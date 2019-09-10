@@ -569,4 +569,40 @@ a.bg-light { @include a-bg-color($color-light, $color-light-focus) }
 }
 
 
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
 
+$loader-height: 5px;
+
+.loader-overlay {
+  width: 100%;
+  min-height: $loader-height;
+}
+
+.loader {
+  margin: 0;
+  min-height: $loader-height;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.loader:before {
+  display: block;
+  position: absolute;
+  content: "";
+  left: 0px;
+  min-height: $loader-height;
+  background-color: $color-green;
+  animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+  from { width: 30%; }
+  10% { left: 10%; width: 30%; }
+  25% { left: 25%; width: 35%; }
+  40% { left: 40%; width: 45%; }
+  60% { left: 60%; width: 60%; }
+  85% { left: 80%; width: 45%; }
+  to { left: 100%; width: 35%; }
+}

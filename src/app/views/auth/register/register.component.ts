@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private service: AuthService, private alertService: AlertMessageService) { }
 
   ngOnInit() {
+    this.alertService.clear();
     this.initForm();
   }
 
@@ -31,7 +32,7 @@ export class RegisterComponent implements OnInit {
     this.form = this.formBuilder.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirm: ['', [Validators.required]],
       fullname: ['', [Validators.required]],
       gender: ['male', [Validators.required]],
