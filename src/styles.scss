@@ -1,11 +1,6 @@
 $default-font: 'Open Sans', sans-serif;
 
-$transition-fs: 0.15s;
-$transition-none: 0s;
-$transition-md: 0.3s;
-$transition-sl: 0.5s;
-
-$font-size-sm: 0.8rem;
+$font-size-sm: .875rem;
 $font-size-md: 1rem;
 $font-size-h6: 1.1rem;
 $font-size-h5: 1.25rem;
@@ -16,17 +11,10 @@ $font-size-h1: 2.5rem;
 $font-size-hg: 3rem;
 $font-size-xh: 5rem;
 
-$border-radius-max: 100rem;
+$border-radius-pill: 100rem;
 $border-radius-none: 0;
-$border-radius-half: 50%;
-$border-radius-sm: 0.15rem;
-$border-radius-md: 0.35rem;
-$border-radius-lg: 1rem;
-
-$box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.16),
-0 2px 10px 0 rgba(0, 0, 0, 0.12);
-$box-shadow-md: 0 2px 5px 0 rgba(0, 0, 0, 0.16),
-0 2px 10px 0 rgba(0, 0, 0, 0.12);
+$border-radius-circle: 50%;
+$border-radius-normal: 0.25rem;
 
 $color-blue: #2196f3;
 $color-blue-focus: #1976d2;
@@ -54,6 +42,17 @@ $color-gray: #6c757d;
 $color-gray-focus: #525d67;
 $color-light: #f8f9fa;
 $color-light-focus: #fff;
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+$default-btn-color: $color-blue;
+$default-btn-color-focus: $color-blue-focus;
+$default-card-header-bg: $color-blue;
+$default-card-header-color: $color-light-focus;
+$default-badge-color: $color-blue;
+$loader-height: 5px;
+$form-input-height: 2.75rem;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,133 +93,123 @@ body {
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 .badge {
-  box-shadow: $box-shadow-sm;
   margin: 0;
   padding: 0.45rem 0.65rem;
   font-size: $font-size-sm;
-  transition: $transition-fs;
   border: none;
-  border-radius: $border-radius-max;
+  box-shadow: none;
+  border-radius: $border-radius-pill;
   color: #fff;
   font-weight: 400;
-  background-color: $color-blue;
+  background-color: $default-badge-color;
 
   // customize shape
   &.badge-square { border-radius: $border-radius-none !important; }
-  &.badge-round { border-radius: $border-radius-half !important; }
-  &.badge-pill { border-radius: $border-radius-max !important; }
-
-  // customize size
-  &.badge-sm {
-    font-size: $font-size-md !important;
-    padding: 0.15rem !important;
-    border-radius: $border-radius-md;
-  }
-
-  &.badge-lg {
-    font-size: $font-size-md !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: $border-radius-md;
-  }
+  &.badge-round { border-radius: $border-radius-circle !important; }
+  &.badge-pill { border-radius: $border-radius-pill !important; }
 
   // customize color
   &.badge-primary { background-color: $color-blue !important; }
   &.badge-default { background-color: $color-teal !important; }
-  &.badge-secondary { background-color: $color-gray !important; }
   &.badge-success { background-color: $color-green !important; }
   &.badge-warning { background-color: $color-amber !important; }
   &.badge-danger { background-color: $color-red !important; }
   &.badge-info { background-color: $color-cyan !important; }
-  &.badge-unique { background-color: $color-violet !important; }
-  &.badge-elegant { background-color: $color-rose !important; }
-  &.badge-purple { background-color: $color-purple !important; }
-  &.badge-dark { background-color: $color-dark !important; }
-  &.badge-light { background-color: $color-light !important; }
 }
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 
 .btn {
-  box-shadow: $box-shadow-md;
-  margin: 0.35rem 0 0.35rem 0;
-  padding: 0.5rem 1.65rem;
-  font-size: $font-size-md;
-  transition: $transition-fs;
-  border: none;
-  border-radius: $border-radius-max;
-  color: #fff;
+  font-size: $font-size-sm;
   font-weight: 500;
-  background-color: $color-blue;
+  text-transform: uppercase;
+  color: $color-light-focus;
+  background-color: $default-btn-color;
   cursor: pointer;
-  height: calc(1.5em + .75rem + 2px);
+  min-height: $form-input-height;
+  border: none;
+  border-radius: $border-radius-normal;
+  padding: 0 1rem 0 1rem;
+  margin: .5rem 0 .5rem 0;
 
-  &.no-shadow {
-    box-shadow: none !important;
-  }
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  .input-group & {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    height: calc(1.5em + .75rem + 2px);
-    box-shadow: none;
-  }
-
-  .input-group .input-group-append & {
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
-  }
-
-  .input-group .input-group-append &.btn-outline-secondary {
-    border-color: rgb(206, 212, 218) !important;
-    color: rgb(206, 212, 218) !important;
-  }
+  &:hover { background-color: $default-btn-color-focus; }
 
   &:disabled {
-    opacity: 0.65;
+    opacity: 0.5 !important;
     cursor: default !important;
   }
 
-  &.calendar {
+  &.btn-link {
+    font-size: 1rem;
+    font-weight: 400;
+    text-transform: none;
+    color: $color-dark-focus;
+    background-color: transparent;
+    cursor: pointer;
+    min-height: 0;
+    border-radius: none;
+    padding: 0;
     margin: 0;
-    box-shadow: none;
-    color: #fff;
-    background-color: $color-blue;
-    border-radius: .25rem;
-    height: calc(1.5em + .75rem + 2px);
-    width: 2.8rem;
-    padding-left: .25rem;
-    padding-right: .25rem;
 
-    &:hover { background-color: $color-blue-focus; }
+    box-shadow: none !important;
+    transition: none !important;
   }
 
-  &.btn-icon {
+  @mixin box-shadow-none {
+    box-shadow: none !important;
+    transition: none !important;
+  }
+
+  @mixin btn-append-border-radius {
+    border-top-left-radius: $border-radius-none !important;
+    border-bottom-left-radius: $border-radius-none !important;
+    border-bottom-right-radius: $border-radius-normal !important;
+    border-top-right-radius: $border-radius-normal !important;
+  }
+
+  .input-group .input-group-append & {
+    @include btn-append-border-radius();
+    @include box-shadow-none();
+  }
+
+  &.calendar {
+    font-size: 1rem;
+    color: $color-dark-focus;
+    background-color: $color-light-focus;
+    cursor: pointer;
+    width: $form-input-height + .5rem;
+    height: $form-input-height;
+    border: none;
+    padding: 0 .25rem 0 .25rem;
     margin: 0;
-    box-shadow: none;
-    height: calc(1.5em + .75rem + 2px);
-    width: 2.8rem;
-    padding-left: .25rem;
-    padding-right: .25rem;
+  
+    @include btn-append-border-radius();
+    @include box-shadow-none();
   }
 
   // customize shape
-  &.btn-normal { border-radius: $border-radius-sm !important; }
-  &.btn-btn-square { border-radius: $border-radius-none !important; }
-  &.btn-round { border-radius: $border-radius-half !important; }
-  &.btn-pill { border-radius: $border-radius-max !important; }
+  &.btn-normal { border-radius: $border-radius-normal !important; }
+  &.btn-square { border-radius: $border-radius-none !important; }
+  &.btn-round { border-radius: $border-radius-circle !important; }
+  &.btn-pill { border-radius: $border-radius-pill !important; }
 
   // customize size
   &.btn-sm {
-    font-size: $font-size-sm !important;
-    padding: 0.35rem 0.85rem !important;
-    border-radius: $border-radius-sm;
+    font-size: .75rem;
+    min-height: 2rem;
+    padding: 0 .5rem 0 .5rem;
+    margin: .25rem 0 .25rem 0;
   }
 
   &.btn-lg {
-    font-size: $font-size-h4 !important;
-    padding: .65rem 2rem !important;
-    border-radius: $border-radius-lg;
+    font-size: $font-size-h6;
+    min-height: 3.5rem;
+    padding: 0 1.25rem 0 1.25rem;
+    margin: .5rem 0 .5rem 0;
   }
 
   // customize gradient color
@@ -228,9 +217,7 @@ body {
     background: linear-gradient(45deg, $color, $color-2) !important;
     color: #fff;
 
-    &:hover {
-      background: linear-gradient(45deg, $color-focus, $color-2-focus) !important;
-    }
+    &:hover { background: linear-gradient(45deg, $color-focus, $color-2-focus) !important; }
   }
 
   &.btn-purple-gradient { @include btn-color-gradient($color-rose, $color-violet, $color-rose-focus, $color-violet-focus) }
@@ -243,9 +230,7 @@ body {
     background-color: $color !important;
     color: #fff;
 
-    &:hover {
-      background-color: $color-focus !important;
-    }
+    &:hover { background-color: $color-focus !important; }
   }
 
   &.btn-primary { @include btn-color($color-blue, $color-blue-focus) }
@@ -254,18 +239,19 @@ body {
   &.btn-success { @include btn-color($color-green, $color-green-focus) }
   &.btn-warning { @include btn-color($color-amber, $color-amber-focus) }
   &.btn-danger { @include btn-color($color-red, $color-red-focus) }
+
   &.btn-secondary { @include btn-color($color-gray, $color-gray-focus) }
   &.btn-unique { @include btn-color($color-violet, $color-violet-focus) }
   &.btn-romantic { @include btn-color($color-rose, $color-rose-focus) }
   &.btn-elegant { @include btn-color($color-purple, $color-purple-focus) }
-  &.btn-light { @include btn-color($color-light, $color-light-focus) }
+  &.btn-special { @include btn-color($color-brown, $color-brown-focus) }
   &.btn-dark { @include btn-color($color-dark, $color-dark-focus) }
 
   // customize btn outline
   @mixin btn-outline-color($color, $color-focus) {
     background-color: transparent !important;
     color: $color !important;
-    border: 1.5px solid $color !important;
+    border: .1rem solid $color !important;
 
     &:hover {
       color: $color-focus !important;
@@ -279,23 +265,13 @@ body {
   &.btn-outline-success { @include btn-outline-color($color-green, $color-green-focus) }
   &.btn-outline-warning { @include btn-outline-color($color-amber, $color-amber-focus) }
   &.btn-outline-danger { @include btn-outline-color($color-red, $color-red-focus) }
+
+  &.btn-outline-special { @include btn-outline-color($color-brown, $color-brown-focus) }
   &.btn-outline-unique { @include btn-outline-color($color-violet, $color-violet-focus) }
   &.btn-outline-romantic { @include btn-outline-color($color-rose, $color-rose-focus) }
   &.btn-outline-elegant { @include btn-outline-color($color-purple, $color-purple-focus) }
-  &.btn-outline-light { @include btn-outline-color($color-light, $color-light-focus) }
   &.btn-outline-dark { @include btn-outline-color($color-dark, $color-dark-focus) }
   &.btn-outline-secondary { @include btn-outline-color($color-gray, $color-gray-focus) }
-
-  &.btn-link {
-    color: $color-blue;
-    background-color: transparent !important;
-    padding: 0 0.35rem !important;
-    border: none;
-    box-shadow: none;
-    margin-top: 0;
-    margin-bottom: 0;
-    height: auto !important;
-  }
 }
 
 //////////////////////////////////////////////////////
@@ -303,26 +279,24 @@ body {
 
 @mixin bg-color($color, $color-focus) {
   background-color: $color !important;
-  color: #fff;
+  color: $color-light-focus;
 
-  &.focus {
-    background-color: $color-focus !important;
-  }
+  &.focus { background-color: $color-focus !important; }
 }
 
 .bg-primary { @include bg-color($color-blue, $color-blue-focus) }
 .bg-default { @include bg-color($color-teal, $color-teal-focus) }
 .bg-info { @include bg-color($color-cyan, $color-cyan-focus) }
 .bg-success { @include bg-color($color-green, $color-green-focus) }
-.bg-danger { @include bg-color($color-red, $color-red-focus) }
 .bg-warning { @include bg-color($color-amber, $color-amber-focus) }
+.bg-danger { @include bg-color($color-red, $color-red-focus) }
+
+.bg-special { @include bg-color($color-brown, $color-brown-focus) }
 .bg-unique { @include bg-color($color-violet, $color-violet-focus) }
 .bg-elegant { @include bg-color($color-purple, $color-purple-focus) }
 .bg-romantic { @include bg-color($color-rose, $color-rose-focus) }
+.bg-dark { @include bg-color($color-dark, $color-dark-focus) }
 .bg-secondary { @include bg-color($color-gray, $color-gray-focus) }
-.bg-light { @include bg-color($color-light, $color-light-focus) }
-.bg-secondary { @include bg-color($color-gray, $color-gray-focus) }
-
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
@@ -330,9 +304,7 @@ body {
 @mixin bg-color-gradient($color, $color-focus, $color-2, $color-2-focus) {
   background: linear-gradient(45deg, $color, $color-2) !important;
 
-  &.focus {
-    background: linear-gradient(45deg, $color-focus, $color-2-focus) !important;
-  }
+  &.focus { background: linear-gradient(45deg, $color-focus, $color-2-focus) !important; }
 }
 
 .bg-purple-gradient { @include bg-color-gradient($color-rose, $color-rose-focus, $color-violet, $color-violet-focus) }
@@ -343,69 +315,47 @@ body {
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 
-@mixin border-color($color, $color-focus) {
-  border-color: $color !important;
-
-  &.focus {
-    border-color: $color-focus !important;
-  }
-}
-
-.border-primary { @include border-color($color-blue, $color-blue-focus) }
-.border-default { @include border-color($color-teal, $color-teal-focus) }
-.border-info { @include border-color($color-cyan, $color-cyan-focus) }
-.border-success { @include border-color($color-green, $color-green-focus) }
-.border-danger { @include border-color($color-red, $color-red-focus) }
-.border-warning { @include border-color($color-amber, $color-amber-focus) }
-.border-light { @include border-color($color-light, $color-light-focus) }
-.border-dark { @include border-color($color-dark, $color-dark-focus) }
-.border-secondary { @include border-color($color-gray, $color-gray-focus) }
-.border-unique { @include border-color($color-violet, $color-violet-focus) }
-.border-elegant { @include border-color($color-purple, $color-purple-focus) }
-.border-romantic { @include border-color($color-rose, $color-rose-focus) }
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
 .card {
-  box-shadow: $box-shadow-md;
+  color: $default-card-header-color;
   border: none;
-  border-radius: $border-radius-md;
+  border-radius: $border-radius-normal;
   width: 100%;
-  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 .5rem 1rem 0 rgba(0,0,0,.2),0 .375px 1.25rem 0 rgba(0,0,0,.19);
 
   & .card-header {
-    background: $color-light;
-    border-radius: $border-radius-md $border-radius-md 0 0;
+    background: $default-card-header-bg;
+    border-radius: $border-radius-normal $border-radius-normal 0 0;
     padding: 1rem 1.25rem;
   }
 
   & .card-body {
     flex: 1 1 auto;
-    padding: .75rem 1.25rem;
+    padding: 1rem 1.25rem;
   }
 
   & .card-footer {
-    background: $color-light;
-    border-radius: 0 0 $border-radius-md $border-radius-md;
+    background: $color-gray;
+    border-radius: 0 0 $border-radius-normal $border-radius-normal;
     padding: 1rem 1.25rem;
   }
 
   & img.card-img-top {
-    padding: 0;
-    border-radius: $border-radius-md $border-radius-md 0 0;
+    padding: 0 !important;
+    border-radius: $border-radius-normal $border-radius-normal 0 0;
     width: 100%;
   }
 
   & img.card-img {
+    padding: 0 !important;
     border-radius: 0;
-    padding: 0;
     width: 100%;
   }
 
   & img.card-img-bottom {
-    padding: 0;
-    border-radius: 0 0 $border-radius-md $border-radius-md;
+    padding: 0 !important;
+    border-radius: 0 0 $border-radius-normal $border-radius-normal;
     width: 100%;
   }
 }
@@ -431,7 +381,7 @@ h3 {
 
 h4 {
   font-size: $font-size-h4;
-  margin-bottom: .35rem;
+  margin-bottom: .15rem;
 }
 
 h5 {
@@ -503,7 +453,6 @@ svg {
 .text-danger { @include text-color($color-red, $color-red-focus) }
 .text-warning { @include text-color($color-amber, $color-amber-focus) }
 .text-success { @include text-color($color-green, $color-green-focus) }
-.text-light { @include text-color($color-light, $color-light-focus) }
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
@@ -523,7 +472,6 @@ a.bg-secondary { @include a-bg-color($color-gray, $color-gray-focus) }
 a.bg-danger { @include a-bg-color($color-red, $color-red-focus) }
 a.bg-warning { @include a-bg-color($color-amber, $color-amber-focus) }
 a.bg-success { @include a-bg-color($color-green, $color-green-focus) }
-a.bg-light { @include a-bg-color($color-light, $color-light-focus) }
 
 
 //////////////////////////////////////////////////////
@@ -563,7 +511,12 @@ a.bg-light { @include a-bg-color($color-light, $color-light-focus) }
 //////////////////////////////////////////////////////
 
 .table {
-  & td {
+  & th {
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  & th, & td {
     padding: 0.5rem 0.75rem;
   }
 }
@@ -571,8 +524,6 @@ a.bg-light { @include a-bg-color($color-light, $color-light-focus) }
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
-
-$loader-height: 5px;
 
 .loader-overlay {
   width: 100%;
