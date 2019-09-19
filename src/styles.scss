@@ -1,481 +1,84 @@
-$default-font: 'Open Sans', sans-serif;
+$color-primary: #563D7C;
+$color-secondary: #868E96;
+$color-success: #28A745;
+$color-danger: #E8286B;
+$color-warning: #FF550B;
+$color-info: #17A2B8;
+$color-light: #F8F9FA;
+$color-dark: #343434;
 
-$font-size-sm: .875rem;
-$font-size-md: 1rem;
-$font-size-h6: 1.1rem;
-$font-size-h5: 1.25rem;
-$font-size-h4: 1.5rem;
-$font-size-h3: 1.75rem;
-$font-size-h2: 2rem;
-$font-size-h1: 2.5rem;
-$font-size-hg: 3rem;
-$font-size-xh: 5rem;
 
-$border-radius-pill: 100rem;
-$border-radius-none: 0;
-$border-radius-circle: 50%;
-$border-radius-normal: 0.25rem;
-
-$color-blue: #2196f3;
-$color-blue-focus: #1976d2;
-$color-teal: #009688;
-$color-teal-focus: #00796b;
-$color-purple: #9c27b0;
-$color-purple-focus: #7b1fa2;
-$color-violet: #673ab7;
-$color-violet-focus: #512da8;
-$color-green: #4caf50;
-$color-green-focus: #388e3c;
-$color-amber: #ffc107;
-$color-amber-focus: #ffa000;
-$color-red: #f44336;
-$color-red-focus: #d32f2f;
-$color-cyan: #00bcd4;
-$color-cyan-focus: #0097a7;
-$color-dark: #313131;
-$color-dark-focus: #212121;
-$color-rose: #e91e63;
-$color-rose-focus: #c2185b;
-$color-brown: #795548;
-$color-brown-focus: #5d4037;
-$color-gray: #6c757d;
-$color-gray-focus: #525d67;
-$color-light: #f8f9fa;
-$color-light-focus: #fff;
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-$default-btn-color: $color-blue;
-$default-btn-color-focus: $color-blue-focus;
-$default-card-header-bg: $color-blue;
-$default-card-header-color: $color-light-focus;
-$default-badge-color: $color-blue;
-$loader-height: 5px;
-$form-input-height: 2.75rem;
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
+* {
+  font-family: Montserrat, sans-serif;
+  font-size: 15px;
+}
 
 body {
-  font-family: $default-font;
-  color: $font-size-md;
-}
-
-.form-group {
-  margin-bottom: .45rem;
-
-  label { margin-bottom: .45rem; }
-  label.form-check-label { margin: 0; }
-}
-
-.cursor-pointer {
-  cursor: pointer;
+  overflow-x: hidden;
 }
 
 .card {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+
   & .card-header {
-    color: #fff;
-    background-color: $color-blue !important;
-    font-size: $font-size-h6;
+    color: $color-light;
+    background-color: $color-primary;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  & .card-body {
+    flex: 1 1 auto;
+  }
+
+  & .card-footer {
+    background-color: $color-light;
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 .alert {
   margin-top: .5rem;
   margin-bottom: .5rem;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-.badge {
-  margin: 0;
-  padding: 0.45rem 0.65rem;
-  font-size: $font-size-sm;
-  border: none;
-  box-shadow: none;
-  border-radius: $border-radius-pill;
+.tag {
+  padding: .25rem .5rem;
+  border-radius: .25rem;
   color: #fff;
-  font-weight: 400;
-  background-color: $default-badge-color;
-
-  // customize shape
-  &.badge-square { border-radius: $border-radius-none !important; }
-  &.badge-round { border-radius: $border-radius-circle !important; }
-  &.badge-pill { border-radius: $border-radius-pill !important; }
-
-  // customize color
-  &.badge-primary { background-color: $color-blue !important; }
-  &.badge-default { background-color: $color-teal !important; }
-  &.badge-success { background-color: $color-green !important; }
-  &.badge-warning { background-color: $color-amber !important; }
-  &.badge-danger { background-color: $color-red !important; }
-  &.badge-info { background-color: $color-cyan !important; }
 }
 
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-.btn {
-  font-size: $font-size-sm;
+button.btn {
+  font-size: 1rem;
   font-weight: 500;
-  text-transform: uppercase;
-  color: $color-light-focus;
-  background-color: $default-btn-color;
+}
+
+.btn-link {
+  margin: 0;
+  padding: 0;
+}
+
+button.btn.calendar {
+  font-size: 1rem;
+  color: $color-light;
+  background-color: $color-primary;
   cursor: pointer;
-  min-height: $form-input-height;
-  border: none;
-  border-radius: $border-radius-normal;
-  padding: 0 1rem 0 1rem;
-  margin: .5rem 0 .5rem 0;
-
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
-  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover { background-color: $default-btn-color-focus; }
-
-  &:disabled {
-    opacity: 0.5 !important;
-    cursor: default !important;
-  }
-
-  &.btn-link {
-    font-size: 1rem;
-    font-weight: 400;
-    text-transform: none;
-    color: $color-dark-focus;
-    background-color: transparent;
-    cursor: pointer;
-    min-height: 0;
-    border-radius: none;
-    padding: 0;
-    margin: 0;
-
-    box-shadow: none !important;
-    transition: none !important;
-  }
-
-  @mixin box-shadow-none {
-    box-shadow: none !important;
-    transition: none !important;
-  }
-
-  @mixin btn-append-border-radius {
-    border-top-left-radius: $border-radius-none !important;
-    border-bottom-left-radius: $border-radius-none !important;
-    border-bottom-right-radius: $border-radius-normal !important;
-    border-top-right-radius: $border-radius-normal !important;
-  }
-
-  .input-group .input-group-append & {
-    @include btn-append-border-radius();
-    @include box-shadow-none();
-  }
-
-  &.calendar {
-    font-size: 1rem;
-    color: $color-dark-focus;
-    background-color: $color-light-focus;
-    cursor: pointer;
-    width: $form-input-height + .5rem;
-    height: $form-input-height;
-    border: none;
-    padding: 0 .25rem 0 .25rem;
-    margin: 0;
-  
-    @include btn-append-border-radius();
-    @include box-shadow-none();
-  }
-
-  // customize shape
-  &.btn-normal { border-radius: $border-radius-normal !important; }
-  &.btn-square { border-radius: $border-radius-none !important; }
-  &.btn-round { border-radius: $border-radius-circle !important; }
-  &.btn-pill { border-radius: $border-radius-pill !important; }
-
-  // customize size
-  &.btn-sm {
-    font-size: .75rem;
-    min-height: 2rem;
-    padding: 0 .5rem 0 .5rem;
-    margin: .25rem 0 .25rem 0;
-  }
-
-  &.btn-lg {
-    font-size: $font-size-h6;
-    min-height: 3.5rem;
-    padding: 0 1.25rem 0 1.25rem;
-    margin: .5rem 0 .5rem 0;
-  }
-
-  // customize gradient color
-  @mixin btn-color-gradient($color, $color-2, $color-focus, $color-2-focus) {
-    background: linear-gradient(45deg, $color, $color-2) !important;
-    color: #fff;
-
-    &:hover { background: linear-gradient(45deg, $color-focus, $color-2-focus) !important; }
-  }
-
-  &.btn-purple-gradient { @include btn-color-gradient($color-rose, $color-violet, $color-rose-focus, $color-violet-focus) }
-  &.btn-blue-gradient { @include btn-color-gradient($color-cyan, $color-blue, $color-cyan-focus, $color-blue-focus) }
-  &.btn-red-gradient { @include btn-color-gradient($color-amber, $color-red, $color-amber-focus, $color-red-focus) }
-  &.btn-green-gradient { @include btn-color-gradient($color-green, $color-teal, $color-green-focus, $color-teal-focus) }
-
-  // customize color
-  @mixin btn-color($color, $color-focus) {
-    background-color: $color !important;
-    color: #fff;
-
-    &:hover { background-color: $color-focus !important; }
-  }
-
-  &.btn-primary { @include btn-color($color-blue, $color-blue-focus) }
-  &.btn-default { @include btn-color($color-teal, $color-teal-focus) }
-  &.btn-info { @include btn-color($color-cyan, $color-cyan-focus) }
-  &.btn-success { @include btn-color($color-green, $color-green-focus) }
-  &.btn-warning { @include btn-color($color-amber, $color-amber-focus) }
-  &.btn-danger { @include btn-color($color-red, $color-red-focus) }
-
-  &.btn-secondary { @include btn-color($color-gray, $color-gray-focus) }
-  &.btn-unique { @include btn-color($color-violet, $color-violet-focus) }
-  &.btn-romantic { @include btn-color($color-rose, $color-rose-focus) }
-  &.btn-elegant { @include btn-color($color-purple, $color-purple-focus) }
-  &.btn-special { @include btn-color($color-brown, $color-brown-focus) }
-  &.btn-dark { @include btn-color($color-dark, $color-dark-focus) }
-
-  // customize btn outline
-  @mixin btn-outline-color($color, $color-focus) {
-    background-color: transparent !important;
-    color: $color !important;
-    border: .1rem solid $color !important;
-
-    &:hover {
-      color: $color-focus !important;
-      border-color: $color-focus !important;
-    }
-  }
-
-  &.btn-outline-primary { @include btn-outline-color($color-blue, $color-blue-focus) }
-  &.btn-outline-default { @include btn-outline-color($color-teal, $color-teal-focus) }
-  &.btn-outline-info { @include btn-outline-color($color-cyan, $color-cyan-focus) }
-  &.btn-outline-success { @include btn-outline-color($color-green, $color-green-focus) }
-  &.btn-outline-warning { @include btn-outline-color($color-amber, $color-amber-focus) }
-  &.btn-outline-danger { @include btn-outline-color($color-red, $color-red-focus) }
-
-  &.btn-outline-special { @include btn-outline-color($color-brown, $color-brown-focus) }
-  &.btn-outline-unique { @include btn-outline-color($color-violet, $color-violet-focus) }
-  &.btn-outline-romantic { @include btn-outline-color($color-rose, $color-rose-focus) }
-  &.btn-outline-elegant { @include btn-outline-color($color-purple, $color-purple-focus) }
-  &.btn-outline-dark { @include btn-outline-color($color-dark, $color-dark-focus) }
-  &.btn-outline-secondary { @include btn-outline-color($color-gray, $color-gray-focus) }
-}
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-@mixin bg-color($color, $color-focus) {
-  background-color: $color !important;
-  color: $color-light-focus;
-
-  &.focus { background-color: $color-focus !important; }
-}
-
-.bg-primary { @include bg-color($color-blue, $color-blue-focus) }
-.bg-default { @include bg-color($color-teal, $color-teal-focus) }
-.bg-info { @include bg-color($color-cyan, $color-cyan-focus) }
-.bg-success { @include bg-color($color-green, $color-green-focus) }
-.bg-warning { @include bg-color($color-amber, $color-amber-focus) }
-.bg-danger { @include bg-color($color-red, $color-red-focus) }
-
-.bg-special { @include bg-color($color-brown, $color-brown-focus) }
-.bg-unique { @include bg-color($color-violet, $color-violet-focus) }
-.bg-elegant { @include bg-color($color-purple, $color-purple-focus) }
-.bg-romantic { @include bg-color($color-rose, $color-rose-focus) }
-.bg-dark { @include bg-color($color-dark, $color-dark-focus) }
-.bg-secondary { @include bg-color($color-gray, $color-gray-focus) }
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-@mixin bg-color-gradient($color, $color-focus, $color-2, $color-2-focus) {
-  background: linear-gradient(45deg, $color, $color-2) !important;
-
-  &.focus { background: linear-gradient(45deg, $color-focus, $color-2-focus) !important; }
-}
-
-.bg-purple-gradient { @include bg-color-gradient($color-rose, $color-rose-focus, $color-violet, $color-violet-focus) }
-.bg-blue-gradient { @include bg-color-gradient($color-cyan, $color-cyan-focus, $color-blue, $color-blue-focus) }
-.bg-red-gradient { @include bg-color-gradient($color-amber, $color-amber-focus, $color-red, $color-red-focus) }
-.bg-green-gradient { @include bg-color-gradient($color-green, $color-green-focus, $color-teal, $color-teal-focus) }
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-.card {
-  color: $default-card-header-color;
-  border: none;
-  border-radius: $border-radius-normal;
-  width: 100%;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 .5rem 1rem 0 rgba(0,0,0,.2),0 .375px 1.25rem 0 rgba(0,0,0,.19);
-
-  & .card-header {
-    background: $default-card-header-bg;
-    border-radius: $border-radius-normal $border-radius-normal 0 0;
-    padding: 1rem 1.25rem;
-  }
-
-  & .card-body {
-    flex: 1 1 auto;
-    padding: 1rem 1.25rem;
-  }
-
-  & .card-footer {
-    background: $color-gray;
-    border-radius: 0 0 $border-radius-normal $border-radius-normal;
-    padding: 1rem 1.25rem;
-  }
-
-  & img.card-img-top {
-    padding: 0 !important;
-    border-radius: $border-radius-normal $border-radius-normal 0 0;
-    width: 100%;
-  }
-
-  & img.card-img {
-    padding: 0 !important;
-    border-radius: 0;
-    width: 100%;
-  }
-
-  & img.card-img-bottom {
-    padding: 0 !important;
-    border-radius: 0 0 $border-radius-normal $border-radius-normal;
-    width: 100%;
-  }
 }
 
 
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-h1 {
-  font-size: $font-size-h1;
-  margin-bottom: 1rem;
+.form-group {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-h2 {
-  font-size: $font-size-h2;
-  margin-bottom: .85rem;
-}
-
-h3 {
-  font-size: $font-size-h3;
-  margin-bottom: .65rem;
-}
-
-h4 {
-  font-size: $font-size-h4;
-  margin-bottom: .15rem;
-}
-
-h5 {
-  font-size: $font-size-h5;
-  margin-bottom: .15rem;
-}
-
-h6 {
-  font-size: $font-size-h6;
-  margin-bottom: 0;
-}
-
-.h1 { font-size: $font-size-h1 }
-.h2 { font-size: $font-size-h2 }
-.h3 { font-size: $font-size-h3 }
-.h4 { font-size: $font-size-h4 }
-.h5 { font-size: $font-size-h5 }
-.h6 { font-size: $font-size-h6 }
-.hg { font-size: $font-size-hg }
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-svg {
-  min-width: 24px;
-}
 
 .list-group {
   & .list-group-item {
-    padding: .45rem 15px;
-  }
-
-  &.p-md .list-group-item {
-    padding: .65rem 1.25rem;
-  }
-
-  &.border-0 .list-group-item {
-    border: 0 !important;
+    padding: .5rem;
   }
 }
 
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-.row.less-gutters {
-  margin-left: -8px;
-  margin-right: -8px;
-
-  &>.col, &>[class*=col-] {
-    padding-right: 8px;
-    padding-left: 8px;
-  }
-}
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-@mixin text-color($color, $color-focus) {
-  color: $color !important;
-
-  &.focus {
-    color: $color-focus !important;
-  }
-}
-
-.text-primary { @include text-color($color-blue, $color-blue-focus) }
-.text-info { @include text-color($color-cyan, $color-cyan-focus) }
-.text-secondary { @include text-color($color-gray, $color-gray-focus) }
-.text-danger { @include text-color($color-red, $color-red-focus) }
-.text-warning { @include text-color($color-amber, $color-amber-focus) }
-.text-success { @include text-color($color-green, $color-green-focus) }
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-@mixin a-bg-color($color, $color-focus) {
-  color: #fff;
-  background-color: $color;
-
-  &:hover { background-color: $color-focus !important }
-  &:focus { background-color: $color-focus !important }
-  &.active { background-color: $color-focus !important }
-}
-
-a.bg-primary { @include a-bg-color($color-blue, $color-blue-focus) }
-a.bg-info { @include a-bg-color($color-cyan, $color-cyan-focus) }
-a.bg-secondary { @include a-bg-color($color-gray, $color-gray-focus) }
-a.bg-danger { @include a-bg-color($color-red, $color-red-focus) }
-a.bg-warning { @include a-bg-color($color-amber, $color-amber-focus) }
-a.bg-success { @include a-bg-color($color-green, $color-green-focus) }
-
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
 
 .star {
   position: relative;
@@ -483,77 +86,57 @@ a.bg-success { @include a-bg-color($color-green, $color-green-focus) }
   color: #d3d3d3;
 
   &.full {
-    color: $color-amber;
+    color: $color-warning;
   }
 
   & .half {
     position: absolute;
     display: inline-block;
     overflow: hidden;
-    color: $color-amber;
+    color: $color-warning;
   }
 }
 
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
 
-.sidebar-heading {
-  padding: 0.975rem 1.25rem !important;
-  font-size: 1.2rem !important;
+.page-content-wrapper {
+  min-width: 100vw;
 }
 
-.navbar-heading {
-  font-size: 1.2rem !important;
+.sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  transition: margin .25s ease-out;
+
+  & .sidebar-heading {
+    padding: 1rem 1.25rem;
+    font-size: 1.25rem;
+  }
+
+  & .list-group {
+    width: 15rem;
+
+    & .list-group-item { padding: 0.75rem 1.25rem; }
+  }
+
+  .wrapper.toggled & { margin-left: 0; }
 }
 
+@media (min-width: 768px) {
+  .page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+  
+  .sidebar-wrapper {
+    margin-left: 0;
 
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
+    .wrapper.toggled & { margin-left: -15rem; }
+  }
+}
+
 
 .table {
-  & th {
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
   & th, & td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 0.5rem;
   }
-}
-
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-
-.loader-overlay {
-  width: 100%;
-  min-height: $loader-height;
-}
-
-.loader {
-  margin: 0;
-  min-height: $loader-height;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.loader:before {
-  display: block;
-  position: absolute;
-  content: "";
-  left: 0px;
-  min-height: $loader-height;
-  background-color: $color-green;
-  animation: loading 2s linear infinite;
-}
-
-@keyframes loading {
-  from { width: 30%; }
-  10% { left: 10%; width: 30%; }
-  25% { left: 25%; width: 35%; }
-  40% { left: 40%; width: 45%; }
-  60% { left: 60%; width: 60%; }
-  85% { left: 80%; width: 45%; }
-  to { left: 100%; width: 35%; }
 }

@@ -1,7 +1,7 @@
 <div *ngIf="loaded" class="row mb-4">
   <div class="col-md-6">
     <div class="card mb-3">
-      <div class="card-header h5">Delivery Information</div>
+      <div class="card-header">Delivery Information</div>
       <div class="card-body">
         <ul class="list-group padding-sm list-group-flush">
           <li class="list-group-item"><strong>Delivery address:</strong> {{ data.address }}</li>
@@ -30,7 +30,7 @@
 
   <div class="col-md-6">
     <div class="card mb-3">
-      <div class="card-header h5">Customer Information</div>
+      <div class="card-header">Customer Information</div>
       <div class="card-body">
         <ul class="list-group padding-sm list-group-flush">
           <li class="list-group-item"><strong>Customer:</strong> {{ data.customer.fullname }}</li>
@@ -52,7 +52,7 @@
 </div>
 
 <div *ngIf="loaded" class="card mb-4">
-  <div class="card-header h5">List of books ordered</div>
+  <div class="card-header">List of books ordered</div>
   <div class="card-body">
     <div class="table-responsive">
       <table class="table table-striped">

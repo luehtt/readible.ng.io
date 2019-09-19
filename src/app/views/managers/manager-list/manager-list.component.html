@@ -3,7 +3,7 @@
 <div class="row">
   <div class="col-xl-6 col-lg-8 col-md-10">
     <div class="card" *ngIf="createDialog == true">
-      <div class="card-header h5">Create manager</div>
+      <div class="card-header">Create manager</div>
       <div class="card-body">
         <form *ngIf="form" [formGroup]="form">
           <div class="form-group">
@@ -96,7 +96,7 @@
 
 
 <div class="card">
-  <div class="card-header h5">List of all managers</div>
+  <div class="card-header">List of all managers</div>
   <div class="card-body">
     <div class="input-group mb-4">
       <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Search..." />

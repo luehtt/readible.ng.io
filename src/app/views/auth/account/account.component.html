@@ -1,7 +1,7 @@
 <div class="row mb-4">
   <div class="col-lg-7">
     <div class="card mb-3" *ngIf="data">
-      <div class="card-header h5">Customer Information</div>
+      <div class="card-header">Customer Information</div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 text-center mb-3 mb-md-0">
@@ -95,14 +95,14 @@
 
   <div class="col-lg-5">
     <div class="card mb-3" *ngIf="account">
-      <div class="card-header h5">Account Information</div>
+      <div class="card-header">Account Information</div>
       <div class="card-body">
         <ul class="list-group padding-sm list-group-flush">
           <li class="list-group-item"><strong>Username:</strong> {{ account.username }}</li>
           <li class="list-group-item"><strong>Email:</strong> {{ account.email }}</li>
           <li class="list-group-item"><strong>Active: </strong>
-            <span class="badge badge-primary" *ngIf="account.active == true">Yes</span>
-            <span class="badge badge-secondary" *ngIf="account.active == false">Disabled</span>
+            <span class="tag bg-primary" *ngIf="account.active == true">Yes</span>
+            <span class="tag bg-secondary" *ngIf="account.active == false">Disabled</span>
           </li>
           <li class="list-group-item"><strong>Registered at: </strong> {{ account.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
           <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>

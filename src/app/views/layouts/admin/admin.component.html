@@ -1,6 +1,6 @@
-<div id="wrapper" class="d-flex" [ngClass]="{ toggled: toggled == true }">
+<div class="wrapper d-flex" [ngClass]="{ toggled: toggled == true }">
   <!-- Sidebar -->
-  <div class="border-right bg-primary text-white" id="sidebar-wrapper">
+  <div class="sidebar-wrapper border-right bg-primary text-white">
     <div class="sidebar-heading">Readible 1.0.1</div>
     <div class="list-group list-group-flush p-md">
       <a [routerLink]="'/admin/dashboard'" [class.active]="selectMenu == 'dashboard'" (click)="selectMenu = 'dashboard'" class="list-group-item list-group-item-action bg-primary text-white">Dashboard</a>
@@ -16,7 +16,7 @@
   <!-- /#sidebar-wrapper -->
 
   <!-- Page Content -->
-  <div id="page-content-wrapper">
+  <div class="page-content-wrapper">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
       <button class="btn btn-outline-light btn-normal btn-icon my-0" (click)="toggled = !toggled"><i class="fas fa-sliders-h"></i></button>
 
@@ -40,7 +40,7 @@
       </div>
     </nav>
 
-    <div id="main-content-wrapper" class="container-fluid">
+    <div class="main-content-wrapper container-fluid">
       <app-http-loader></app-http-loader>
       <app-alert-message></app-alert-message>
       <div class="my-3">

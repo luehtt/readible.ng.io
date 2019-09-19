@@ -1,7 +1,7 @@
 <div *ngIf="loaded" class="row">
   <div class="col-lg-6">
     <div class="card" *ngIf="data">
-      <div class="card-header h5">ISBN: {{ data.isbn }}</div>
+      <div class="card-header">ISBN: {{ data.isbn }}</div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 text-center mb-3 mb-md-0">
@@ -25,16 +25,16 @@
               <li class="list-group-item"><strong>Published: </strong>{{ data.published | date: "yyyy-MM-dd" }}</li>
               <li class="list-group-item"><strong>Language: </strong>{{ data.language }}</li>
               <li class="list-group-item"><strong>Rating: </strong>
-                <span class="badge badge-secondary" *ngIf="data.rating == 0">0</span>
-                <span class="badge badge-primary" *ngIf="data.rating != 0">{{ data.rating | number }}</span>
+                <span class="tag bg-secondary" *ngIf="data.rating == 0">0</span>
+                <span class="tag bg-warning" *ngIf="data.rating != 0">{{ data.rating | number }}</span>
               </li>
               <li class="list-group-item"><strong>Price: </strong>{{ data.price | currency }}</li>
               <li class="list-group-item"><strong>Page: </strong>{{ data.page }}</li>
               <li class="list-group-item"><strong>Discount: </strong>{{ data.discount }} percent</li>
               <li class="list-group-item"><strong>Viewed: </strong> {{ data.viewed }}</li>
               <li class="list-group-item"><strong>Active: </strong>
-                <span class="badge badge-primary" *ngIf="data.active == true">Yes</span>
-                <span class="badge badge-secondary" *ngIf="data.active == false">Disabled</span>
+                <span class="tag bg-primary" *ngIf="data.active == true">Yes</span>
+                <span class="tag bg-secondary" *ngIf="data.active == false">Disabled</span>
               </li>
               <li class="list-group-item"><strong>Created at: </strong>{{ data.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
               <li class="list-group-item"><strong>Updated at: </strong>{{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
@@ -47,7 +47,7 @@
 
   <div class="col-lg-6">
     <div class="card" *ngIf="data">
-      <div class="card-header h5">Edit</div>
+      <div class="card-header">Edit</div>
       <div class="card-body">
         <form [formGroup]="form">
           <div class="form-group row">
@@ -153,7 +153,7 @@
 </div>
 
 <div *ngIf="loaded" class="card">
-  <div class="card-header h5">List of comments</div>
+  <div class="card-header">List of comments</div>
   <div class="card-body">
     <div class="input-group mb-4">
       <input type="text" class="form-control" [(ngModel)]="commentFilter" placeholder="Search..."/>

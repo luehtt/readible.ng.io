@@ -3,7 +3,7 @@
 <div *ngIf="itemDialog == true" class="row">
   <div class="col-xl-6 col-lg-8 col-md-10">
     <div class="card">
-      <div class="card-header h5">Create item</div>
+      <div class="card-header">Create item</div>
       <div class="card-body">
         <form *ngIf="form" [formGroup]="form">
           <div class="form-group row">
@@ -24,7 +24,7 @@
 </div>
 
 <div *ngIf="loaded" class="card">
-  <div class="card-header h5">List of all book categories</div>
+  <div class="card-header">List of all book categories</div>
   <div class="card-body">
     <div class="input-group mb-4">
       <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Search..." />

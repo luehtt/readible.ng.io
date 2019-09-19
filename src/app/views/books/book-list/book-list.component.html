@@ -1,7 +1,7 @@
 <button *ngIf="createDialog == false" type="button" class="btn btn-primary mb-3" (click)="createDialog = true">Create book</button>
 
 <div *ngIf="createDialog == true" class="card">
-  <div class="card-header h5">Create item</div>
+  <div class="card-header">Create item</div>
   <div class="card-body">
     <form *ngIf="form" [formGroup]="form">
       <div class="row">
@@ -129,7 +129,7 @@
 </div>
 
 <div *ngIf="loaded" class="card">
-  <div class="card-header h5">List of all books</div>
+  <div class="card-header">List of all books</div>
   <div class="card-body">
     <div class="input-group mb-4">
       <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Search..."/>
