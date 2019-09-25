@@ -52,6 +52,12 @@ body {
 button.btn {
   font-size: 1rem;
   font-weight: 500;
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem;
+
+  .input-group-append & {
+    margin: 0;
+  }
 }
 
 .btn-link {
@@ -64,8 +70,8 @@ button.btn.calendar {
   color: $color-light;
   background-color: $color-primary;
   cursor: pointer;
+  margin: 0;
 }
-
 
 .form-group {
   margin-top: 0.5rem;
@@ -78,25 +84,6 @@ button.btn.calendar {
     padding: .5rem;
   }
 }
-
-
-.star {
-  position: relative;
-  display: inline-block;
-  color: #d3d3d3;
-
-  &.full {
-    color: $color-warning;
-  }
-
-  & .half {
-    position: absolute;
-    display: inline-block;
-    overflow: hidden;
-    color: $color-warning;
-  }
-}
-
 
 .page-content-wrapper {
   min-width: 100vw;
@@ -119,6 +106,32 @@ button.btn.calendar {
   }
 
   .wrapper.toggled & { margin-left: 0; }
+}
+
+.star-template-container .star {
+  position: relative;
+  display: inline-block;
+  color: #d3d3d3;
+  font-size: 1.5rem;
+  margin-top: -0.5rem;
+
+  &.full {
+    color: $color-warning;
+    font-size: 1.5rem;
+  }
+
+  & .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: $color-warning;
+    font-size: 1.5rem;
+  }
+}
+
+.star-container span {
+  margin-top: -0.5rem;
+  font-size: 1.5rem;
 }
 
 @media (min-width: 768px) {

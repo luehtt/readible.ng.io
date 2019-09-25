@@ -7,9 +7,9 @@
           <div class="form-group">
             <label>Username</label>
             <div>
-              <input type="text" class="form-control" formControlName="username" (change)="customValidator.username = true"/>
+              <input type="text" class="form-control" formControlName="username" (change)="validateUsername()"/>
               <app-form-error [(input)]="form.controls.username"></app-form-error>
-              <div class="text-danger" *ngIf="customValidator.username == false">
+              <div class="text-danger" *ngIf="customRule.username == false">
                 <small>{{USERNAME_EXISTED}}</small>
               </div>
             </div>
@@ -17,9 +17,9 @@
           <div class="form-group">
             <label>Email</label>
             <div>
-              <input type="email" class="form-control" formControlName="email" (change)="customValidator.email = true"/>
+              <input type="email" class="form-control" formControlName="email" (change)="validateEmail()"/>
               <app-form-error [(input)]="form.controls.email"></app-form-error>
-              <div class="text-danger" *ngIf="customValidator.email == false">
+              <div class="text-danger" *ngIf="customRule.email == false">
                 <small>{{EMAIL_EXISTED}}</small>
               </div>
             </div>
@@ -36,7 +36,7 @@
             <div>
               <input type="password" class="form-control" formControlName="confirm" (change)="validateConfirm()" />
               <app-form-error [(input)]="form.controls.password"></app-form-error>
-              <div class="text-danger" *ngIf="form.controls.confirm.touched && customValidator.confirm == false">
+              <div class="text-danger" *ngIf="form.controls.confirm.touched && customRule.confirm == false">
                 <small>{{CONFIRM_PASSWORD_MISMATCHED}}</small>
               </div>
             </div>
@@ -49,28 +49,29 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-7">
               <div class="form-group">
                 <label>Year of birth</label>
                 <div><input type="number" style="max-width: 200px" class="form-control" formControlName="birth" (change)="validateBirth()" /></div>
                 <app-form-error [(input)]="form.controls.birth"></app-form-error>
-                <div class="text-danger" *ngIf="customValidator.birth == false">
+                <div class="text-danger" *ngIf="customRule.birth == false">
                   <small>{{REGISTER_AGE_LIMIT}}</small>
                 </div>
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-5">
               <div class="form-group">
                 <label>Gender</label>
                 <div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" formControlName="gender" value="true" />
+                    <input class="form-check-input" type="radio" name="male" formControlName="male" value="true" />
                     <label class="form-check-label">Male</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" formControlName="gender" value="false" />
+                    <input class="form-check-input" type="radio" name="male" formControlName="male" value="false" />
                     <label class="form-check-label">Female</label>
                   </div>
+                  <app-form-error [(input)]="form.controls.male"></app-form-error>
                 </div>
               </div>
             </div>

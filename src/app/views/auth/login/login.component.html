@@ -1,5 +1,5 @@
 <div class="row justify-content-center">
-  <div class="col-xl-4 col-lg-6 col-md-8 col-sm-10">
+  <div class="col-xl-6 col-md-8 col-sm-10">
     <div class="card">
       <div class="card-header">Log in</div>
       <div class="card-body">
@@ -19,6 +19,7 @@
             </div>
           </div>
 
+          <div *ngIf="failed" class="my-2 text-danger">The email and password does not exist!<br>Please enter valid email and password!</div>
           <div class="form-group text-center mt-4">
             <div>
               <button type="button" class="btn btn-primary mr-2" (click)="onSubmit()">Login</button>

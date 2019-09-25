@@ -17,45 +17,57 @@ export class RegisterComponent implements OnInit {
   REGISTER_AGE_LIMIT = FormMessage.REGISTER_AGE_LIMIT;
 
   form: FormGroup;
-  customValidator = { confirm: true, birth: true, username: true, email: true };
+  customRule = { confirm: true, birth: true, username: true, email: true };
+  conflictUsername: string[];
+  conflictEmail: string[];
 
   constructor(private formBuilder: FormBuilder, private service: AuthService, private alertService: AlertMessageService) { }
 
   ngOnInit() {
     this.alertService.clear();
     this.initForm();
+    this.conflictUsername = [];
+    this.conflictEmail = [];
   }
 
   initForm() {
-    const recommendedYear = new Date().getFullYear() - 40;
-
     this.form = this.formBuilder.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirm: ['', [Validators.required]],
       fullname: ['', [Validators.required]],
-      gender: ['male', [Validators.required]],
-      birth: [recommendedYear, [Validators.required]],
+      male: ['', [Validators.required]],
+      birth: ['', [Validators.required]],
       address: [''],
       phone: [''],
     });
   }
 
+  validateUsername() {
+    const username = this.form.controls.username.value;
+    this.customRule.username = !this.conflictUsername.includes(username);
+  }
+
+  validateEmail() {
+    const email = this.form.controls.email.value;
+    this.customRule.email = !this.conflictEmail.includes(email)
+  }
+
   validateConfirm() {
     const p = this.form.controls.password.value;
     const c = this.form.controls.confirm.value;
-    this.customValidator.confirm = p === c;
+    this.customRule.confirm = p === c;
   }
 
   validateBirth() {
-    this.customValidator.birth = true;
+    this.customRule.birth = true;
     const year = new Date().getFullYear() - this.form.controls.birth.value;
-    if (year > Common.REGISTER_UPPER_LIMIT) { this.customValidator.birth = false; }
-    if (year < Common.REGISTER_LOWER_LIMIT) { this.customValidator.birth = false; }
+    if (year > Common.REGISTER_UPPER_LIMIT) { this.customRule.birth = false; }
+    if (year < Common.REGISTER_LOWER_LIMIT) { this.customRule.birth = false; }
   }
 
-  private retrieveInfo(form: FormGroup) {
+  private retrieveData(form: FormGroup) {
     return {
       username: this.form.controls.username.value,
       password: this.form.controls.password.value,
@@ -71,15 +83,25 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.alertService.clear();
-    if (FormGroupControl.validateForm(this.form, this.customValidator)) { return; }
+    if (FormGroupControl.validateForm(this.form, this.customRule)) { return; }
 
-    const data = this.retrieveInfo(this.form);
+    const data = this.retrieveData(this.form);
     this.service.register(data).subscribe(res => {
-      if (res.success === true) {
+      if (res.usernameConflict === false && res.emailConflict === false) {
         window.location.href = Common.THIS_URL + '/login';
       } else {
-        if (data.username) { this.customValidator.username = false; }
-        if (data.email) { this.customValidator.email = false; }
+        if (res.usernameConflict === true) {
+          const username = data.username;
+          this.conflictUsername.filter(x => x != username);
+          this.conflictUsername.push(username);
+          this.customRule.username = false;
+        }
+        if (res.emailConflict === true) {
+          const email = data.email;
+          this.conflictEmail.filter(x => x != email);
+          this.conflictEmail.push(email);
+          this.customRule.email = false;
+        }
       }
     }, err => {
       this.alertService.failed(err);

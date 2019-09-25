@@ -129,7 +129,7 @@
       <tbody>
         <tr *ngFor="let item of filterComment | slice: (commentPage-1) * commentPageSize : (commentPage-1) * commentPageSize + commentPageSize">
           <td><ngb-highlight [result]="item.bookIsbn" [term]="commentFilter"></ngb-highlight></td>
-          <td><ngb-rating class="h5 text-warning" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
+          <td><ngb-rating class="star-container text-warning" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
           <td><ngb-highlight [result]="item.comment" [term]="commentFilter"></ngb-highlight></td>
           <td><ngb-highlight [result]="item.updatedAt | date:'yyyy-MM-dd HH:mm:ss'" [term]="commentFilter"></ngb-highlight></td>
           <td>

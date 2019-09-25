@@ -32,6 +32,7 @@ import {StatisticOrderComponent} from './views/statistic/statistic-order/statist
 import {StatisticCustomerComponent} from './views/statistic/statistic-customer/statistic-customer.component';
 import {AccountComponent} from './views/auth/account/account.component';
 import {HttpLoader} from './views/components/loader/http-loader';
+import {BookCommentListComponent} from './views/books/book-comment-list/book-comment-list.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,7 @@ const routes: Routes = [
       {path: 'books', component: BookListComponent},
       {path: 'books/:id', component: BookDetailComponent, pathMatch: 'full'},
       {path: 'book-categories', component: BookCategoryListComponent},
+      {path: 'book-comments', component: BookCommentListComponent},
       {path: 'orders', component: OrderListComponent, pathMatch: 'full'},
       {path: 'orders/:id', component: OrderDetailComponent},
       {path: 'customers', component: CustomerListComponent, pathMatch: 'full'},
@@ -93,7 +95,7 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
   declarations: [DashboardComponent,
-    BookCategoryListComponent, BookListComponent, BookDetailComponent,
+    BookCategoryListComponent, BookListComponent, BookDetailComponent, BookCommentListComponent,
     OrderListComponent, OrderDetailComponent,
     CustomerListComponent, CustomerDetailComponent,
     ManagerListComponent, ManagerDetailComponent,

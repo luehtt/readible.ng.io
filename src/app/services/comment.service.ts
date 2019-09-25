@@ -14,6 +14,10 @@ export class BookCommentService {
 
   constructor(private httpService: HttpClientService) { }
 
+  fetch(): Observable<BookComment[]> {
+    return this.httpService.get(this.endpoint);
+  }
+
   post(data: BookComment): Observable<BookComment> {
     return this.httpService.post(this.endpoint, data);
   }

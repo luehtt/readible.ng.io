@@ -25,9 +25,11 @@ export class ManagerListComponent implements OnInit {
   pageSize = Common.PAGE_SIZE_HIGHER;
   sortColumn = 'title';
   sortDirection = 'asc';
-  customRule: CustomValidator;
+  customRule = { confirm: true, birth: true, username: true, email: true };
   createDialog = false;
   loaded: boolean;
+  conflictUsername: string[];
+  conflictEmail: string[];
 
   form: FormGroup;
   USERNAME_EXISTED = FormMessage.USERNAME_EXISTED;
@@ -40,6 +42,8 @@ export class ManagerListComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
     this.initData();
+    this.conflictUsername = [];
+    this.conflictEmail = [];
   }
 
   private initData() {
@@ -68,10 +72,27 @@ export class ManagerListComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
       fullname: ['', [Validators.required, Validators.maxLength(255)]],
       birth: [recommendedYear, [Validators.required]],
-      gender: ['male', [Validators.required]],
+      male: ['', [Validators.required]],
       address: ['', [Validators.maxLength(255)]],
       phone: ['', [Validators.maxLength(16)]],
     });
+  }
+
+  validateUsername() {
+    const username = this.form.controls.username.value;
+    this.customRule.username = !this.conflictUsername.includes(username);
+  }
+
+  validateEmail() {
+    const email = this.form.controls.email.value;
+    this.customRule.email = !this.conflictEmail.includes(email)
+  }
+
+  validateBirth() {
+    this.customRule.birth = true;
+    const year = new Date().getFullYear() - this.form.controls.birth.value;
+    if (year > Common.REGISTER_UPPER_LIMIT) { this.customRule.birth = false; }
+    if (year < Common.REGISTER_LOWER_LIMIT) { this.customRule.birth = false; }
   }
 
   get dataFilter() {
@@ -90,13 +111,6 @@ export class ManagerListComponent implements OnInit {
     this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }
 
-  validateBirth() {
-    this.customRule.birth = true;
-    const year = new Date().getFullYear() - this.form.controls.birth.value;
-    if (year > Common.REGISTER_UPPER_LIMIT) { this.customRule.birth = false; }
-    if (year < Common.REGISTER_LOWER_LIMIT) { this.customRule.birth = false; }
-  }
-
   private retrieveData(form: FormGroup) {
     return {
       username: form.controls.username.value,
@@ -104,10 +118,21 @@ export class ManagerListComponent implements OnInit {
       email: form.controls.email.value,
       birth: form.controls.birth.value,
       fullname: form.controls.fullname.value,
-      male: form.controls.gender.value === 'male',
+      male: form.controls.male.value === 'true',
       address: form.controls.address.value,
       phone: form.controls.phone.value
     };
+  }
+
+  private pushManager(data) {
+    let item = new Manager();
+    item.fullname = data.fullname;
+    item.birth = data.birth;
+    item.male = data.male;
+    item.address = data.address;
+    item.phone = data.phone;
+    item = DataControl.createTimestamp(item);
+    this.data.push(item);
   }
 
   onSubmit() {
@@ -117,12 +142,23 @@ export class ManagerListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.register(data).subscribe(res => {
-      if (res.success === true) {
-        this.ngOnInit();
+      if (res.usernameConflict === false && res.emailConflict === false) {
         this.alertService.success(startTime, 'POST');
+        this.pushManager(res);
+        this.createDialog = false;
       } else {
-        if (data.username) { this.customRule.username = false; }
-        if (data.email) { this.customRule.email = false; }
+        if (res.usernameConflict === true) {
+          const username = data.username;
+          this.conflictUsername.filter(x => x != username);
+          this.conflictUsername.push(username);
+          this.customRule.username = false;
+        }
+        if (res.emailConflict === true) {
+          const email = data.email;
+          this.conflictEmail.filter(x => x != email);
+          this.conflictEmail.push(email);
+          this.customRule.email = false;
+        }
       }
     }, err => {
       this.alertService.failed(err);

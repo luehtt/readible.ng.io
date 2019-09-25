@@ -10,6 +10,7 @@ export const Common = {
   PAGE_SIZE_HIGHER: 60,
   PAGE_SIZE_HIGHEST: 120,
   LIMIT_VIEWED_BOOK: 6,
+  TIME_OUT: 8000,
   INITIAL_YEAR: new Date().getFullYear() - 3,
   LANGUAGE: ['English', 'Português', 'Français', 'العربية', '日本語', '한국어', '中文', 'Tiếng Việt']
 };

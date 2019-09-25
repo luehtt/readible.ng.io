@@ -30,4 +30,8 @@ export class OrderService {
     return this.httpService.put(this.endpoint + '/' + data.id + '?status=' + status, data);
   }
 
+  delete(id: number): Observable<Order> {
+    return this.httpService.delete(this.endpoint + '/' + id);
+  }
+
 }

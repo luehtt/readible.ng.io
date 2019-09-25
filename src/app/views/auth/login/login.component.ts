@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
 
   form: FormGroup;
   redirect: string;
+  failed = false;
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
               private service: AuthService, private alertService: AlertMessageService, private sessionService: SessionService) { }
@@ -47,7 +48,10 @@ export class LoginComponent implements OnInit {
       const json = this.sessionService.decodeToken(res.token);
       this.navigateOnRole(json.role);
     }, err => {
-      this.alertService.failed(err);
+      this.failed = true;
+      setTimeout(() => {
+        this.failed = false
+      }, Common.TIME_OUT)
     });
   }
 

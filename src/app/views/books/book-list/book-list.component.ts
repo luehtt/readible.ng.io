@@ -30,22 +30,21 @@ export class BookListComponent implements OnInit {
   loaded: boolean;
 
   // view child for NgbTypeahead
-  @ViewChild('ngt', { static: false }) instance: NgbTypeahead;
+  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
-  search(text$: Observable<string>) {
-    const debouncedText$ = text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged()
-    );
+  search = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
     const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
     const inputFocus$ = this.focus$;
 
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term => (term === '' ? Common.LANGUAGE : Common.LANGUAGE.filter(e => e.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+      map(term => (term === '' ? Common.LANGUAGE
+        : Common.LANGUAGE.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
   }
+
 
   constructor(private formBuilder: FormBuilder, private service: BookService, private alertService: AlertMessageService, private categoryService: BookCategoryService) {
   }

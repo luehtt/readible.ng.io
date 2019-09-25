@@ -27,6 +27,6 @@ export class ManagerService {
   }
 
   register(data): Observable<any> {
-    return this.httpService.post('register/manager', data);
+    return this.httpService.post('register-manager', data);
   }
 }

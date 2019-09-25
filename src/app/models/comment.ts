@@ -1,4 +1,5 @@
 import {Customer} from './customer';
+import {Book} from './book';
 
 export class BookComment {
   id: number;
@@ -11,4 +12,5 @@ export class BookComment {
   updatedFromNow: string;
 
   customer: Customer;
+  book: Book;
 }

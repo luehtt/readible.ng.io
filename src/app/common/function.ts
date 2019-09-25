@@ -206,7 +206,7 @@ export class FileControl {
 export class FormGroupControl {
   static validateForm(form: FormGroup, customRule: object = null): boolean {
     this.touchControls(form);
-    return customRule ? form.invalid || Object.values(customRule).includes(false) : form.invalid;
+    return customRule ? form.invalid || Object.values(customRule).includes(false) : !form.invalid;
   }
 
   static touchControls(form: FormGroup) {

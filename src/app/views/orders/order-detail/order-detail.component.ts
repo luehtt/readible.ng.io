@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { OrderService } from 'src/app/services/order.service';
 import { Order } from 'src/app/models/order';
+import {Common} from '../../../common/const';
 
 @Component({
   selector: 'app-order-detail',
@@ -53,4 +54,16 @@ export class OrderDetailComponent implements OnInit {
   }
 
 
+  onDelete() {
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    this.service.delete(this.id).subscribe(
+      res => {
+        window.location.href = Common.THIS_URL + '/admin/orders';
+        this.alertService.success(startTime, 'PUT');
+      }, err => {
+        this.alertService.failed(err);
+      }
+    );
+  }
 }

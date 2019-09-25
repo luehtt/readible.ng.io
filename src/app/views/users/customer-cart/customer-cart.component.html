@@ -21,7 +21,7 @@
                     <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
                   </span>
               </ng-template>
-              <ngb-rating [rate]="i.rating" [readonly]="true" [starTemplate]="t" class="h4 text-warning my-1" max="5"></ngb-rating>
+              <ngb-rating [rate]="i.rating" [readonly]="true" [starTemplate]="t" class="text-warning star-container" max="5"></ngb-rating>
               <div>Price:
                 <span *ngIf="i.discount != 0">
                   <span class="h6 mr-2">{{i.price * (100 - i.discount) / 100 | currency}}</span>

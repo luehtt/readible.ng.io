@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {HttpClientService} from './common/http-client.service';
-import {DashboardSummary, DashboardTop} from '../models/dashboard';
+import {DashboardSummary, DashboardTopTen} from '../models/dashboard';
 import {Endpoint} from '../common/const';
 
 @Injectable({
@@ -14,12 +14,12 @@ export class DashboardService {
 
   constructor(private httpService: HttpClientService) { }
 
-  fetchTop(): Observable<DashboardTop> {
-    return this.httpService.get(this.endpoint + '/top');
+  fetchTopten(): Observable<DashboardTopTen> {
+    return this.httpService.get(this.endpoint + '/topten');
   }
 
-  fetchCount(): Observable<DashboardSummary> {
-    return this.httpService.get(this.endpoint + '/count');
+  fetchSummary(): Observable<DashboardSummary> {
+    return this.httpService.get(this.endpoint + '/summary');
   }
 
 }

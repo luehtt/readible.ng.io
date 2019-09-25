@@ -79,6 +79,7 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.itemEditing);
     this.itemEditing === true ? this.updateItem() : this.storeItem();
   }
 
@@ -111,10 +112,13 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   private updateItem() {
+    console.log(this.form)
+    console.log(FormGroupControl.validateForm(this.form));
     if (FormGroupControl.validateForm(this.form) === false) { return; }
 
     this.item = this.retrieveData(this.item, this.form);
     this.item = DataControl.updateTimestamp(this.item);
+    console.log(this.item)
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();

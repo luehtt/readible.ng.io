@@ -1,7 +1,7 @@
 import {Customer} from './customer';
 import {Book} from './book';
 
-export interface DashboardTop {
+export interface DashboardTopTen {
   sold: Book[];
   rating: Book[];
   purchased: Customer[];

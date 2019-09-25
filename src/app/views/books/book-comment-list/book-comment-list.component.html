@@ -1,0 +1,45 @@
+<div *ngIf="loaded" class="card">
+  <div class="card-header">List of all book comments</div>
+  <div class="card-body">
+    <div class="input-group mb-4">
+      <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Search..." />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" (click)="filter = ''"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="cursor-pointer" (click)="onSort('customer.fullname')">Customer</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('book.isbn')">ISBN</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('book.title')">Title</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('rating')">Rating</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort('updatedAt')">Commented</th>
+          <th scope="col" class="cursor-pointer" (click)="onSort(null)">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of dataFilter | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+          <td><ngb-highlight [result]="item.customer.fullname" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.book.isbn" [term]="filter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.book.title" [term]="filter"></ngb-highlight></td>
+          <td><ngb-rating class="text-warning star-container" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
+          <td><ngb-highlight [result]="item.updatedAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="filter"></ngb-highlight></td>
+          <td>
+            <a class="btn btn-link text-primary mr-2" [routerLink]="'/admin/books/' + item.bookIsbn">View</a>
+            <button class="btn btn-link text-danger" type="button" (click)="onDelete(item.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ngb-pagination *ngIf="dataFilter" [(page)]="page" [pageSize]="pageSize" [collectionSize]="dataFilter.length" [maxSize]="10">
+      <ng-template ngbPaginationFirst>First</ng-template>
+      <ng-template ngbPaginationLast>Last</ng-template>
+      <ng-template ngbPaginationPrevious>Prev</ng-template>
+      <ng-template ngbPaginationNext>Next</ng-template>
+      <ng-template ngbPaginationEllipsis>...</ng-template>
+      <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+    </ngb-pagination>
+  </div>
+</div>

@@ -6,6 +6,7 @@
       <a [routerLink]="'/admin/dashboard'" [class.active]="selectMenu == 'dashboard'" (click)="selectMenu = 'dashboard'" class="list-group-item list-group-item-action bg-primary text-white">Dashboard</a>
       <a [routerLink]="'/admin/books'" [class.active]="selectMenu == 'books'" (click)="selectMenu = 'books'" class="list-group-item list-group-item-action bg-primary text-white">Books</a>
       <a [routerLink]="'/admin/book-categories'" [class.active]="selectMenu == 'book-categories'" (click)="selectMenu = 'book-categories'" class="list-group-item list-group-item-action bg-primary text-white">Book Categories</a>
+      <a [routerLink]="'/admin/book-comments'" [class.active]="selectMenu == 'book-comments'" (click)="selectMenu = 'book-comments'" class="list-group-item list-group-item-action bg-primary text-white">Book Comments</a>
       <a [routerLink]="'/admin/orders'" [class.active]="selectMenu == 'orders'" (click)="selectMenu = 'orders'" class="list-group-item list-group-item-action bg-primary text-white">Orders</a>
       <a [routerLink]="'/admin/customers'" [class.active]="selectMenu == 'customers'" (click)="selectMenu = 'customers'" class="list-group-item list-group-item-action bg-primary text-white">Customers</a>
       <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/managers'" [class.active]="selectMenu == 'managers'" (click)="selectMenu = 'managers'" class="list-group-item list-group-item-action bg-primary text-white">Managers</a>

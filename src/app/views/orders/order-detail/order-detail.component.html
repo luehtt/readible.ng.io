@@ -21,10 +21,37 @@
     </div>
 
     <div class="mt-2">
-      <button type="button" class="btn btn-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="data.status.name == 'SUCCESS' || data.status.name == 'FAILED' ? '' : null">To pending</button>
-      <button type="button" class="btn btn-primary mr-1" (click)="onChangeStatus('delivering')" [attr.disabled]="data.status.name == 'SUCCESS' || data.status.name == 'FAILED' ? '' : null">To delivering</button>
-      <button type="button" class="btn btn-success mr-1" (click)="onChangeStatus('success')" [attr.disabled]="data.status.name != 'DELIVERING' ? '' : null">To success</button>
-      <button type="button" class="btn btn-danger" (click)="onChangeStatus('failed')" [attr.disabled]="data.status.name != 'DELIVERING' ? '' : null">To failed</button>
+      <!--if status is PENDING, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'PENDING'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="''">To pending</button>
+        <button type="button" class="btn btn-primary mr-1" (click)="onChangeStatus('delivering')">To delivering</button>
+        <button type="button" class="btn btn-outline-success mr-1" (click)="onChangeStatus('success')" [attr.disabled]="''">To success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')" [attr.disabled]="''">To failed</button>
+      </div>
+
+      <!--if status is DELIVERING, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'DELIVERING'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')">To pending</button>
+        <button type="button" class="btn btn-outline-primary mr-1" [attr.disabled]="''">To delivering</button>
+        <button type="button" class="btn btn-success mr-1" (click)="onChangeStatus('success')">To success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')">To failed</button>
+      </div>
+
+      <!--if status is SUCCESS, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'SUCCESS'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="''">To pending</button>
+        <button type="button" class="btn btn-outline-primary mr-1" (click)="onChangeStatus('delivering')">To delivering</button>
+        <button type="button" class="btn btn-outline-success mr-1" (click)="onChangeStatus('success')" [attr.disabled]="''">To success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')">To failed</button>
+      </div>
+
+      <!--if status is FAILED, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'FAILED'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="''">To pending</button>
+        <button type="button" class="btn btn-outline-primary mr-1" (click)="onChangeStatus('delivering')">To delivering</button>
+        <button type="button" class="btn btn-outline-success mr-1" (click)="onChangeStatus('success')" [attr.disabled]="''">To success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')" [attr.disabled]="''">To failed</button>
+      </div>
     </div>
   </div>
 
@@ -45,8 +72,8 @@
     </div>
 
     <div class="mt-2">
-      <a class="btn btn-secondary mr-1" [routerLink]="'/admin/orders'">Back</a>
-      <button type="button" class="btn btn-danger" disabled ngbTooltip="Not implemented yet">Delete</button>
+      <a class="btn btn-outline-secondary mr-1" [routerLink]="'/admin/orders'">Back</a>
+      <button type="button" class="btn btn-outline-danger" [attr.disabled]="data.status.name != 'PENDING' ? '': null" (click)="onDelete()">Delete</button>
     </div>
   </div>
 </div>
