@@ -10,7 +10,7 @@ import {BookCategoryService} from 'src/app/services/category.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Book} from 'src/app/models/book';
 import {Common} from 'src/app/common/const';
-import {FormGroupControl, DataControl, FileControl} from 'src/app/common/function';
+import {FormGroupControl, DataControl, FileControl, TimestampControl} from 'src/app/common/function';
 import {BookCategory} from 'src/app/models/category';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import {BookCommentService} from '../../../services/comment.service';
@@ -106,12 +106,12 @@ export class BookDetailComponent implements OnInit {
       title: [data.title, [Validators.required, Validators.maxLength(255)]],
       author: [data.author, [Validators.required, Validators.maxLength(255)]],
       publisher: [data.publisher, [Validators.required, Validators.maxLength(255)]],
-      published: [DataControl.toNgbDate(this.data.published), [Validators.required]],
+      published: [TimestampControl.toNgbDate(this.data.published), [Validators.required]],
       price: [data.price, [Validators.required, Validators.min(0.0)]],
       page: [data.page, [Validators.required, Validators.min(0)]],
       language: [data.language, [Validators.required, Validators.maxLength(32)]],
       categoryId: [data.categoryId, [Validators.required]],
-      active: [DataControl.radioTrueFalse(data.active), [Validators.required]],
+      active: [TimestampControl.radioTrueFalse(data.active), [Validators.required]],
       info: [data.info],
       discount: [data.discount, [Validators.required, Validators.min(0)]]
     });
@@ -174,12 +174,14 @@ export class BookDetailComponent implements OnInit {
     });
   }
 
-  private setItemData(item: Book, form: FormGroup): Book {
+  private getItemData(data: Book, form: FormGroup): Book {
+    const item = DataControl.clone(data);
+
     item.title = form.controls.title.value;
     item.author = form.controls.author.value;
     item.categoryId = form.controls.categoryId.value;
     item.publisher = form.controls.publisher.value;
-    item.published = DataControl.fromNgbDateToJson(form.controls.published.value);
+    item.published = TimestampControl.fromNgbDateToJson(form.controls.published.value);
     item.language = form.controls.language.value;
     item.price = form.controls.price.value;
     item.page = form.controls.page.value;
@@ -192,8 +194,8 @@ export class BookDetailComponent implements OnInit {
   onSubmit() {
     if (FormGroupControl.validateForm(this.form) === false) { return; }
 
-    this.data = this.setItemData(this.data, this.form);
-    this.data = DataControl.updateTimestamp(this.data);
+    this.data = this.getItemData(this.data, this.form);
+    this.data = TimestampControl.updateTimestamp(this.data);
     if (this.data.image === this.data.originalImage) { delete(this.data.image); }
 
     const startTime = this.alertService.startTime();

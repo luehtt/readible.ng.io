@@ -20,7 +20,7 @@ export class BookCommentListComponent implements OnInit {
   sortColumn = 'name';
   sortDirection = 'asc';
 
-  constructor(private formBuilder: FormBuilder, private service: BookCommentService, private alertService: AlertMessageService) { }
+  constructor(private service: BookCommentService, private alertService: AlertMessageService) { }
 
   ngOnInit() {
     this.alertService.clear();

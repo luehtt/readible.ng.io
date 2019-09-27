@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 import {AuthService} from 'src/app/services/auth/auth.service';
-import {DataControl, FormGroupControl} from 'src/app/common/function';
+import {DataControl, FormGroupControl, TimestampControl} from 'src/app/common/function';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {Common, FormMessage} from 'src/app/common/const';
 
@@ -77,7 +77,7 @@ export class RegisterComponent implements OnInit {
       male: form.controls.male.value,
       address: form.controls.address.value,
       phone: form.controls.phone.value,
-      createdAt: DataControl.jsonDate(),
+      createdAt: TimestampControl.jsonDate(),
     };
   }
 

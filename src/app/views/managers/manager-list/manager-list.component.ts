@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {DataControl, FormGroupControl} from 'src/app/common/function';
+import {DataControl, FormGroupControl, TimestampControl} from 'src/app/common/function';
 import {Common, FormMessage} from '../../../common/const';
 import {ManagerService} from '../../../services/manager.service';
 import {Manager} from '../../../models/manager';
@@ -131,7 +131,7 @@ export class ManagerListComponent implements OnInit {
     item.male = data.male;
     item.address = data.address;
     item.phone = data.phone;
-    item = DataControl.createTimestamp(item);
+    item = TimestampControl.createTimestamp(item);
     this.data.push(item);
   }
 

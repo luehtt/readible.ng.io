@@ -12,7 +12,14 @@ export const Common = {
   LIMIT_VIEWED_BOOK: 6,
   TIME_OUT: 8000,
   INITIAL_YEAR: new Date().getFullYear() - 3,
-  LANGUAGE: ['English', 'Português', 'Français', 'العربية', '日本語', '한국어', '中文', 'Tiếng Việt']
+  LANGUAGE: ['English', 'Português', 'Français', 'العربية', '日本語', '한국어', '中文', 'Tiếng Việt'],
+  
+  METHOD: {
+    GET: 'GET',
+    POST: 'POST',
+    PUT: 'PUT',
+    DELETE: 'DELETE'
+  }
 };
 
 export const Endpoint = {

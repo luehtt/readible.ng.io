@@ -6,7 +6,7 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {Book} from 'src/app/models/book';
 import {BookCategory} from 'src/app/models/category';
 import {Common} from 'src/app/common/const';
-import {FormGroupControl, DataControl, FileControl} from 'src/app/common/function';
+import {FormGroupControl, DataControl, FileControl, TimestampControl} from 'src/app/common/function';
 import {BookService} from 'src/app/services/book.service';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {BookCategoryService} from 'src/app/services/category.service';
@@ -125,7 +125,7 @@ export class BookListComponent implements OnInit {
     item.author = form.controls.author.value;
     item.categoryId = form.controls.categoryId.value;
     item.publisher = form.controls.publisher.value;
-    item.published = DataControl.fromNgbDateToJson(form.controls.published.value);
+    item.published = TimestampControl.fromNgbDateToJson(form.controls.published.value);
     item.language = form.controls.language.value;
     item.price = form.controls.price.value;
     item.page = form.controls.page.value;
@@ -140,7 +140,7 @@ export class BookListComponent implements OnInit {
 
     let item = new Book()
     item = this.retrieveData(item, this.form);
-    item = DataControl.updateTimestamp(item);
+    item = TimestampControl.updateTimestamp(item);
     if (this.upload && this.uploadFilename) item.image = this.upload;
 
     this.alertService.clear();

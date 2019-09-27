@@ -5,7 +5,7 @@ import {AlertMessageService} from 'src/app/services/common/alert-message.service
 import {ChartOption, FormMessage} from '../../../common/const';
 import {StatisticService} from '../../../services/statistic.service';
 import {OrderStatistic} from '../../../models/statistic';
-import {DataControl} from '../../../common/function';
+import {DataControl, TimestampControl} from '../../../common/function';
 
 @Component({
   selector: 'app-statistic-orders',
@@ -72,8 +72,8 @@ export class StatisticOrderComponent implements OnInit {
 
   onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
-    this.fromDate = new Date(DataControl.fromNgbDateToJson(this.fromDateNgb));
-    this.toDate = new Date(DataControl.fromNgbDateToJson(this.toDateNgb));
+    this.fromDate = new Date(TimestampControl.fromNgbDateToJson(this.fromDateNgb));
+    this.toDate = new Date(TimestampControl.fromNgbDateToJson(this.toDateNgb));
     if (!this.validateReference(this.selectedReference, this.fromDate, this.toDate)) { return; }
     this.initData();
   }
@@ -82,11 +82,11 @@ export class StatisticOrderComponent implements OnInit {
     this.alertService.clear();
     let message: string;
     if (fromDate > toDate) { message = FormMessage.SELECTED_DATE_MISMATCHED; }
-    if (reference === 'day' && DataControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'day' && DataControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'month' && DataControl.tooLongMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'month' && DataControl.isSameMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
-    if (reference === 'year' && DataControl.isSameYear(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
+    if (reference === 'day' && TimestampControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'day' && TimestampControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && TimestampControl.tooLongMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && TimestampControl.isSameMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
+    if (reference === 'year' && TimestampControl.isSameYear(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
 
     if (!message) { return true; }
     this.alertService.set(message, 'danger');
@@ -95,8 +95,8 @@ export class StatisticOrderComponent implements OnInit {
 
   private initData() {
     this.alertService.clear();
-    const fromDate = DataControl.jsonDate(this.fromDate);
-    const toDate = DataControl.jsonDate(this.toDate);
+    const fromDate = TimestampControl.jsonDate(this.fromDate);
+    const toDate = TimestampControl.jsonDate(this.toDate);
 
     const startTime = this.alertService.startTime();
     this.service.statisticOrder(this.selectedReference, fromDate, toDate).subscribe(res => {
@@ -121,7 +121,7 @@ export class StatisticOrderComponent implements OnInit {
       labels: this.selectedReference === 'day' ? this.data.map(x => x.key.substr(5, 5)) : this.data.map(x => x.key),
       data: data.map(x => x[property]),
       borderColor,
-      chartTitle: chartTitle + ' from ' + DataControl.jsonDate(this.fromDate) + ' to ' + DataControl.jsonDate(this.toDate)
+      chartTitle: chartTitle + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
     };
   }
 

@@ -6,7 +6,7 @@ import {User} from 'src/app/models/user';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {AccountService} from 'src/app/services/account.service';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
-import {FileControl, FormGroupControl, DataControl} from 'src/app/common/function';
+import {FileControl, FormGroupControl, DataControl, TimestampControl} from 'src/app/common/function';
 import {Common, FormMessage} from 'src/app/common/const';
 
 @Component({
@@ -60,7 +60,7 @@ export class AccountComponent implements OnInit {
       fullname: [this.data.fullname, [Validators.required, Validators.maxLength(255)]],
       address: [this.data.address ? this.data.address : '', [Validators.maxLength(255)]],
       phone: [this.data.phone ? this.data.phone : '', [Validators.maxLength(16)]],
-      male: [DataControl.radioTrueFalse(this.data.male), [Validators.required]],
+      male: [TimestampControl.radioTrueFalse(this.data.male), [Validators.required]],
       birth: [this.data.birth, [Validators.required, Validators.min(minYear), Validators.max(maxYear)]]
     });
   }
@@ -143,7 +143,7 @@ export class AccountComponent implements OnInit {
       address: form.controls.address.value,
       phone: form.controls.phone.value,
       image: originalImage !== image ? image : null,
-      updatedAt: DataControl.jsonDate(),
+      updatedAt: TimestampControl.jsonDate(),
     };
   }
 

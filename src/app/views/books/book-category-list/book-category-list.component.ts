@@ -3,7 +3,7 @@ import {BookCategory} from '../../../models/category';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {BookCategoryService} from '../../../services/category.service';
 import {AlertMessageService} from '../../../services/common/alert-message.service';
-import {FormGroupControl, DataControl} from '../../../common/function';
+import {FormGroupControl, DataControl, TimestampControl} from '../../../common/function';
 import {Common} from '../../../common/const';
 
 @Component({
@@ -13,13 +13,13 @@ import {Common} from '../../../common/const';
 export class BookCategoryListComponent implements OnInit {
 
   data: BookCategory[];
-  item: BookCategory;
-  form: FormGroup;
-  itemDialog = false;
-  itemEditing = false;
+  formGroup: FormGroup;
+  editData: BookCategory;
+  editDialog = false;
+  isEdit = false;
 
-  filter = '';
   loaded: boolean;
+  filter = '';
   page = 1;
   pageSize = Common.PAGE_SIZE_SMALLER;
   sortColumn = 'name';
@@ -36,7 +36,7 @@ export class BookCategoryListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.service.fetch().subscribe(res => {
       this.data = res;
-      this.form = this.initForm();
+      this.formGroup = this.initForm();
       this.alertService.success(startTime, 'GET');
       this.loaded = true;
     }, err => {
@@ -61,50 +61,38 @@ export class BookCategoryListComponent implements OnInit {
     this.data = DataControl.sort(this.data, this.sortColumn, this.sortDirection);
   }
 
-  onEdit(item: BookCategory) {
-    this.itemDialog = true;
-    item ? this.editUpdateItem(item) : this.editStoreItem();
-  }
-
-  private editStoreItem() {
-    this.item = new BookCategory();
-    this.itemEditing = false;
-    this.form.controls.name.setValue('');
-  }
-
-  private editUpdateItem(item: BookCategory) {
-    this.item = item;
-    this.itemEditing = true;
-    this.form.controls.name.setValue(item.name);
+  onEdit(data: BookCategory) {
+    this.editData = data ? DataControl.clone(data) : new BookCategory();
+    this.editDialog = true;
+    this.isEdit = data ? true : false;
+    this.formGroup.controls.name.setValue(this.editData.name);
   }
 
   onSubmit() {
-    console.log(this.itemEditing);
-    this.itemEditing === true ? this.updateItem() : this.storeItem();
+    this.isEdit === true ? this.updateItem() : this.storeItem();
   }
 
-  private retrieveData(item: BookCategory, form: FormGroup): BookCategory {
+  private readData(item: BookCategory, form: FormGroup): BookCategory {
     item.name = form.controls.name.value;
+    item = this.isEdit ? TimestampControl.updateTimestamp(this.editData) : TimestampControl.createTimestamp(this.editData);
     return item;
   }
 
   private resetSummit() {
-    this.item = new BookCategory();
-    this.itemDialog = false;
+    this.editData = null;
+    this.editDialog = false;
     this.initForm();
   }
 
   private storeItem() {
-    if (FormGroupControl.validateForm(this.form) === false) { return; }
-
-    this.item = this.retrieveData(this.item, this.form);
-    this.item = DataControl.createTimestamp(this.item);
+    if (FormGroupControl.validateForm(this.formGroup) === false) { return; }
+    this.editData = this.readData(this.editData, this.formGroup);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();
-    this.service.post(this.item).subscribe(res => {
+    this.service.post(this.editData).subscribe(res => {
       this.data.push(res);
-      this.alertService.success(startTime, 'GET');
+      this.alertService.success(startTime, 'POST');
       this.resetSummit();
     }, err => {
       this.alertService.failed(err);
@@ -112,21 +100,13 @@ export class BookCategoryListComponent implements OnInit {
   }
 
   private updateItem() {
-    console.log(this.form)
-    console.log(FormGroupControl.validateForm(this.form));
-    if (FormGroupControl.validateForm(this.form) === false) { return; }
-
-    this.item = this.retrieveData(this.item, this.form);
-    this.item = DataControl.updateTimestamp(this.item);
-    console.log(this.item)
+    if (FormGroupControl.validateForm(this.formGroup) === false) { return; }
+    this.editData = this.readData(this.editData, this.formGroup);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();
-    this.service.put(this.item).subscribe(res => {
-      const update = this.data.find(x => x.id === res.id);
-      update.name = res.name;
-      update.updatedAt = res.updatedAt;
-
+    this.service.put(this.editData).subscribe(res => {
+      this.data = DataControl.updateItem(this.data, res, 'id');
       this.alertService.success(startTime, 'PUT');
       this.resetSummit();
     }, err => {
@@ -138,7 +118,7 @@ export class BookCategoryListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.destroy(id).subscribe(res => {
-      this.data = this.data.filter(x => x.id !== res.id);
+      this.data = DataControl.deleteItem(this.data, res, 'id');
       this.alertService.success(startTime, 'DELETE');
       this.resetSummit();
     }, err => {

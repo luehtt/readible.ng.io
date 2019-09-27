@@ -5,7 +5,7 @@ import {AlertMessageService} from 'src/app/services/common/alert-message.service
 import {ChartOption, FormMessage} from '../../../common/const';
 import {StatisticService} from '../../../services/statistic.service';
 import {OrderStatistic} from '../../../models/statistic';
-import {DataControl,} from '../../../common/function';
+import {DataControl, TimestampControl,} from '../../../common/function';
 
 @Component({
   selector: 'app-statistic-customers',
@@ -57,8 +57,8 @@ export class StatisticCustomerComponent implements OnInit {
 
   onSelectRange() {
     if (!this.fromDateNgb || !this.toDateNgb) { return; }
-    this.fromDate = new Date(DataControl.fromNgbDateToJson(this.fromDateNgb));
-    this.toDate = new Date(DataControl.fromNgbDateToJson(this.toDateNgb));
+    this.fromDate = new Date(TimestampControl.fromNgbDateToJson(this.fromDateNgb));
+    this.toDate = new Date(TimestampControl.fromNgbDateToJson(this.toDateNgb));
 
     this.alertService.clear();
     if (this.fromDate >= this.toDate) { this.alertService.set(FormMessage.SELECTED_DATE_MISMATCHED, 'warning'); }
@@ -68,8 +68,8 @@ export class StatisticCustomerComponent implements OnInit {
 
   private initData() {
     this.alertService.clear();
-    const fromDate = DataControl.jsonDate(this.fromDate);
-    const toDate = DataControl.jsonDate(this.toDate);
+    const fromDate = TimestampControl.jsonDate(this.fromDate);
+    const toDate = TimestampControl.jsonDate(this.toDate);
     this.initAgeData(fromDate, toDate);
     this.initGenderData(fromDate, toDate);
   }
@@ -105,7 +105,7 @@ export class StatisticCustomerComponent implements OnInit {
     return {
       labels: data.map(x => x.key),
       data: data.map(x => x[property]),
-      chartTitle: chartTitle + ' from ' + DataControl.jsonDate(this.fromDate) + ' to ' + DataControl.jsonDate(this.toDate)
+      chartTitle: chartTitle + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
     };
   }
 
