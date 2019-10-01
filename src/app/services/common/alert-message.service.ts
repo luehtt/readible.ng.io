@@ -56,9 +56,9 @@ export class AlertMessageService {
     }
   }
 
-  public errorResponse(err, startTime: number = null, customError = []) {
-    if (customError) { err = this.setCustomError(err, customError) }
-    const message = 'Http failed reponse: ' + err.status + (startTime ? ` in ${this.spentTime(startTime)}ms` : '') + '!' + (err.error ? ' ' + err.error : '');
+  public errorResponse(err, startTime: number = null, customError = null) {
+    if (customError) { err = this.setCustomError(err, customError); }
+    const message = 'Http failed response: ' + err.status + (startTime ? ` in ${this.spentTime(startTime)}ms` : '') + '!' + (err.error ? ' ' + err.error : '');
     this.error(message)
   }
 

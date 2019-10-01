@@ -1,7 +1,6 @@
-import {piexif} from 'piexifjs';
-import {FormGroup} from '@angular/forms';
+import { piexif } from 'piexifjs';
+import { FormGroup } from '@angular/forms';
 import { ExifCode } from './const';
-
 
 export class DataControl {
   static isDigit(value: string): boolean {
@@ -20,9 +19,9 @@ export class DataControl {
     return data ? data.filter(x => this.includes(x, search, props)) : null;
   }
 
-  static includes(data, search: string, prop: string[]): boolean {
+  static includes(data, search: string, props: string[]): boolean {
     const s = search.toLocaleLowerCase();
-    for (const p of prop) {
+    for (const p of props) {
       const a = p.split('.');
       const d = this.readObject(data, a).toString();
       if (d.toLocaleLowerCase().includes(s)) {

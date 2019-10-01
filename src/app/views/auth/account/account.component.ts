@@ -129,7 +129,7 @@ export class AccountComponent implements OnInit {
       this.passwordDialog = false;
       this.initPasswordForm();
     }, err => {
-      const customError = [ {status: 401, error: ErrorMessage.UPDATE_PASSWORD_ERROR} ]
+      const customError = [ {status: 401, error: ErrorMessage.UPDATE_PASSWORD_ERROR} ];
       this.alertService.errorResponse(err, startTime, customError);
       }
     );

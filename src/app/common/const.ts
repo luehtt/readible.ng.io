@@ -1,5 +1,5 @@
 export const Common = {
-  SERVER_URL: 'https://localhost:44388/api/',
+  SERVER_URL: 'https://localhost:5001/api/',
   THIS_URL: 'http://localhost:4200/',
   PLACEHOLDER_URL: 'https://via.placeholder.com/',
   RETRY_ATTEMPT: 3,
@@ -9,7 +9,7 @@ export const Common = {
   PAGE_SIZE_DEFAULT: 30,
   PAGE_SIZE_HIGHER: 60,
   PAGE_SIZE_HIGHEST: 120,
-  LIMIT_VIEWED_BOOK: 6,
+  LIMIT_VIEWED_BOOK: 8,
   TIME_OUT: 8000,
   INITIAL_YEAR: new Date().getFullYear() - 3,
   LANGUAGE: ['English', 'Português', 'Français', 'العربية', '日本語', '한국어', '中文', 'Tiếng Việt'],
@@ -114,5 +114,5 @@ export const ExifCode = {
   MAKE: 271,
   MODEL: 272,
   ORIENTATION: 274,
-}
+};
 

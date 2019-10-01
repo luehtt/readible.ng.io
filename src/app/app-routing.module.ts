@@ -33,6 +33,7 @@ import {StatisticCustomerComponent} from './views/statistic/statistic-customer/s
 import {AccountComponent} from './views/auth/account/account.component';
 import {HttpLoader} from './views/components/http-loader/http-loader';
 import {BookCommentListComponent} from './views/books/book-comment-list/book-comment-list.component';
+import {BookCardComponent} from './views/components/book-card/book-card.component';
 
 const routes: Routes = [
   {
@@ -104,7 +105,7 @@ const routes: Routes = [
     ShopListComponent, ShopDetailComponent,
     LoginComponent, RegisterComponent, AccountComponent,
     AdminComponent, ShopComponent,
-    AlertMessageComponent, FormErrorComponent, OrderStatusComponent, HttpLoader,
+    AlertMessageComponent, FormErrorComponent, OrderStatusComponent, HttpLoader, BookCardComponent,
     StatisticOrderComponent, StatisticCustomerComponent
   ]
 })

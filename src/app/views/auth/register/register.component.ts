@@ -85,7 +85,7 @@ export class RegisterComponent implements OnInit {
 
     const data = this.retrieveData(this.form);
     this.service.register(data).subscribe(res => {
-      if (res.usernameConflict === false && res.emailConflict === false) {
+      if (!res.usernameConflict && !res.emailConflict) {
         window.location.href = Common.THIS_URL + '/login';
       } else {
         if (res.usernameConflict === true) {

@@ -46,7 +46,7 @@ export class StatisticCustomerComponent implements OnInit {
       name: 'ageCanvas',
       color: [ChartOption.COLOR_RED, ChartOption.COLOR_GREEN, ChartOption.COLOR_BLUE, ChartOption.COLOR_AMBER],
       data: []
-    }
+    };
 
     this.genderChartData = {
       name: 'genderCanvas',

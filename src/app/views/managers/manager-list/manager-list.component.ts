@@ -126,10 +126,10 @@ export class ManagerListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.register(data).subscribe(res => {
-      if (res.usernameConflict === false && res.emailConflict === false) {
-        this.alertService.successResponse(startTime);
+      if (!res.usernameConflict && !res.emailConflict) {
         this.data.push(res);
         this.createDialog = false;
+        this.alertService.successResponse(startTime);
       } else {
         if (res.usernameConflict === true) {
           const username = data.username;

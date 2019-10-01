@@ -26,6 +26,7 @@ export class ShopDetailComponent implements OnInit {
 
   bookcart: Cart;
   data: Book;
+  similar: Book[];
   amount: number;
   ratings: any[];
   form: FormGroup;
@@ -39,13 +40,33 @@ export class ShopDetailComponent implements OnInit {
     private alertService: AlertMessageService, private authService: AuthService, public placeholderService: PlaceholderService) { }
 
   ngOnInit() {
+    this.alertService.clear();
+    this.id = this.getParam();
+    if (!this.id) return;
+
     this.url = window.location.href;
-    this.id = this.route.snapshot.paramMap.get('id');
     this.auth = this.authService.isLogged();
     this.customerId = parseInt(this.authService.getToken('nameid'), 10);
-    this.alertService.clear();
 
-    this.alertService.clear();
+    this.initData();
+  }
+
+  private getParam(): string | null {
+    const value = this.route.snapshot.paramMap.get('id');
+    if (DataControl.isDigit(value) && value.length === 13) {
+      return value;
+    }
+    else {
+      return this.getParamFailed(value);
+    }
+  }
+
+  private getParamFailed(parameter: string): null {
+    this.alertService.mismatchParameter(parameter);
+    return null;
+  }
+
+  private initData() {
     const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
       this.data = res;
@@ -53,10 +74,21 @@ export class ShopDetailComponent implements OnInit {
       this.initBookRating();
       this.initBookcart();
       this.initBookViewed();
+      this.initSimilar();
       this.alertService.successResponse(startTime);
     }, err => {
       this.alertService.errorResponse(err, startTime);
       this.router.navigate(['/']);
+    });
+  }
+
+  private initSimilar() {
+    const startTime = this.alertService.startTime();
+    this.service.getSimilar(this.id).subscribe(res => {
+      this.similar = res;
+      this.alertService.successResponse(startTime);
+    }, err => {
+      this.alertService.errorResponse(err, startTime);
     });
   }
 

@@ -41,6 +41,10 @@ export class ShopService {
     return this.httpService.get(this.endpoint + '/' + isbn);
   }
 
+  getSimilar(isbn: string): Observable<Book[]> {
+    return this.httpService.get(this.endpoint + '/similar/' + isbn);
+  }
+
   postOrder(data: Order): Observable<Order> {
     return this.httpService.post(this.orderEndpoint, data);
   }

@@ -1,41 +1,22 @@
 <div class="container" *ngIf="data">
   <app-alert-message></app-alert-message>
+
+  <!--empty cart section-->
   <div *ngIf="data.length == 0">
     <h3 class="mb-4">Empty Cart</h3>
     <div>There is no books in your cart! Would you like to pick some!?</div>
     <div class="mt-1 mb-3"><a [routerLink]="'/shop'">Back to shop</a></div>
     <div *ngIf="viewed" class="row">
-      <div *ngFor="let i of viewed" class="card-group col-6 col-sm-4 col-lg-2">
-        <div class="card mb-3">
-          <div class="mx-auto mt-2">
-            <img *ngIf="i.image" [alt]="i.title" class="img-fluid mt-2" [src]="i.image"/>
-            <img *ngIf="!i.image" [alt]="i.title" class="img-fluid mt-2" [src]="placeholderService.imgHolder(500, 700, i.title)" />
-          </div>
-
-          <div class="card-body">
-            <a [routerLink]="'/shop/' + i.isbn">{{ i.title }}</a>
-            <div><strong>{{ i.author }}</strong></div>
-            <div>
-              <ng-template #t let-fill="fill">
-                  <span [class.full]="fill === 100" class="star">
-                    <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
-                  </span>
-              </ng-template>
-              <ngb-rating [rate]="i.rating" [readonly]="true" [starTemplate]="t" class="text-warning star-container" max="5"></ngb-rating>
-              <div>Price:
-                <span *ngIf="i.discount != 0">
-                  <span class="h6 mr-2">{{i.price * (100 - i.discount) / 100 | currency}}</span>
-                  <del class="text-muted">({{i.price | currency}})</del></span>
-                <span *ngIf="i.discount == 0"><span class="h6">{{i.price | currency}}</span></span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div *ngFor="let i of viewed" class="card-group col-6 col-md-4 col-lg-3 d-flex">
+        <app-book-card class="mb-2" [input]="i"></app-book-card>
       </div>
     </div>
   </div>
 
+  <!--my cart section-->
   <div *ngIf="data.length != 0" class="row">
+
+    <!--book detail section-->
     <div class="col-12">
       <div class="card">
         <div class="card-body">
@@ -71,6 +52,7 @@
       </div>
     </div>
 
+    <!--customer info section-->
     <div class="col-md-7">
       <div class="card">
         <div class="card-header">Customer Information</div>
@@ -97,6 +79,7 @@
       </div>
     </div>
 
+    <!--order section-->
     <div class="col-md-5">
       <div class="card">
         <div class="card-header">Order Information</div>
@@ -124,10 +107,6 @@
             <div class="form-check">
               <input class="form-check-input" type="radio" value="credit" disabled/>
               <label class="form-check-label">Credit Cart</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" value="debit" disabled/>
-              <label class="form-check-label">Debit Card</label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="radio" value="crypto" disabled/>
