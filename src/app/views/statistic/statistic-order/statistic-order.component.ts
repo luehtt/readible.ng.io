@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {ChartOption, ErrorMessage} from '../../../common/const';
-import {StatisticService} from '../../../services/statistic.service';
-import {OrderStatistic} from '../../../models/statistic';
-import {DataControl, TimestampControl} from '../../../common/function';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { ChartOption, ErrorMessage } from '../../../common/const';
+import { StatisticService } from '../../../services/statistic.service';
+import { OrderStatistic } from '../../../models/statistic';
+import { TimestampControl } from '../../../common/function';
 
 @Component({
   selector: 'app-statistic-orders',
@@ -15,7 +15,6 @@ export class StatisticOrderComponent implements OnInit {
 
   chart: any;
   chartTitle: string;
-
   loaded: boolean;
   fromDate: Date;
   toDate: Date;
@@ -28,7 +27,7 @@ export class StatisticOrderComponent implements OnInit {
   oldestTimestamp: Date;
   data: OrderStatistic[];
 
-  constructor(private service: StatisticService, private alertService: AlertMessageService) {}
+  constructor(private service: StatisticService, private alertService: AlertMessageService) { }
 
   ngOnInit() {
     this.selectedReference = 'day';
@@ -103,22 +102,24 @@ export class StatisticOrderComponent implements OnInit {
       this.data = res;
       this.loaded = true;
       this.initChart();
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
+    }, err => {
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
-  private initChartData(data: OrderStatistic[], value: string) {
+  private calcChartValue(data: OrderStatistic[], value: string) {
     switch (value) {
-      case 'order': return this.initChartDataExtend(data, 'totalOrder', ChartOption.COLOR_BLUE, 'Total orders');
-      case 'item': return this.initChartDataExtend(data, 'totalItem', ChartOption.COLOR_GREEN, 'Total items sold');
-      case 'price': return this.initChartDataExtend(data, 'totalPrice', ChartOption.COLOR_AMBER, 'Total price sold');
+      case 'order': return this.calcChartValueData(data, 'totalOrder', ChartOption.COLOR_BLUE, 'Total orders');
+      case 'item': return this.calcChartValueData(data, 'totalItem', ChartOption.COLOR_GREEN, 'Total items sold');
+      case 'price': return this.calcChartValueData(data, 'totalPrice', ChartOption.COLOR_AMBER, 'Total price sold');
       default: return null;
     }
   }
 
-  private initChartDataExtend(data: OrderStatistic[], property: string, borderColor: string, chartTitle: string) {
+  private calcChartValueData(data: OrderStatistic[], property: string, borderColor: string, chartTitle: string) {
     return {
-      labels: this.selectedReference === 'day' ? this.data.map(x => x.key.substr(5, 5)) : this.data.map(x => x.key),
+      labels: this.selectedReference === 'day' ? this.data.map(x => x.property.substr(5, 5)) : this.data.map(x => x.property),
       data: data.map(x => x[property]),
       borderColor,
       chartTitle: chartTitle + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
@@ -127,19 +128,19 @@ export class StatisticOrderComponent implements OnInit {
 
   private initChart() {
     if (this.chart) { this.chart.destroy(); }
-    const chartData = this.initChartData(this.data, this.selectedValue);
+    const chartData = this.calcChartValue(this.data, this.selectedValue);
 
     this.chartTitle = chartData.chartTitle;
     this.chart = new Chart('canvas', {
       type: ChartOption.CHART_LINE,
       data: {
         labels: chartData.labels,
-        datasets: [ {
-            data: chartData.data,
-            borderColor: chartData.borderColor,
-            backgroundColor: ChartOption.TRANSPARENT,
-            steppedLine: ChartOption.STEP_MIDDLE
-          } ]
+        datasets: [{
+          data: chartData.data,
+          borderColor: chartData.borderColor,
+          backgroundColor: ChartOption.TRANSPARENT,
+          steppedLine: ChartOption.STEP_MIDDLE
+        }]
       },
       options: ChartOption.DEFAULT_LINE_OPTION
     });

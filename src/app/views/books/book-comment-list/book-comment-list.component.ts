@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {AlertMessageService} from '../../../services/common/alert-message.service';
-import {DataControl} from '../../../common/function';
-import {Common} from '../../../common/const';
-import {BookComment} from '../../../models/comment';
-import {BookCommentService} from '../../../services/comment.service';
+import { Component, OnInit } from '@angular/core';
+import { AlertMessageService } from '../../../services/common/alert-message.service';
+import { DataControl } from '../../../common/function';
+import { Common } from '../../../common/const';
+import { BookComment } from '../../../models/comment';
+import { BookCommentService } from '../../../services/comment.service';
 
 @Component({
   selector: 'app-book-comment-list',
@@ -30,10 +30,10 @@ export class BookCommentListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.service.fetch().subscribe(res => {
       this.data = res;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
       this.loaded = true;
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
@@ -57,11 +57,11 @@ export class BookCommentListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.destroy(id).subscribe(res => {
-        this.data.filter(x => x.id !== res.id);
-        this.alertService.success(startTime, 'DELETE')
-      },
+      this.data.filter(x => x.id !== res.id);
+      this.alertService.successResponse(startTime)
+    },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }

@@ -28,9 +28,9 @@ export class DashboardComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.service.fetchSummary().subscribe(res => {
       this.count = res;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
@@ -38,9 +38,9 @@ export class DashboardComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.service.fetchTopten().subscribe(res => {
       this.top = res;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 }

@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Book} from '../models/book';
-import {Cart} from '../models/cart';
-import {Common} from '../common/const';
+import { Book } from '../models/book';
+import { Cart } from '../models/cart';
+import { Common } from '../common/const';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +21,12 @@ export class CartService {
   }
 
   fetchCart(): Cart[] {
-    const get = JSON.parse(localStorage.getItem(this.CART_SESSION));
-    if (!get) { return null; }
+    const session = localStorage.getItem(this.CART_SESSION);
     const data: Cart[] = [];
-    for (const i of get) {
+    if (!session) return [];
+
+    const json = JSON.parse(session);
+    for (const i of json) {
       data.push(i as Cart);
     }
     return data;
@@ -43,8 +45,7 @@ export class CartService {
     if (amount < 1) {
       this.removeCart(item);
     } else {
-      let data = this.fetchCart();
-      data = data.filter(x => x.isbn !== item.isbn);
+      let data = this.fetchCart().filter(x => x.isbn !== item.isbn);
       const find = data.find(x => x.isbn === item.isbn);
       if (find) {
         find.amount = amount;
@@ -78,10 +79,12 @@ export class CartService {
   //////////////////////////////////////////////////////////////////
 
   fetchViewed(): Book[] {
-    const get = JSON.parse(localStorage.getItem(this.VIEWED_SESSION));
-    if (!get) { return null; }
+    const session = localStorage.getItem(this.VIEWED_SESSION);
     const data: Book[] = [];
-    for (const i of get) {
+    if (!session) return [];
+
+    const json = JSON.parse(session);
+    for (const i of json) {
       data.push(i as Book);
     }
     return data;
@@ -97,7 +100,7 @@ export class CartService {
 
   addViewed(item: Book) {
     let data = this.fetchViewed();
-    if (data ) {
+    if (data) {
       data = data.filter(x => x.isbn !== item.isbn);
       data.unshift(item);
       if (data.length > this.LIMIT_VIEWED) { data.pop(); }

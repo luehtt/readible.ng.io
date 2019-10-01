@@ -1,12 +1,13 @@
 <button *ngIf="editDialog == false" type="button" class="btn btn-primary mb-3" (click)="editDialog = true">Create book</button>
 
+<!-- add book section -->
 <div *ngIf="editDialog == true" class="card">
   <div class="card-header">Create item</div>
   <div class="card-body">
     <form *ngIf="formGroup" [formGroup]="formGroup">
       <div class="row">
 
-        <!--column 1-->
+        <!-- column 1: -->
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-sm-4">ISBN</label>
@@ -88,7 +89,7 @@
           </div>
         </div>
 
-        <!--column 2-->
+        <!-- column 2: -->
         <div class="col-md-6">
           <div class="form-group row">
             <label class="col-sm-4">Price ($)</label>
@@ -128,6 +129,7 @@
   </div>
 </div>
 
+<!-- list book section -->
 <div *ngIf="loaded" class="card">
   <div class="card-header">List of all books</div>
   <div class="card-body">

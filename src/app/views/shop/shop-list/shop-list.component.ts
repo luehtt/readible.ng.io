@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {Book} from 'src/app/models/book';
-import {Pagination} from 'src/app/models/pagination';
-import {Common} from 'src/app/common/const';
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {ShopService} from 'src/app/services/shop.service';
-import {BookCategory} from 'src/app/models/category';
-import {BookCategoryService} from 'src/app/services/category.service';
-import {PlaceholderService} from '../../../services/common/placeholder.service';
+import { Book } from 'src/app/models/book';
+import { Pagination } from 'src/app/models/pagination';
+import { Common } from 'src/app/common/const';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { ShopService } from 'src/app/services/shop.service';
+import { BookCategory } from 'src/app/models/category';
+import { BookCategoryService } from 'src/app/services/category.service';
+import { PlaceholderService } from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-shop-list',
@@ -25,7 +25,7 @@ export class ShopListComponent implements OnInit {
   defaultLimit = Common.PAGE_SIZE_DEFAULT;
 
   constructor(private service: ShopService, private categoryService: BookCategoryService,
-              private alertService: AlertMessageService, public placeholderService: PlaceholderService) {
+    private alertService: AlertMessageService, public placeholderService: PlaceholderService) {
   }
 
   ngOnInit() {
@@ -34,15 +34,15 @@ export class ShopListComponent implements OnInit {
 
     this.categoryService.fetch().subscribe(res => {
       this.categories = res;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
 
     this.onPageChange(1);
   }
 
-  onPageChange(page) {
+  onPageChange(page: number) {
     this.currentPage = page;
     if (this.filter !== '') {
       this.onFilter();
@@ -54,10 +54,10 @@ export class ShopListComponent implements OnInit {
       this.service.fetchCategory(page, this.defaultLimit, this.filter).subscribe(res => {
         this.pagination = res.pagination;
         this.data = res.data;
-        this.alertService.success(startTime, 'GET');
+        this.alertService.successResponse(startTime);
         this.calcCommentRating();
       }, err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       });
     }
   }
@@ -78,10 +78,10 @@ export class ShopListComponent implements OnInit {
     this.service.fetchCategory(this.currentPage, this.defaultLimit, this.filter).subscribe(res => {
       this.pagination = res.pagination;
       this.data = res.data;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
       this.calcCommentRating();
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
@@ -96,10 +96,10 @@ export class ShopListComponent implements OnInit {
     this.service.fetchSearchCategory(this.currentPage, this.defaultLimit, this.filter, this.search).subscribe(res => {
       this.pagination = res.pagination;
       this.data = res.data;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
       this.calcCommentRating();
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 

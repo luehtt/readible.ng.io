@@ -1,40 +1,42 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
-import {Book} from 'src/app/models/book';
-import {Cart} from 'src/app/models/cart';
-import {BookComment} from 'src/app/models/comment';
+import { Book } from 'src/app/models/book';
+import { Cart } from 'src/app/models/cart';
+import { BookComment } from 'src/app/models/comment';
 
-import {AuthService} from 'src/app/services/auth/auth.service';
-import {ShopService} from 'src/app/services/shop.service';
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {BookCommentService} from 'src/app/services/comment.service';
-import {CartService} from '../../../services/cart.service';
-import {PlaceholderService} from '../../../services/common/placeholder.service';
-import {FormGroupControl, DataControl, TimestampControl} from 'src/app/common/function';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { ShopService } from 'src/app/services/shop.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { BookCommentService } from 'src/app/services/comment.service';
+import { CartService } from '../../../services/cart.service';
+import { PlaceholderService } from '../../../services/common/placeholder.service';
+import { TimestampControl, DataControl, FormGroupControl } from 'src/app/common/function';
 
 @Component({
   selector: 'app-shop-detail',
   templateUrl: './shop-detail.component.html'
 })
 export class ShopDetailComponent implements OnInit {
-  data: Book;
+  auth = false;
   customerId: number;
   id: string;
   url: string;
+
   bookcart: Cart;
+  data: Book;
   amount: number;
   ratings: any[];
-  auth = false;
   form: FormGroup;
-  commentDialog = false;
-  commentEditing = false;
-  comment: BookComment;
+
+  editData: BookComment;
+  editDialog = false;
+  isEdit = false;
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
-              private service: ShopService, private cartService: CartService, private commentService: BookCommentService,
-              private alertService: AlertMessageService, private authService: AuthService, public placeholderService: PlaceholderService) { }
+    private service: ShopService, private cartService: CartService, private commentService: BookCommentService,
+    private alertService: AlertMessageService, private authService: AuthService, public placeholderService: PlaceholderService) { }
 
   ngOnInit() {
     this.url = window.location.href;
@@ -51,9 +53,9 @@ export class ShopDetailComponent implements OnInit {
       this.initBookRating();
       this.initBookcart();
       this.initBookViewed();
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
       this.router.navigate(['/']);
     });
   }
@@ -78,8 +80,10 @@ export class ShopDetailComponent implements OnInit {
     this.form = this.formBuilder.group({
       comment: [''],
     });
-    this.comment = new BookComment();
-    this.comment.rating = 3;
+    this.editData = new BookComment();
+    this.editData.rating = 3;
+    this.editData.bookIsbn = this.id;
+    this.editData.customerId = this.customerId;
   }
 
   onAddCart() {
@@ -97,72 +101,66 @@ export class ShopDetailComponent implements OnInit {
     this.amount = parseInt(value, 10);
   }
 
-  onChangeRating(value) {
-    this.comment.rating = value;
+  onChangeRating(value: number) {
+    this.editData.rating = value;
   }
 
-  onOpenComment(item: BookComment) {
-    this.commentDialog = true;
-
-    if (!item) {
-      this.comment = new BookComment();
-      this.commentEditing = false;
-      this.comment.rating = 3;
-      this.comment.comment = '';
-      this.form.controls.comment.setValue('');
-    } else {
-      this.comment = item;
-      this.commentEditing = true;
-      this.form.controls.comment.setValue(item.comment);
-    }
+  onEditComment(data: BookComment) {
+    this.editDialog = true;
+    this.editData = data ? DataControl.clone(data, true) : new BookComment();
+    this.isEdit = !!data;
+    this.editDialog = true;
+    this.form.controls.comment.setValue(this.editData.comment);
   }
 
-  onSubmitComment() {
-    if (this.commentEditing === true) { this.updateComment(); } else { this.storeComment(); }
+  onSubmit() {
+    this.isEdit === true ? this.updateComment() : this.storeComment();
+  }
+
+  private getFormData(item: BookComment, form: FormGroup): BookComment {
+    item.comment = form.controls.comment.value;
+    return item;
   }
 
   private storeComment() {
-    this.comment.comment = this.form.controls.comment.value;
-    this.comment.customerId = this.customerId;
-    this.comment.bookIsbn = this.id;
+    if (FormGroupControl.validateForm(this.form) === false) { return; }
+    const data = DataControl.clone(this.getFormData(this.editData, this.form));
+    data.customerId = this.customerId;
+    data.bookIsbn = this.id;
 
     this.alertService.clear();
     const startTime = this.alertService.startTime();
-    this.commentService.post(this.comment).subscribe(res => {
-        this.data.bookComments.unshift(res);
-        this.initBookRating();
-        this.initForm();
+    this.commentService.post(data).subscribe(res => {
+      this.data.bookComments.unshift(res);
+      this.initBookRating();
+      this.initForm();
 
-        this.commentDialog = false;
-        this.comment = null;
-        this.alertService.success(startTime, 'POST');
-      },
+      this.editDialog = false;
+      this.editData = null;
+      this.alertService.successResponse(startTime);
+    },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
 
   private updateComment() {
-    this.comment.comment = this.form.controls.comment.value;
-    this.comment.customerId = this.customerId;
+    if (FormGroupControl.validateForm(this.form) === false) { return; }
+    const data = DataControl.clone(this.getFormData(this.editData, this.form));
 
     this.alertService.clear();
     const startTime = this.alertService.startTime();
-    this.commentService.put(this.comment).subscribe(res => {
-        const item = this.data.bookComments.find(x => x.id === res.id);
-        item.rating = res.rating;
-        item.comment = res.comment;
-        item.updatedAt = res.updatedAt;
-        this.initBookRating();
-        this.initForm();
-
-        this.alertService.success(startTime, 'PUT');
-        this.commentDialog = false;
-        this.comment = null;
-      },
+    this.commentService.put(data).subscribe(res => {
+      this.data.bookComments = DataControl.updateItem(this.data.bookComments, res, 'id');
+      this.initBookRating();
+      this.initForm();
+      this.alertService.successResponse(startTime);
+      this.editDialog = false;
+      this.editData = null;
+    },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
@@ -171,16 +169,16 @@ export class ShopDetailComponent implements OnInit {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.commentService.destroy(id).subscribe(res => {
-        this.data.bookComments = this.data.bookComments.filter(x => x.id !== res.id);
-        this.initBookRating();
-        this.initForm();
+      this.data.bookComments = DataControl.deleteItem(this.data.bookComments, res, 'id');
+      this.initBookRating();
+      this.initForm();
 
-        this.alertService.success(startTime, 'DELETE');
-        this.commentDialog = false;
-        this.comment = null;
-      },
+      this.alertService.successResponse(startTime);
+      this.editDialog = false;
+      this.editData = null;
+    },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }

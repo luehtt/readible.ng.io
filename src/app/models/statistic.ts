@@ -1,5 +1,5 @@
 export interface OrderStatistic {
-  key: string;
+  property: string;
   totalOrder: number;
   totalItem: number;
   totalPrice: number;

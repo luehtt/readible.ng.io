@@ -13,6 +13,8 @@ export class Order {
   note: string;
   createdAt: string;
   updatedAt: string;
+  confirmedAt: string;
+  completedAt: string;
 
   status: OrderStatus;
   customer: Customer;
@@ -27,7 +29,6 @@ export class OrderDetail {
   bookIsbn: string;
   amount: number;
   price: number;
-
   book: Book;
 }
 

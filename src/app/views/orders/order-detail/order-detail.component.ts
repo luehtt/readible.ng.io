@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Data, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { OrderService } from 'src/app/services/order.service';
 import { Order } from 'src/app/models/order';
-import {AuthService} from '../../../services/auth/auth.service';
-import {DataControl} from '../../../common/function';
+import { AuthService } from '../../../services/auth/auth.service';
+import { DataControl } from '../../../common/function';
 
 @Component({
   selector: 'app-order-detail',
@@ -15,9 +15,9 @@ export class OrderDetailComponent implements OnInit {
   data: Order;
   id: number;
   loaded: boolean;
-  public role: string;
+  userRole: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private service: OrderService, private alertService: AlertMessageService, private authService: AuthService ) {
+  constructor(private route: ActivatedRoute, private router: Router, private service: OrderService, private alertService: AlertMessageService, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -25,7 +25,7 @@ export class OrderDetailComponent implements OnInit {
     this.id = this.getParam();
     if (!this.id) return;
 
-    this.role = this.authService.getToken('role');
+    this.userRole = this.authService.getToken('role');
     this.initData();
   }
 
@@ -42,7 +42,7 @@ export class OrderDetailComponent implements OnInit {
   }
 
   private getParamFailed(parameter: string): null {
-    this.alertService.notFound(parameter);
+    this.alertService.mismatchParameter(parameter);
     return null;
   }
 
@@ -52,16 +52,12 @@ export class OrderDetailComponent implements OnInit {
       res => {
         this.data = res;
         this.loaded = true;
-        this.alertService.success(startTime, 'GET');
+        this.alertService.successResponse(startTime);
       },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
-  }
-
-  get userRole() {
-    return this.role;
   }
 
   onChangeStatus(value: string) {
@@ -71,9 +67,9 @@ export class OrderDetailComponent implements OnInit {
       res => {
         this.data = DataControl.remove(this.data, ['confirmedManager', 'completedManager']);
         this.data = DataControl.read(res, this.data, true);
-        this.alertService.success(startTime, 'PUT');
+        this.alertService.successResponse(startTime);
       }, err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
@@ -83,10 +79,10 @@ export class OrderDetailComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.service.delete(this.id).subscribe(
       res => {
-        this.alertService.success(startTime, 'DELETE');
+        this.alertService.successResponse(startTime);
         this.router.navigate(['/admin/books']);
       }, err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }

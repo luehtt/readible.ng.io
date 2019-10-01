@@ -1,6 +1,7 @@
 <div *ngIf="data" class="container">
   <app-alert-message></app-alert-message>
 
+  <!-- book detail section -->
   <div class="row my-4">
     <!--image section-->
     <div class="col-md-4 mb-4 mb-md-0">
@@ -20,7 +21,7 @@
         each
       </div>
       <hr/>
-      <div>
+      <div class="mb-3">
         <ng-template #t let-fill="fill">
           <span [class.full]="fill === 100" class="star">
             <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
@@ -87,7 +88,7 @@
   <hr>
 
   <!--comments section-->
-  <div class="row mt-5">
+  <div class="row my-4">
     <div class="col-md-4 mb-3 mb-md-0">
       <!--rating section-->
       <div class="mb-0 text-uppercase font-weight-bold">{{ data.bookComments.length }} customer reviews</div>
@@ -99,7 +100,7 @@
       <ngb-rating [rate]="data.rating" [readonly]="true" [starTemplate]="t2" class="text-warning star-template-container" max="5"></ngb-rating>
 
       <div *ngFor="let i of ratings" class="row no-gutters">
-        <div class="col-3 pr-1"><label class="m-0" style="width: 0.75rem">{{ i.name }}</label><span class="h5 text-warning">&#9733;</span></div>
+        <div class="col-3 pr-1"><label class="m-0 text-right" style="width: 0.75rem;">{{ i.name }}</label><span class="h5 text-warning">&#9733;</span></div>
         <div class="col-5 progress mt-1">
           <div [ngStyle]="{ width: '' + i.percent + '%' }" class="progress-bar bg-warning"></div>
         </div>
@@ -108,25 +109,25 @@
       <!--end rating section-->
 
       <!--this angular built-in routerLink cannot use with link having backslash or any other special character-->
-      <div class="mt-3">
-        <button (click)="onOpenComment(null)" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
+      <div *ngIf="data.bookComments.length != 0" class="mt-3">
+        <button (click)="onEditComment(null)" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
         <a *ngIf="auth == false" [href]="'/login?redirect=' + url" class="btn btn-secondary">Login to comment</a>
       </div>
     </div>
 
     <div class="col-md-8">
       <!--post new comment section-->
-      <div *ngIf="commentDialog == true && comment" class="card mb-4">
+      <div *ngIf="editDialog === true" class="card mb-4">
         <div class="card-body">
           <form [formGroup]="form">
               <div class="mb-2">
-                Select the stars: <ngb-rating (rateChange)="onChangeRating($event)" [rate]="comment.rating" class="h4 text-warning star-container mb-0" max="5"></ngb-rating>
+                Select the stars: <ngb-rating (rateChange)="onChangeRating($event)" [rate]="editData.rating" class="h4 text-warning star-container mb-0" max="5"></ngb-rating>
               </div>
               <div class="mb-2">Comment</div>
               <textarea class="form-control" formControlName="comment" placeholder="enter the comment" rows="3" type="text"></textarea>
               <div class="form-group text-center mt-3 mb-0">
-                  <button (click)="onSubmitComment()" class="btn btn-primary mr-1" type="button">Submit</button>
-                  <button (click)="commentDialog = false" class="btn btn-secondary" type="button">Close</button>
+                  <button (click)="onSubmit()" class="btn btn-primary mr-1" type="button">Submit</button>
+                  <button (click)="commentDialog = false" class="btn btn-outline-secondary" type="button">Close</button>
               </div>
           </form>
         </div>
@@ -134,17 +135,24 @@
       <!--end post new comment section-->
 
       <!--list of comment section-->
-      <div *ngIf="data.bookComments.length == 0" class="text-center">Be the first one to comment!?</div>
+      <div class="text-center" *ngIf="data.bookComments.length == 0">
+        <div>Be the first one to comment!?</div>
+        <div class="mt-3">
+          <button (click)="onOpenComment(null)" *ngIf="auth == true" class="btn btn-primary">Post comment</button>
+          <a *ngIf="auth == false" [href]="'/login?redirect=' + url" class="btn btn-secondary">Login to comment</a>
+        </div>
+      </div> 
+
       <div *ngFor="let i of data.bookComments" class="mb-3 pb-1 border-bottom">
-        <div>
+        <div class="mb-1">
           <strong>{{ i.customer.fullname }}</strong> commented at {{ i.updatedAt | date: "yyyy-MM-dd hh:mm:ss z" }}
         </div>
 
         <ngb-rating [rate]="i.rating" [readonly]="true" class="text-warning star-container" max="5"></ngb-rating>
-        <div class="text-justify">{{ i.comment }}</div>
+        <div class="text-justify mb-2">{{ i.comment }}</div>
         <div *ngIf="i.customerId == customerId">
-          <button class="btn btn-sm btn-pill btn-primary mr-2" (click)="onOpenComment(i)">Edit</button>
-          <button class="btn btn-sm btn-pill btn-danger" (click)="onDeleteComment(i.id)">Delete</button>
+          <button class="btn btn-sm btn-link text-info mr-2" (click)="onEditComment(i)">Edit</button>
+          <button class="btn btn-sm btn-link text-danger" (click)="onDeleteComment(i.id)">Delete</button>
         </div>
       </div>
       <!--end list of comment section-->

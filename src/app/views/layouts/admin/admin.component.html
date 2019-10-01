@@ -1,5 +1,5 @@
 <div class="wrapper d-flex" [ngClass]="{ toggled: toggled == true }">
-  <!-- Sidebar -->
+  <!-- sidebar -->
   <div class="sidebar-wrapper border-right bg-primary text-white">
     <div class="sidebar-heading">Readible 1.0.1</div>
     <div class="list-group list-group-flush p-md">
@@ -14,9 +14,9 @@
       <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/statistic/customers'" [class.active]="selectMenu == 'customersStatistic'" (click)="selectMenu = 'customersStatistic'" class="list-group-item list-group-item-action bg-primary text-white">Customers Statistic</a>
     </div>
   </div>
-  <!-- /#sidebar-wrapper -->
+  <!-- sidebar-wrapper -->
 
-  <!-- Page Content -->
+  <!-- page content -->
   <div class="page-content-wrapper">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
       <button class="btn btn-outline-light btn-normal btn-icon my-0" (click)="toggled = !toggled"><i class="fas fa-sliders-h"></i></button>
@@ -49,6 +49,6 @@
       </div>
     </div>
   </div>
-  <!-- /#page-content-wrapper -->
+  <!-- page-content-wrapper -->
 </div>
-<!-- /#wrapper -->
+<!-- wrapper -->

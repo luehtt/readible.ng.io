@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {DataControl, FormGroupControl, TimestampControl} from 'src/app/common/function';
-import {Common, ErrorMessage} from '../../../common/const';
-import {ManagerService} from '../../../services/manager.service';
-import {Manager} from '../../../models/manager';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { DataControl, FormGroupControl } from 'src/app/common/function';
+import { Common, ErrorMessage } from '../../../common/const';
+import { ManagerService } from '../../../services/manager.service';
+import { Manager } from '../../../models/manager';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -14,18 +14,19 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class ManagerListComponent implements OnInit {
   data: Manager[];
+  loaded: boolean;
+  form: FormGroup;
+  conflictUsername: string[];
+  conflictEmail: string[];
+  customRule = { confirm: true, birth: true, username: true, email: true };
+
   filter = '';
   page = 1;
   pageSize = Common.PAGE_SIZE_HIGHER;
   sortColumn = 'title';
   sortDirection = 'asc';
-  customRule = { confirm: true, birth: true, username: true, email: true };
   createDialog = false;
-  loaded: boolean;
-  conflictUsername: string[];
-  conflictEmail: string[];
 
-  form: FormGroup;
   USERNAME_EXISTED = ErrorMessage.USERNAME_EXISTED;
   EMAIL_EXISTED = ErrorMessage.EMAIL_EXISTED;
   REGISTER_AGE_LIMIT = ErrorMessage.REGISTER_AGE_LIMIT;
@@ -47,10 +48,10 @@ export class ManagerListComponent implements OnInit {
         this.data = res;
         this.loaded = true;
         this.initForm();
-        this.alertService.success(startTime, 'GET');
+        this.alertService.successResponse(startTime);
       },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
 
@@ -118,16 +119,6 @@ export class ManagerListComponent implements OnInit {
     };
   }
 
-  private pushManager(data) {
-    let item = new Manager();
-    item.fullname = data.fullname;
-    item.birth = data.birth;
-    item.male = data.male;
-    item.address = data.address;
-    item.phone = data.phone;
-    this.data.push(item);
-  }
-
   onSubmit() {
     if (FormGroupControl.validateForm(this.form, this.customRule)) { return; }
 
@@ -136,8 +127,8 @@ export class ManagerListComponent implements OnInit {
     this.alertService.clear();
     this.service.register(data).subscribe(res => {
       if (res.usernameConflict === false && res.emailConflict === false) {
-        this.alertService.success(startTime, 'POST');
-        this.pushManager(res);
+        this.alertService.successResponse(startTime);
+        this.data.push(res);
         this.createDialog = false;
       } else {
         if (res.usernameConflict === true) {
@@ -154,7 +145,7 @@ export class ManagerListComponent implements OnInit {
         }
       }
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 }

@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   failed = false;
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
-              private service: AuthService, private alertService: AlertMessageService, private sessionService: SessionService) { }
+    private service: AuthService, private alertService: AlertMessageService, private sessionService: SessionService) { }
 
   ngOnInit() {
     this.alertService.clear();
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!FormGroupControl.validateForm(this.form)) { return; }
+    if (FormGroupControl.validateForm(this.form) === false) { return; }
 
     const user = new User();
     user.email = this.form.controls.email.value;
@@ -49,9 +49,7 @@ export class LoginComponent implements OnInit {
       this.navigateOnRole(json.role);
     }, err => {
       this.failed = true;
-      setTimeout(() => {
-        this.failed = false
-      }, Common.TIME_OUT)
+      setTimeout(() => { this.failed = false }, Common.TIME_OUT)
     });
   }
 

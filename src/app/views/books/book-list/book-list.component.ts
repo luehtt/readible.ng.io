@@ -1,16 +1,16 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {merge, Observable, Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { merge, Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
-import {Book} from 'src/app/models/book';
-import {BookCategory} from 'src/app/models/category';
-import {Common} from 'src/app/common/const';
-import {FormGroupControl, DataControl, FileControl, TimestampControl} from 'src/app/common/function';
-import {BookService} from 'src/app/services/book.service';
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {BookCategoryService} from 'src/app/services/category.service';
+import { Book } from 'src/app/models/book';
+import { BookCategory } from 'src/app/models/category';
+import { Common } from 'src/app/common/const';
+import { FormGroupControl, DataControl, FileControl, TimestampControl } from 'src/app/common/function';
+import { BookService } from 'src/app/services/book.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { BookCategoryService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-book-list',
@@ -48,9 +48,9 @@ export class BookListComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder,
-              private service: BookService,
-              private alertService: AlertMessageService,
-              private categoryService: BookCategoryService) {
+    private service: BookService,
+    private alertService: AlertMessageService,
+    private categoryService: BookCategoryService) {
   }
 
   ngOnInit() {
@@ -63,10 +63,10 @@ export class BookListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.service.fetch().subscribe(res => {
       this.data = res;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
       this.loaded = true;
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
@@ -75,9 +75,9 @@ export class BookListComponent implements OnInit {
     this.categoryService.fetch().subscribe(res => {
       this.categories = res;
       this.formGroup = this.initForm();
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
@@ -118,12 +118,12 @@ export class BookListComponent implements OnInit {
           this.upload = result.toString();
         })
         .catch(err => {
-          this.alertService.failed(err);
+          this.alertService.error(err.message);
         });
     }
   }
 
-  private getData(formGroup: FormGroup): Book {
+  private getFormData(formGroup: FormGroup): Book {
     const item = new Book();
     const formControl = formGroup.controls;
 
@@ -146,7 +146,7 @@ export class BookListComponent implements OnInit {
 
   onSubmit() {
     if (FormGroupControl.validateForm(this.formGroup) == false) { return; }
-    const item = this.getData(this.formGroup);
+    const item = this.getFormData(this.formGroup);
 
     this.alertService.clear();
     const startTime = this.alertService.startTime();
@@ -154,10 +154,10 @@ export class BookListComponent implements OnInit {
       res => {
         this.data.push(res);
         this.resetForm();
-        this.alertService.success(startTime, 'POST');
+        this.alertService.successResponse(startTime);
       },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }

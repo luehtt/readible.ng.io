@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Validators, FormGroup, FormBuilder} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
-import {User} from 'src/app/models/user';
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {AccountService} from 'src/app/services/account.service';
-import {PlaceholderService} from '../../../services/common/placeholder.service';
-import {FileControl, FormGroupControl, DataControl, TimestampControl} from 'src/app/common/function';
-import {Common, ErrorMessage} from 'src/app/common/const';
+import { User } from 'src/app/models/user';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { AccountService } from 'src/app/services/account.service';
+import { PlaceholderService } from '../../../services/common/placeholder.service';
+import { FileControl, FormGroupControl, DataControl, TimestampControl } from 'src/app/common/function';
+import { Common, ErrorMessage } from 'src/app/common/const';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-account',
@@ -23,16 +23,22 @@ export class AccountComponent implements OnInit {
   passwordDialog = false;
   confirmPasswordError = false;
   imageTransform: string;
+  userRole: string;
 
   CONFIRM_PASSWORD_ERROR = ErrorMessage.CONFIRM_PASSWORD_ERROR;
 
-  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
-              private service: AccountService, private alertService: AlertMessageService, public placeholderService: PlaceholderService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private service: AccountService,
+    private alertService: AlertMessageService,
+    private authService: AuthService,
+    public placeholderService: PlaceholderService) {
   }
 
   ngOnInit() {
     this.alertService.clear();
     this.initData();
+    this.userRole = this.authService.getToken('role');
   }
 
   private initData() {
@@ -42,12 +48,13 @@ export class AccountComponent implements OnInit {
         this.data = res.data;
         this.data.originalImage = res.data.image;
         this.account = res.user;
-        this.alertService.success(startTime, 'GET');
+
+        this.alertService.successResponse(startTime);
         this.initInfoForm();
         this.initPasswordForm();
       },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
@@ -78,7 +85,7 @@ export class AccountComponent implements OnInit {
       res => {
         this.data = res.data;
       }, err => {
-        this.alertService.failed(err.message);
+        this.alertService.errorResponse(err);
       }
     );
   }
@@ -91,16 +98,15 @@ export class AccountComponent implements OnInit {
   onChangeImage(event) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      FileControl.convertFileToBase64(file)
-        .then(res => {
-          this.data.image = res.toString();
-          const orientation = FileControl.getOrientation(this.data.image);
-          if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = FileControl.transformCss(orientation);
-          }
-          this.infoDialog = true;
-        }).catch(err => {
-        this.alertService.failed(err.message);
+      FileControl.convertFileToBase64(file).then(res => {
+        this.data.image = res.toString();
+        const orientation = FileControl.getOrientation(this.data.image);
+        if (orientation && orientation !== 0 && orientation !== 1) {
+          this.imageTransform = FileControl.imageTransform(orientation);
+        }
+        this.infoDialog = true;
+      }).catch(err => {
+        this.alertService.error(err.message);
       });
     }
   }
@@ -111,58 +117,52 @@ export class AccountComponent implements OnInit {
     this.confirmPasswordError = password !== confirmPassword;
   }
 
-  validateConfirmPasswordExtend() {
-    this.passwordForm.controls.confirmPassword.markAsTouched();
-    return this.confirmPasswordError;
-  }
-
   onChangePassword() {
     this.alertService.clear();
-    if (FormGroupControl.validateForm(this.passwordForm)) { return; }
-    if (this.validateConfirmPasswordExtend()) { return; }
+    if (FormGroupControl.validateForm(this.passwordForm) === false) { return; }
 
     const currentPassword = this.passwordForm.controls.currentPassword.value;
     const updatePassword = this.passwordForm.controls.updatePassword.value;
     const startTime = this.alertService.startTime();
-    this.service.postPassword(currentPassword, updatePassword).subscribe(res => {
-        this.alertService.success(startTime, 'POST');
-        this.passwordDialog = false;
-        this.initPasswordForm();
-      },
-      err => {
-        this.alertService.failed(err);
+    this.service.password(currentPassword, updatePassword).subscribe(res => {
+      this.alertService.successResponse(startTime);
+      this.passwordDialog = false;
+      this.initPasswordForm();
+    }, err => {
+      const customError = [ {status: 401, error: ErrorMessage.UPDATE_PASSWORD_ERROR} ]
+      this.alertService.errorResponse(err, startTime, customError);
       }
     );
   }
 
-  private retrieveInfo(form: FormGroup, originalImage: string, image: string) {
-    return {
-      fullname: form.controls.fullname.value,
-      birth: form.controls.birth.value,
-      male: form.controls.male.value,
-      address: form.controls.address.value,
-      phone: form.controls.phone.value,
-      image: originalImage !== image ? image : null,
-      updatedAt: TimestampControl.jsonDate(),
-    };
+  private getFormData(form: FormGroup) {
+    const item = DataControl.clone(this.data);
+    const formControl = form.controls;
+
+    item.fullname = formControl.fullname.value;
+    item.birth = formControl.birth.value;
+    item.male = formControl.male.value;
+    item.address = formControl.address.value;
+    item.phone = formControl.phone.value;
+
+    if (item.image === item.originalImage) { delete (item.image); }
+    if (!item.image) item.image = 'null';
+    return item;
   }
 
   onChangeInfo() {
     this.alertService.clear();
-    const form = this.infoForm;
-    if (FormGroupControl.validateForm(form)) { return; }
+    if (FormGroupControl.validateForm(this.infoForm) === false) { return; }
 
-    const item = this.retrieveInfo(form, this.data.originalImage, this.data.image);
+    const item = this.getFormData(this.infoForm);
     const startTime = this.alertService.startTime();
-    this.service.put(item).subscribe(res => {
-        this.alertService.success(startTime, 'PUT');
-        this.data = res;
-        this.initInfoForm();
-        this.infoDialog = false;
-      },
-      err => {
-        this.alertService.failed(err);
-      }
-    );
+    this.service.put(item, this.userRole).subscribe(res => {
+      this.alertService.successResponse(startTime);
+      this.data = DataControl.read(res, this.data);
+      this.initInfoForm();
+      this.infoDialog = false;
+    }, err => {
+      this.alertService.errorResponse(err, startTime);
+    });
   }
 }

@@ -1,5 +1,6 @@
 <button *ngIf="createDialog == false" type="button" class="btn btn-primary mb-3" (click)="createDialog = true">Create manager</button>
 
+<!-- create manager section -->
 <div class="row">
   <div class="col-xl-6 col-lg-8 col-md-10">
     <div class="card" *ngIf="createDialog == true">
@@ -94,7 +95,7 @@
   </div>
 </div>
 
-
+<!-- list all managers -->
 <div class="card">
   <div class="card-header">List of all managers</div>
   <div class="card-body">

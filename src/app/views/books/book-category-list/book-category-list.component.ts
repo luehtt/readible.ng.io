@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {BookCategory} from '../../../models/category';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {BookCategoryService} from '../../../services/category.service';
-import {AlertMessageService} from '../../../services/common/alert-message.service';
-import {FormGroupControl, DataControl, TimestampControl} from '../../../common/function';
-import {Common} from '../../../common/const';
+import { Component, OnInit } from '@angular/core';
+import { BookCategory } from '../../../models/category';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BookCategoryService } from '../../../services/category.service';
+import { AlertMessageService } from '../../../services/common/alert-message.service';
+import { FormGroupControl, DataControl } from '../../../common/function';
+import { Common } from '../../../common/const';
 
 @Component({
   selector: 'app-book-category-list',
@@ -37,10 +37,10 @@ export class BookCategoryListComponent implements OnInit {
     this.service.fetch().subscribe(res => {
       this.data = res;
       this.formGroup = this.initForm();
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
       this.loaded = true;
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
@@ -72,7 +72,7 @@ export class BookCategoryListComponent implements OnInit {
     this.isEdit === true ? this.updateItem() : this.storeItem();
   }
 
-  private readData(item: BookCategory, form: FormGroup): BookCategory {
+  private getFormData(item: BookCategory, form: FormGroup): BookCategory {
     item.name = form.controls.name.value;
     return item;
   }
@@ -85,31 +85,31 @@ export class BookCategoryListComponent implements OnInit {
 
   private storeItem() {
     if (FormGroupControl.validateForm(this.formGroup) === false) { return; }
-    this.editData = this.readData(this.editData, this.formGroup);
+    this.editData = this.getFormData(this.editData, this.formGroup);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.post(this.editData).subscribe(res => {
       this.data.push(res);
-      this.alertService.success(startTime, 'POST');
+      this.alertService.successResponse(startTime);
       this.resetSummit();
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
   private updateItem() {
     if (FormGroupControl.validateForm(this.formGroup) === false) { return; }
-    this.editData = this.readData(this.editData, this.formGroup);
+    this.editData = this.getFormData(this.editData, this.formGroup);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.put(this.editData).subscribe(res => {
       this.data = DataControl.updateItem(this.data, res, 'id');
-      this.alertService.success(startTime, 'PUT');
+      this.alertService.successResponse(startTime);
       this.resetSummit();
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
@@ -118,10 +118,10 @@ export class BookCategoryListComponent implements OnInit {
     this.alertService.clear();
     this.service.destroy(id).subscribe(res => {
       this.data = DataControl.deleteItem(this.data, res, 'id');
-      this.alertService.success(startTime, 'DELETE');
+      this.alertService.successResponse(startTime);
       this.resetSummit();
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 }

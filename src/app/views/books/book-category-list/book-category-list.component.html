@@ -1,5 +1,6 @@
 <button *ngIf="editDialog == false" type="button" class="btn btn-primary mb-3" (click)="onEdit(null)">Create book category</button>
 
+<!-- edit section -->
 <div *ngIf="editDialog == true" class="row">
   <div class="col-xl-6 col-lg-8 col-md-10">
     <div class="card">
@@ -25,6 +26,7 @@
   </div>
 </div>
 
+<!-- list book categories section -->
 <div *ngIf="loaded" class="card">
   <div class="card-header">List of all book categories</div>
   <div class="card-body">

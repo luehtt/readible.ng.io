@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {ChartOption, ErrorMessage} from '../../../common/const';
-import {StatisticService} from '../../../services/statistic.service';
-import {OrderStatistic} from '../../../models/statistic';
-import {DataControl, TimestampControl,} from '../../../common/function';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { ChartOption, ErrorMessage } from '../../../common/const';
+import { StatisticService } from '../../../services/statistic.service';
+import { OrderStatistic } from '../../../models/statistic';
+import { TimestampControl } from '../../../common/function';
+
+interface IChartData {
+  name: string;
+  data: OrderStatistic[];
+  color: string[];
+}
 
 @Component({
   selector: 'app-statistic-customers',
@@ -19,20 +25,34 @@ export class StatisticCustomerComponent implements OnInit {
   selectedValue: string;
   latestTimestamp: Date;
   oldestTimestamp: Date;
-  ageData: OrderStatistic[];
-  genderData: OrderStatistic[];
 
-  ageChart: any;
-  genderChart: any;
+  ageChartData: IChartData;
+  genderChartData: IChartData;
+  ageChart: Chart;
+  genderChart: Chart;
   chartTitle: string;
-  ageChartColor = [ChartOption.COLOR_RED, ChartOption.COLOR_GREEN, ChartOption.COLOR_BLUE, ChartOption.COLOR_AMBER];
-  genderChartColor = [ChartOption.COLOR_GREEN, ChartOption.COLOR_ROSE];
+  chartType = 'doughnut';
 
-  constructor(private service: StatisticService, private alertService: AlertMessageService) {}
+  constructor(private service: StatisticService, private alertService: AlertMessageService) { }
 
   ngOnInit() {
     this.selectedValue = 'item';
     this.initTimestamp();
+    this.initIChartData();
+  }
+
+  private initIChartData() {
+    this.ageChartData = {
+      name: 'ageCanvas',
+      color: [ChartOption.COLOR_RED, ChartOption.COLOR_GREEN, ChartOption.COLOR_BLUE, ChartOption.COLOR_AMBER],
+      data: []
+    }
+
+    this.genderChartData = {
+      name: 'genderCanvas',
+      color: [ChartOption.COLOR_GREEN, ChartOption.COLOR_ROSE],
+      data: []
+    }
   }
 
   private initTimestamp() {
@@ -77,55 +97,73 @@ export class StatisticCustomerComponent implements OnInit {
   private initAgeData(fromDate: string, toDate: string) {
     const startTime = this.alertService.startTime();
     this.service.statisticCustomer('age', fromDate, toDate).subscribe(res => {
-      this.ageData = res;
-      this.alertService.success(startTime, 'GET');
-      this.initChart(this.ageChart, this.ageData, this.ageChartColor);
+      this.ageChartData.data = res;
+      this.alertService.successResponse(startTime);
+      this.initChart(this.ageChartData);
+    }, err => {
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
   private initGenderData(fromDate: string, toDate: string) {
     const startTime = this.alertService.startTime();
     this.service.statisticCustomer('gender', fromDate, toDate).subscribe(res => {
-      this.genderData = res;
-      this.alertService.success(startTime, 'GET');
-      this.initChart(this.genderChart, this.genderData, this.genderChartColor);
+      this.genderChartData.data = res;
+      this.alertService.successResponse(startTime);
+      this.initChart(this.genderChartData);
+    }, err => {
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
-  private initChartData(data: OrderStatistic[], value: string) {
+  private calcChartValue(data: OrderStatistic[], value: string) {
     switch (value) {
-      case 'order': return this.initChartDataExtend(data, 'totalOrder', 'Total orders');
-      case 'item': return this.initChartDataExtend(data, 'totalItem', 'Total items sold');
-      case 'price': return this.initChartDataExtend(data, 'totalPrice', 'Total price sold');
+      case 'order': return this.calcChartValueData(data, 'totalOrder', 'Total orders');
+      case 'item': return this.calcChartValueData(data, 'totalItem', 'Total items sold');
+      case 'price': return this.calcChartValueData(data, 'totalPrice', 'Total price sold');
       default: return null;
     }
   }
 
-  private initChartDataExtend(data: OrderStatistic[], property: string, chartTitle: string) {
+  private calcChartValueData(data: OrderStatistic[], property: string, chartTitle: string) {
     return {
-      labels: data.map(x => x.key),
+      labels: data.map(x => x.property),
       data: data.map(x => x[property]),
       chartTitle: chartTitle + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
     };
   }
 
-  private initChart(chart: Chart, data: OrderStatistic[], colors: string[]) {
-    if (chart) { chart.destroy(); }
-    const chartData = this.initChartData(data, this.selectedValue);
-
-    // init doughnut chart
+  private initChart(chart: IChartData) {
+    const chartData = this.calcChartValue(chart.data, this.selectedValue);
     this.chartTitle = chartData.chartTitle;
-    this.ageChart = new Chart('ageCanvas', {
-      type: 'doughnut',
-      data: {
-        labels: chartData.labels,
-        datasets: [ {
-          data: chartData.data,
-          backgroundColor: colors,
-        } ]
-      },
-      options: ChartOption.DEFAULT_PIE_OPTION
-    });
+
+    // have tried to include chart as variable and failed miserably
+    // better just use distinct variable for each chart and do not include in any interface
+    switch (chart.name) {
+      case 'ageCanvas':
+        if (this.ageChart) this.ageChart.destroy();
+        this.ageChart = new Chart(chart.name, {
+          type: this.chartType,
+          data: {
+            labels: chartData.labels,
+            datasets: [{ data: chartData.data, backgroundColor: chart.color, }]
+          },
+          options: ChartOption.DEFAULT_PIE_OPTION
+        });
+        return;
+
+      case 'genderCanvas':
+        if (this.genderChart) this.genderChart.destroy();
+        this.genderChart = new Chart(chart.name, {
+          type: this.chartType,
+          data: {
+            labels: chartData.labels,
+            datasets: [{ data: chartData.data, backgroundColor: chart.color, }]
+          },
+          options: ChartOption.DEFAULT_PIE_OPTION
+        });
+        return;
+    }
   }
 
 }

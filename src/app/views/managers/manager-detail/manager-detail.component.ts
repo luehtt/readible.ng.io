@@ -1,14 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import {User} from '../../../models/user';
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {DataControl} from '../../../common/function';
-import {Common} from '../../../common/const';
-import {Order} from '../../../models/order';
-import {ManagerService} from '../../../services/manager.service';
-import {Manager} from '../../../models/manager';
-import {PlaceholderService} from '../../../services/common/placeholder.service';
+import { User } from '../../../models/user';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { DataControl } from '../../../common/function';
+import { Common } from '../../../common/const';
+import { Order } from '../../../models/order';
+import { ManagerService } from '../../../services/manager.service';
+import { Manager } from '../../../models/manager';
+import { PlaceholderService } from '../../../services/common/placeholder.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-manager-detail',
@@ -18,6 +19,7 @@ export class ManagerDetailComponent implements OnInit {
   data: Manager;
   account: User;
   id: number;
+  userRole: string;
 
   // this.orders is a combine list of confirmedOrders and completedOrders
   orders: Order[];
@@ -32,12 +34,16 @@ export class ManagerDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private service: ManagerService,
     private alertService: AlertMessageService,
+    private authService: AuthService,
     public placeholderService: PlaceholderService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.alertService.clear();
     this.id = this.getParam();
+    if (!this.id) return;
+
+    this.userRole = this.authService.getToken('role');
     this.initData();
   }
 
@@ -54,7 +60,7 @@ export class ManagerDetailComponent implements OnInit {
   }
 
   private getParamFailed(parameter: string): null {
-    this.alertService.notFound(parameter);
+    this.alertService.mismatchParameter(parameter);
     return null;
   }
 
@@ -65,11 +71,11 @@ export class ManagerDetailComponent implements OnInit {
         this.data = res.manager;
         this.account = res.user;
         this.orders = DataControl.removeDuplicate(this.data.confirmedOrders, this.data.completedOrders);
-        this.alertService.success(startTime, 'GET');
+        this.alertService.successResponse(startTime);
         this.loaded = true;
       },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
@@ -83,6 +89,23 @@ export class ManagerDetailComponent implements OnInit {
     this.orderSortDirection = DataControl.sortDirection(this.orderSortColumn, sortColumn, this.orderSortDirection);
     this.orderSortColumn = sortColumn;
     this.orders = DataControl.sort(this.orders, this.orderSortColumn, this.orderSortDirection);
+  }
+
+  onSetEnabled() {
+    this.alertService.clear();
+    const startTime = this.alertService.startTime();
+    const item = DataControl.clone(this.account);
+    item.active = !this.account.active;
+
+    this.service.put(this.data.userId).subscribe(
+      res => {
+        this.account = DataControl.read(res, this.account);
+        this.alertService.successResponse(startTime);
+      },
+      err => {
+        this.alertService.errorResponse(err, startTime);
+      }
+    );
   }
 
 

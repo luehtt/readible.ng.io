@@ -1,3 +1,4 @@
+<!-- count all section -->
 <div *ngIf="count" class="row">
   <div class="col-xl-3 col-6">
     <div class="card bg-success text-white">
@@ -64,7 +65,9 @@
   </div>
 </div>
 
+<!-- top section -->
 <div class="row">
+  <!-- top customer's purchased section -->
   <div *ngIf="top" class="col-md-6">
     <div class="card">
       <div class="card-header">Top purchased</div>
@@ -89,6 +92,7 @@
     </div>
   </div>
 
+  <!-- top customer's paid section -->
   <div *ngIf="top" class="col-md-6">
     <div class="card">
       <div class="card-header">Top paid</div>
@@ -113,6 +117,7 @@
     </div>
   </div>
 
+  <!-- top book sold section -->
   <div *ngIf="top" class="col-12">
     <div class="card">
       <div class="card-header">Top sold book</div>
@@ -142,6 +147,7 @@
     </div>
   </div>
 
+  <!-- top rated book section -->
   <div *ngIf="top" class="col-12">
     <div class="card">
       <div class="card-header">Top rated book</div>

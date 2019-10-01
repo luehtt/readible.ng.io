@@ -1,8 +1,8 @@
 <div class="mb-3" *ngIf="service.data && service.data.length != 0">
-  <div *ngFor="let i of service.data; let it = index">
-    <div [class]="'alert alert-' + i.type">
-      <strong>{{i.type | uppercase}}!</strong> {{i.message}}
-      <button type="button" class="close float-right" aria-label="Close" (click)="service.remove(it)">
+  <div *ngFor="let msg of service.data; let i = index">
+    <div [class]="'alert alert-' + msg.type">
+      <strong>{{msg.type | uppercase}}!</strong> {{msg.message}}
+      <button type="button" class="close float-right" aria-label="Close" (click)="service.remove(i)">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

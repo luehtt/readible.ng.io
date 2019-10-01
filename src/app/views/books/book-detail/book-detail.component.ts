@@ -1,20 +1,20 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {merge, Observable, Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { merge, Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
-import {BookService} from 'src/app/services/book.service';
-import {BookCategoryService} from 'src/app/services/category.service';
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {Book} from 'src/app/models/book';
-import {Common} from 'src/app/common/const';
-import {FormGroupControl, DataControl, FileControl, TimestampControl} from 'src/app/common/function';
-import {BookCategory} from 'src/app/models/category';
-import {PlaceholderService} from '../../../services/common/placeholder.service';
-import {BookCommentService} from '../../../services/comment.service';
-import {BookComment} from 'src/app/models/comment';
+import { BookService } from 'src/app/services/book.service';
+import { BookCategoryService } from 'src/app/services/category.service';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { Book } from 'src/app/models/book';
+import { Common } from 'src/app/common/const';
+import { FormGroupControl, DataControl, FileControl, TimestampControl } from 'src/app/common/function';
+import { BookCategory } from 'src/app/models/category';
+import { PlaceholderService } from '../../../services/common/placeholder.service';
+import { BookCommentService } from '../../../services/comment.service';
+import { BookComment } from 'src/app/models/comment';
 
 @Component({
   selector: 'app-book-detail',
@@ -59,7 +59,7 @@ export class BookDetailComponent implements OnInit {
     private categoryService: BookCategoryService,
     private commentService: BookCommentService,
     public placeholderService: PlaceholderService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.alertService.clear();
@@ -81,7 +81,7 @@ export class BookDetailComponent implements OnInit {
   }
 
   private getParamFailed(parameter: string): null {
-    this.alertService.notFound(parameter);
+    this.alertService.mismatchParameter(parameter);
     return null;
   }
 
@@ -89,25 +89,25 @@ export class BookDetailComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.categoryService.fetch().subscribe(res => {
       this.categories = res;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
   private initData() {
     const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
-      this.data = this.initDataExtend(res);
+      this.data = this.calcDataDetail(res);
       this.formGroup = this.initForm(this.data);
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
       this.loaded = true;
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
-  private initDataExtend(res: Book): Book {
+  private calcDataDetail(res: Book): Book {
     if (res.image) { res.originalImage = res.image; }
     if (res.bookComments) { res.rating = this.calcDataRating(res.bookComments); }
     return res;
@@ -158,10 +158,10 @@ export class BookDetailComponent implements OnInit {
           this.data.image = res.toString();
           const orientation = FileControl.getOrientation(this.data.image);
           if (orientation && orientation !== 0 && orientation !== 1) {
-            this.imageTransform = FileControl.transformCss(orientation);
+            this.imageTransform = FileControl.imageTransform(orientation);
           }
         }).catch(err => {
-          this.alertService.failed(err);
+          this.alertService.error(err.message);
         });
     }
   }
@@ -172,7 +172,7 @@ export class BookDetailComponent implements OnInit {
         this.data.originalImage = res.image;
         this.data.image = res.image;
       }, err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err);
       }
     );
   }
@@ -184,14 +184,14 @@ export class BookDetailComponent implements OnInit {
       this.data.originalImage = res.image;
       this.data.image = res.image;
       this.data.rating = res.bookComments.length === 0 ? 0 : res.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / res.bookComments.length;
-      this.alertService.success(startTime, 'GET');
+      this.alertService.successResponse(startTime);
       this.initData();
     }, err => {
-      this.alertService.failed(err.message);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 
-  private getData(data: Book, formGroup: FormGroup): Book {
+  private getFormData(data: Book, formGroup: FormGroup): Book {
     const item = DataControl.clone(data);
     const formControl = formGroup.controls;
 
@@ -207,28 +207,26 @@ export class BookDetailComponent implements OnInit {
     item.active = formControl.active.value;
     item.info = formControl.info.value;
 
-    if (item.image === item.originalImage) { delete(item.image); }
+    if (item.image === item.originalImage) { delete (item.image); }
     if (!item.image) item.image = 'null';
     return item;
   }
 
   onSubmit() {
     if (FormGroupControl.validateForm(this.formGroup) === false) { return; }
-    const data = this.getData(this.data, this.formGroup);
+    const data = this.getFormData(this.data, this.formGroup);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.put(data).subscribe(
       res => {
-        console.log(res);
-
         this.data = DataControl.read(res, this.data, true);
-        this.data = this.initDataExtend(this.data);
-        this.alertService.success(startTime, 'PUT');
+        this.data = this.calcDataDetail(this.data);
+        this.alertService.successResponse(startTime);
       },
       err => {
         this.data.image = this.data.originalImage;
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
@@ -237,11 +235,11 @@ export class BookDetailComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.service.destroy(this.id).subscribe(res => {
-        this.alertService.success(startTime, 'DELETE');
-        this.router.navigate(['/admin/books']);
-      },
+      this.alertService.successResponse(startTime);
+      this.router.navigate(['/admin/books']);
+    },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
@@ -250,12 +248,12 @@ export class BookDetailComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.alertService.clear();
     this.commentService.destroy(id).subscribe(res => {
-        this.data.bookComments = this.data.bookComments.filter(x => x.id !== res.id);
-        this.data.rating = this.calcDataRating(this.data.bookComments);
-        this.alertService.success(startTime, 'DELETE');
-      },
+      this.data.bookComments = DataControl.deleteItem(this.data.bookComments, res, 'id');
+      this.data.rating = this.calcDataRating(this.data.bookComments);
+      this.alertService.successResponse(startTime);
+    },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }

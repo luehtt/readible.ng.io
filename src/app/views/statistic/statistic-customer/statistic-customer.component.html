@@ -9,8 +9,7 @@
 
   <div class="col-xl-3 col-md-3 mb-1 mb-mb-0">
     <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="fromDateNgb" ngbDatepicker
-             #ngToDate="ngbDatepicker"/>
+      <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="fromDateNgb" ngbDatepicker #ngToDate="ngbDatepicker"/>
       <div class="input-group-append">
         <button class="btn calendar" (click)="ngToDate.toggle()" type="button"><i class="fas fa-calendar-alt"></i>
         </button>
@@ -19,8 +18,7 @@
   </div>
   <div class="col-xl-3 col-md-3 mb-1 mb-mb-0">
     <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="toDateNgb" ngbDatepicker
-             #ngFromDate="ngbDatepicker"/>
+      <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="toDateNgb" ngbDatepicker #ngFromDate="ngbDatepicker"/>
       <div class="input-group-append">
         <button class="btn calendar" (click)="ngFromDate.toggle()" type="button"><i
           class="fas fa-calendar-alt"></i></button>

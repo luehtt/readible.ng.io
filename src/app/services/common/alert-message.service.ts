@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {ErrorMessage} from '../../common/const';
 
-interface CustomMessage {
+interface IMessage {
   type: string;
   message: string;
 }
@@ -10,7 +9,7 @@ interface CustomMessage {
   providedIn: 'root'
 })
 export class AlertMessageService {
-  data: CustomMessage[];
+  data: IMessage[];
 
   constructor() {
     this.data = [];
@@ -28,31 +27,47 @@ export class AlertMessageService {
     this.data = [];
   }
 
-  private spentTime(startTime): number {
-    return startTime == null ? 0 : new Date().getTime() - startTime;
-  }
-
-  public startTime() {
+  public startTime(): number {
     return new Date().getTime();
   }
 
-  public success(startTime, method: string) {
-    const msg = { type: 'success', message: 'Http success response: 200 ' + method + ' OK! in ' + this.spentTime(startTime) + 'ms' };
-    this.data.push(msg);
+  private spentTime(startTime: number): number {
+    return startTime == null ? 0 : new Date().getTime() - startTime;
   }
 
-  public failed(err) {
-    const msg = { type : 'danger', message: err.message, error: err.error };
-    this.data.push(msg);
+  public success(message: string) {
+    this.set(message, 'success');
   }
 
-  public notFound(parameter: string) {
+  public error(message: string) {
+    this.set(message, 'danger');
+  }
+
+  public successResponse(startTime: number = null) {
+    const message = 'Http success response: 200 OK' + (startTime ? ` in ${this.spentTime(startTime)}ms` : '') + '!';
+    this.success(message);
+  }
+
+  private setCustomError(err, customError) {
+    for (const i of customError) {
+      if (err.status !== i.status) continue;
+      err.error = i.error;
+      return err;
+    }
+  }
+
+  public errorResponse(err, startTime: number = null, customError = []) {
+    if (customError) { err = this.setCustomError(err, customError) }
+    const message = 'Http failed reponse: ' + err.status + (startTime ? ` in ${this.spentTime(startTime)}ms` : '') + '!' + (err.error ? ' ' + err.error : '');
+    this.error(message)
+  }
+
+  public mismatchParameter(parameter: string) {
     const msg = { type : 'danger', message: "Parameter [" + parameter + "] cannot be found! Please enter valid parameter!!" };
     this.data.push(msg);
   }
 
   public set(message: string, type: string) {
-    const msg = { type, message };
-    this.data.push(msg);
+    this.data.push( { type, message } );
   }
 }

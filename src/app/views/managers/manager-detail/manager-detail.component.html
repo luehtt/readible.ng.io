@@ -1,3 +1,4 @@
+<!-- manager detail section -->
 <div *ngIf="loaded" class="row mb-4">
   <div class="col-lg-7">
     <div class="card mb-3" *ngIf="data">
@@ -26,7 +27,8 @@
 
     <div class="mb-3 mb-lg-0">
       <a class="btn btn-secondary mr-2" [routerLink]="'../'">Back</a>
-      <button type="button" class="btn btn-danger" ngbTooltip="Not implemented yet" disabled>Disable</button>
+      <button *ngIf="account.active == true && userRole === 'ADMIN'" type="button" class="btn btn-danger" (click)="onSetEnabled()">Disable</button>
+      <button *ngIf="account.active == false && userRole === 'ADMIN'" type="button" class="btn btn-success" (click)="onSetEnabled()">Enable</button>
     </div>
   </div>
 
@@ -42,7 +44,7 @@
             <span class="tag bg-secondary" *ngIf="account.active == false">Disabled</span>
           </li>
           <li class="list-group-item"><strong>Registered at: </strong> {{ account.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
-          <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+          <li class="list-group-item"><strong>Updated at:</strong> {{ account.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
         </ul>
       </div>
     </div>
@@ -59,6 +61,7 @@
   </div>
 </div>
 
+<!-- manager orders section -->
 <div *ngIf="loaded" class="card">
   <div class="card-header">List of orders</div>
   <div class="card-body">

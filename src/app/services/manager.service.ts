@@ -1,9 +1,10 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import {HttpClientService} from './common/http-client.service';
-import {Manager, ManagerUser} from '../models/manager';
-import {Endpoint} from '../common/const';
+import { HttpClientService } from './common/http-client.service';
+import { Manager, ManagerUser } from '../models/manager';
+import { Endpoint } from '../common/const';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,12 @@ export class ManagerService {
     return this.httpService.get(this.endpoint + '/' + id);
   }
 
+  put(id: number): Observable<User> {
+    return this.httpService.put(this.endpoint + '/' + id, {});
+  }
+
   auth(): Observable<Manager> {
-    return this.httpService.post(this.endpoint, null);
+    return this.httpService.post(this.endpoint, {});
   }
 
   register(data): Observable<any> {

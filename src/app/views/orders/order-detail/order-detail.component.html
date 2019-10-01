@@ -11,8 +11,8 @@
           <li class="list-group-item"><strong class="mr-2">Status:</strong>
             <app-order-status [(input)]="data.status"></app-order-status>
           </li>
-          <li class="list-group-item" *ngIf="data.confirmedManager"><strong>Confirmed manager:</strong> {{ data.confirmedManager.fullname }}</li>
-          <li class="list-group-item" *ngIf="data.completedManager"><strong>Completed manager:</strong> {{ data.completedManager.fullname }}</li>
+          <li class="list-group-item" *ngIf="data.confirmedManager"><strong>Confirmed:</strong> {{ data.confirmedManager.fullname }} at {{ data.confirmedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item" *ngIf="data.completedManager"><strong>Completed:</strong> {{ data.completedManager.fullname }} at {{ data.completedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
           <li class="list-group-item"><strong>Created at:</strong> {{ data.createdAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
           <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
           <li class="list-group-item text-justify">{{ data.note }}</li>
@@ -78,6 +78,7 @@
   </div>
 </div>
 
+<!-- order detail section -->
 <div *ngIf="loaded" class="card mb-4">
   <div class="card-header">List of books ordered</div>
   <div class="card-body">

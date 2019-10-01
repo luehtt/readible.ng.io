@@ -1,5 +1,5 @@
 export const Common = {
-  SERVER_URL: 'https://localhost:5001/api/',
+  SERVER_URL: 'https://localhost:44388/api/',
   THIS_URL: 'http://localhost:4200/',
   PLACEHOLDER_URL: 'https://via.placeholder.com/',
   RETRY_ATTEMPT: 3,
@@ -34,7 +34,7 @@ export const Endpoint = {
   LOGIN: 'login',
   REGISTER: 'register',
   DASHBOARD: 'dashboard',
-  ACCOUNT: 'account',
+  ACCOUNT: 'accounts',
   STATISTIC: 'statistic'
 };
 
@@ -54,7 +54,8 @@ export const ErrorMessage = {
   EMAIL_EXISTED: 'The email has existed in the database',
   CONFIRM_PASSWORD_MISMATCHED: 'The confirm password is not the same as password',
   REGISTER_AGE_LIMIT: 'The age must be higher than ' + Common.REGISTER_LOWER_LIMIT + ' and lower than ' + Common.REGISTER_UPPER_LIMIT,
-  CONFIRM_PASSWORD_ERROR: 'The two password does not match',
+  CONFIRM_PASSWORD_ERROR: 'The two password does not match!',
+  UPDATE_PASSWORD_ERROR: 'The current password does not match the one entered!'
 };
 
 export const ChartOption = {
@@ -105,4 +106,13 @@ export const ChartOption = {
     animation: { duration: 0 }
   }
 };
+
+
+// TIFF Tag Reference, Baseline TIFF Tags
+// read more at https://www.awaresystems.be/imaging/tiff/tifftags/baseline.html
+export const ExifCode = {
+  MAKE: 271,
+  MODEL: 272,
+  ORIENTATION: 274,
+}
 

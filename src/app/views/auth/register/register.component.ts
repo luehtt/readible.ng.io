@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {Validators, FormGroup, FormBuilder} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
-import {AuthService} from 'src/app/services/auth/auth.service';
-import {DataControl, FormGroupControl, TimestampControl} from 'src/app/common/function';
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {Common, ErrorMessage} from 'src/app/common/const';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { FormGroupControl, TimestampControl } from 'src/app/common/function';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { Common, ErrorMessage } from 'src/app/common/const';
 
 @Component({
   selector: 'app-register',
@@ -55,9 +55,7 @@ export class RegisterComponent implements OnInit {
   }
 
   validateConfirm() {
-    const p = this.form.controls.password.value;
-    const c = this.form.controls.confirm.value;
-    this.customRule.confirm = p === c;
+    this.customRule.confirm = this.form.controls.password.value === this.form.controls.confirm.value;
   }
 
   validateBirth() {
@@ -83,7 +81,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.alertService.clear();
-    if (FormGroupControl.validateForm(this.form, this.customRule)) { return; }
+    if (FormGroupControl.validateForm(this.form, this.customRule) === false) { return; }
 
     const data = this.retrieveData(this.form);
     this.service.register(data).subscribe(res => {
@@ -104,9 +102,8 @@ export class RegisterComponent implements OnInit {
         }
       }
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err);
     });
-
   }
 
 }

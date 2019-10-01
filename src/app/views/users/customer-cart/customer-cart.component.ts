@@ -9,7 +9,7 @@ import { Book } from 'src/app/models/book';
 import { Common } from '../../../common/const';
 import { Order } from '../../../models/order';
 import { CartService } from '../../../services/cart.service';
-import {PlaceholderService} from '../../../services/common/placeholder.service';
+import { PlaceholderService } from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-customer-cart',
@@ -22,7 +22,7 @@ export class CustomerCartComponent implements OnInit {
   customer: Customer;
 
   constructor(private formBuilder: FormBuilder, public placeholderService: PlaceholderService, private service: ShopService,
-              private cartService: CartService, private alertService: AlertMessageService) {}
+    private cartService: CartService, private alertService: AlertMessageService) { }
 
   get totalPrice() {
     return !this.data ? 0 : this.data.map(x => x ? x.actualPrice * x.amount : 0).reduce((a, b) => a + b, 0);
@@ -48,9 +48,9 @@ export class CustomerCartComponent implements OnInit {
           phone: [this.customer.phone],
           note: ['']
         });
-        this.alertService.success(startTime, 'GET');
+        this.alertService.successResponse(startTime);
       }, err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }
@@ -63,9 +63,9 @@ export class CustomerCartComponent implements OnInit {
         res => {
           i.meta = res;
           i.actualPrice = i.meta.discount === 0 ? i.meta.price : i.meta.price * (100 - i.meta.discount) / 100;
-          this.alertService.success(startTime, 'GET');
+          this.alertService.successResponse(startTime);
         }, err => {
-          this.alertService.failed(err);
+          this.alertService.errorResponse(err, startTime);
         }
       );
     }
@@ -88,7 +88,7 @@ export class CustomerCartComponent implements OnInit {
   onSubmit() {
     const orderDetails = [];
     for (const i of this.data) {
-      orderDetails.push( { bookIsbn: i.isbn, amount: i.amount } );
+      orderDetails.push({ bookIsbn: i.isbn, amount: i.amount });
     }
 
     const data = new Order();
@@ -100,11 +100,11 @@ export class CustomerCartComponent implements OnInit {
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.postOrder(data).subscribe(res => {
-      this.alertService.success(startTime, 'POST');
+      this.alertService.successResponse(startTime);
       this.cartService.clearCart();
       window.location.href = Common.THIS_URL + 'customer/orders';
     }, err => {
-      this.alertService.failed(err);
+      this.alertService.errorResponse(err, startTime);
     });
   }
 

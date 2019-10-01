@@ -1,5 +1,6 @@
 import {piexif} from 'piexifjs';
 import {FormGroup} from '@angular/forms';
+import { ExifCode } from './const';
 
 
 export class DataControl {
@@ -116,7 +117,7 @@ export class DataControl {
     }
 
     let item = list.find(x => x[prop] === data[prop]);
-    for (let prop in item) {
+    for (let prop in data) {
       if (item.hasOwnProperty(prop)) {
         item[prop] = data[prop];
       }
@@ -196,10 +197,14 @@ export class FileControl {
   }
 
   static getOrientation(imageString: string): number {
-    return this.checkBase64File(imageString, 'jpeg') === false ? null : parseInt(this.getExif(imageString, '0th', 271), 10);
+    return this.checkBase64File(imageString, 'jpeg') === false ? null : parseInt(this.getExif(imageString, '0th', ExifCode.ORIENTATION), 10);
   }
 
-  static transformCss = (orientation: number): string => {
+  static getModel(imageString: string): string {
+    return this.checkBase64File(imageString, 'jpeg') === false ? null : this.getExif(imageString, '0th', ExifCode.MODEL);
+  }
+
+  static imageTransform = (orientation: number): string => {
     switch (orientation) {
       case 2:
         return 'rotateY(180deg)';

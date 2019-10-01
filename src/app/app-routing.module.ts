@@ -31,7 +31,7 @@ import {OrderStatusComponent} from './views/components/order-status/order-status
 import {StatisticOrderComponent} from './views/statistic/statistic-order/statistic-order.component';
 import {StatisticCustomerComponent} from './views/statistic/statistic-customer/statistic-customer.component';
 import {AccountComponent} from './views/auth/account/account.component';
-import {HttpLoader} from './views/components/loader/http-loader';
+import {HttpLoader} from './views/components/http-loader/http-loader';
 import {BookCommentListComponent} from './views/books/book-comment-list/book-comment-list.component';
 
 const routes: Routes = [
@@ -78,6 +78,7 @@ const routes: Routes = [
     path: 'customer',
     component: ShopComponent,
     children: [
+      {path: 'account', component: AccountComponent},
       {path: 'cart', component: CustomerCartComponent},
       {path: 'orders', component: CustomerOrderListComponent, pathMatch: 'full'},
       {path: 'orders/:id', component: CustomerOrderDetailComponent},

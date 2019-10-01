@@ -33,10 +33,10 @@ export class CustomerListComponent implements OnInit {
       res => {
         this.data = res;
         this.loaded = true;
-        this.alertService.success(startTime, 'GET');
+        this.alertService.successResponse(startTime);
       },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }

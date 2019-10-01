@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {OrderService} from 'src/app/services/order.service';
-import {Order} from 'src/app/models/order';
-import {Common} from '../../../common/const';
-import {DataControl} from '../../../common/function';
+import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { OrderService } from 'src/app/services/order.service';
+import { Order } from 'src/app/models/order';
+import { Common } from '../../../common/const';
+import { DataControl } from '../../../common/function';
 
 @Component({
   selector: 'app-order-list',
@@ -44,10 +44,10 @@ export class OrderListComponent implements OnInit {
       res => {
         this.data = res;
         this.loaded = true;
-        this.alertService.success(startTime, 'GET');
+        this.alertService.successResponse(startTime);
       },
       err => {
-        this.alertService.failed(err);
+        this.alertService.errorResponse(err, startTime);
       }
     );
   }

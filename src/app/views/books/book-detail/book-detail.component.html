@@ -1,4 +1,5 @@
 <div *ngIf="loaded" class="row">
+  <!-- info section -->
   <div class="col-lg-6">
     <div class="card" *ngIf="data">
       <div class="card-header">ISBN: {{ data.isbn }}</div>
@@ -45,6 +46,7 @@
     </div>
   </div>
 
+  <!-- edit section -->
   <div class="col-lg-6">
     <div class="card" *ngIf="data">
       <div class="card-header">Edit</div>
@@ -152,6 +154,7 @@
   </div>
 </div>
 
+<!-- comment section -->
 <div *ngIf="loaded" class="card">
   <div class="card-header">List of comments</div>
   <div class="card-body">

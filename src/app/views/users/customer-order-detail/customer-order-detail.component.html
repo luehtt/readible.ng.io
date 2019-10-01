@@ -1,4 +1,36 @@
 <div class="container">
+  <div class="row">
+    <div class="col-md-7 mb-md-0 mb-3">
+      <div class="card mb-3" *ngIf="data">
+        <div class="card-header">Information</div>
+        <div class="card-body">
+          <ul class="list-group padding-sm list-group-flush">
+            <li class="list-group-item"><strong>Full name:</strong> {{ data.customer.fullname }}</li>
+            <li class="list-group-item"><strong>Phone:</strong> {{ data.phone }}</li>
+            <li class="list-group-item"><strong>Address: </strong> {{ data.address }}</li>
+            <li class="list-group-item"><strong>Total items: </strong> {{ data.totalItem }}</li>
+            <li class="list-group-item"><strong>Total price: </strong> {{ data.totalPrice | currency }}</li>
+            <li class="list-group-item text-justify">{{ data.note }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5 mb-md-0 mb-3">
+      <div class="card mb-3" *ngIf="data">
+        <div class="card-header">Status</div>
+        <div class="card-body">
+          <ul class="list-group padding-sm list-group-flush">
+            <li class="list-group-item"><strong>Created at:</strong> {{ data.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+            <li class="list-group-item"><strong>Confirmed at:</strong> {{ data.confirmedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+            <li class="list-group-item"><strong>Completed at: </strong> {{ data.completedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+            <li class="list-group-item"><strong>Last updated at: </strong> {{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="data" class="card mb-3">
     <div class="card-header">List of books ordered</div>
     <div class="card-body">
@@ -9,19 +41,19 @@
               <th scope="col">ISBN</th>
               <th scope="col">Title</th>
               <th scope="col">Author</th>
-              <th scope="col">Price</th>
-              <th scope="col">Total price</th>
+              <th class="text-right" scope="col">Amount</th>
+              <th class="text-right" scope="col">Price</th>
+              <th class="text-right" scope="col">Total price</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of data.orderDetails">
               <td>{{ item.book.isbn }}</td>
-              <td>
-                <a [routerLink]="'/admin/book/' + item.book.isbn">{{ item.book.title }}</a>
-              </td>
+              <td><a [routerLink]="'/admin/book/' + item.book.isbn">{{ item.book.title }}</a></td>
               <td>{{ item.book.author }}</td>
-              <td>{{ item.price | currency }}</td>
-              <td>{{ item.amount * item.price | currency }}</td>
+              <td class="text-right">{{ item.amount }} </td>
+              <td class="text-right">{{ item.price | currency }}</td>
+              <td class="text-right">{{ item.amount * item.price | currency }}</td>
             </tr>
           </tbody>
         </table>
@@ -30,6 +62,7 @@
   </div>
 
   <div class="mb-4">
-    <a class="btn btn-secondary" [routerLink]="'../'">Back</a>
+    <a class="btn btn-secondary mr-2" [routerLink]="'../'">Back</a>
+    <button *ngIf="data && data.status.name === 'PENDING'" class="btn btn-outline-danger" (click)="onDelete()">Cancel order</button>
   </div>
 </div>

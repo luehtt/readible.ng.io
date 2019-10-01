@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import {HttpClientService} from './common/http-client.service';
-import {Order} from '../models/order';
-import {Endpoint} from '../common/const';
+import { HttpClientService } from './common/http-client.service';
+import { Order } from '../models/order';
+import { Endpoint } from '../common/const';
 
 @Injectable({
   providedIn: 'root'
