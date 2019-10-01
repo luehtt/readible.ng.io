@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
 import {AlertMessageService} from '../../../services/common/alert-message.service';
 import {DataControl} from '../../../common/function';
 import {Common} from '../../../common/const';

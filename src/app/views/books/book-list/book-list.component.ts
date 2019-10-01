@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {merge, Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+
 import {Book} from 'src/app/models/book';
 import {BookCategory} from 'src/app/models/category';
 import {Common} from 'src/app/common/const';
@@ -17,20 +18,21 @@ import {BookCategoryService} from 'src/app/services/category.service';
 })
 export class BookListComponent implements OnInit {
   data: Book[];
-  filter = '';
-  createDialog = false;
   categories: BookCategory[];
-  form: FormGroup;
+  editDialog = false;
+  formGroup: FormGroup;
   upload: string;
   uploadFilename: string;
+
   page = 1;
-  pageSize: number = Common.PAGE_SIZE_HIGHER;
+  pageSize = Common.PAGE_SIZE_HIGHER;
   sortColumn = 'title';
   sortDirection = 'asc';
+  filter = '';
   loaded: boolean;
 
   // view child for NgbTypeahead
-  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
+  @ViewChild('instance', { static: false }) instance: NgbTypeahead;
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
@@ -43,10 +45,12 @@ export class BookListComponent implements OnInit {
       map(term => (term === '' ? Common.LANGUAGE
         : Common.LANGUAGE.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
-  }
+  };
 
-
-  constructor(private formBuilder: FormBuilder, private service: BookService, private alertService: AlertMessageService, private categoryService: BookCategoryService) {
+  constructor(private formBuilder: FormBuilder,
+              private service: BookService,
+              private alertService: AlertMessageService,
+              private categoryService: BookCategoryService) {
   }
 
   ngOnInit() {
@@ -70,7 +74,7 @@ export class BookListComponent implements OnInit {
     const startTime = this.alertService.startTime();
     this.categoryService.fetch().subscribe(res => {
       this.categories = res;
-      this.form = this.initForm();
+      this.formGroup = this.initForm();
       this.alertService.success(startTime, 'GET');
     }, err => {
       this.alertService.failed(err);
@@ -79,7 +83,7 @@ export class BookListComponent implements OnInit {
 
   private initForm() {
     return this.formBuilder.group({
-      isbn: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
+      isbn: ['', [Validators.required, Validators.maxLength(13), Validators.minLength(13)]],
       title: ['', [Validators.required, Validators.maxLength(255)]],
       author: ['', [Validators.required, Validators.maxLength(255)]],
       publisher: ['', [Validators.required, Validators.maxLength(255)]],
@@ -119,37 +123,38 @@ export class BookListComponent implements OnInit {
     }
   }
 
-  private retrieveData(item: Book, form: FormGroup): Book {
-    item.isbn = form.controls.isbn.value;
-    item.title = form.controls.title.value;
-    item.author = form.controls.author.value;
-    item.categoryId = form.controls.categoryId.value;
-    item.publisher = form.controls.publisher.value;
-    item.published = TimestampControl.fromNgbDateToJson(form.controls.published.value);
-    item.language = form.controls.language.value;
-    item.price = form.controls.price.value;
-    item.page = form.controls.page.value;
-    item.discount = form.controls.discount.value;
-    item.active = form.controls.active.value;
-    item.info = form.controls.info.value;
+  private getData(formGroup: FormGroup): Book {
+    const item = new Book();
+    const formControl = formGroup.controls;
+
+    item.isbn = formControl.isbn.value;
+    item.title = formControl.title.value;
+    item.author = formControl.author.value;
+    item.categoryId = formControl.categoryId.value;
+    item.publisher = formControl.publisher.value;
+    item.published = TimestampControl.fromNgbDateToJson(formControl.published.value);
+    item.language = formControl.language.value;
+    item.price = formControl.price.value;
+    item.page = formControl.page.value;
+    item.discount = formControl.discount.value;
+    item.active = formControl.active.value;
+    item.info = formControl.info.value;
+
+    if (this.upload && this.uploadFilename) item.image = this.upload;
     return item;
   }
 
   onSubmit() {
-    if (FormGroupControl.validateForm(this.form)) { return; }
-
-    let item = new Book()
-    item = this.retrieveData(item, this.form);
-    item = TimestampControl.updateTimestamp(item);
-    if (this.upload && this.uploadFilename) item.image = this.upload;
+    if (FormGroupControl.validateForm(this.formGroup) == false) { return; }
+    const item = this.getData(this.formGroup);
 
     this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.post(item).subscribe(
       res => {
         this.data.push(res);
-        this.alertService.success(startTime, 'POST');
         this.resetForm();
+        this.alertService.success(startTime, 'POST');
       },
       err => {
         this.alertService.failed(err);

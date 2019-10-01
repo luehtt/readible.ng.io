@@ -36,9 +36,26 @@ export class ManagerDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
     this.alertService.clear();
+    this.id = this.getParam();
     this.initData();
+  }
+
+  private getParam(): number | null {
+    const value = this.route.snapshot.paramMap.get('id');
+    if (DataControl.isDigit(value)) {
+      const res = parseInt(value, 10);
+      if (!isNaN(res)) return res;
+      return this.getParamFailed(value);
+    }
+    else {
+      return this.getParamFailed(value);
+    }
+  }
+
+  private getParamFailed(parameter: string): null {
+    this.alertService.notFound(parameter);
+    return null;
   }
 
   private initData() {

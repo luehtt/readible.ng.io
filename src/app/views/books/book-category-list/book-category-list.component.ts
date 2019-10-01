@@ -64,7 +64,7 @@ export class BookCategoryListComponent implements OnInit {
   onEdit(data: BookCategory) {
     this.editData = data ? DataControl.clone(data) : new BookCategory();
     this.editDialog = true;
-    this.isEdit = data ? true : false;
+    this.isEdit = !!data;
     this.formGroup.controls.name.setValue(this.editData.name);
   }
 
@@ -74,7 +74,6 @@ export class BookCategoryListComponent implements OnInit {
 
   private readData(item: BookCategory, form: FormGroup): BookCategory {
     item.name = form.controls.name.value;
-    item = this.isEdit ? TimestampControl.updateTimestamp(this.editData) : TimestampControl.createTimestamp(this.editData);
     return item;
   }
 

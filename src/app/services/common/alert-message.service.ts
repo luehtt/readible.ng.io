@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {ErrorMessage} from '../../common/const';
 
 interface CustomMessage {
   type: string;
@@ -36,17 +37,22 @@ export class AlertMessageService {
   }
 
   public success(startTime, method: string) {
-    const a = { type: 'success', message: 'Http success response: 200 ' + method + ' OK! in ' + this.spentTime(startTime) + 'ms' };
-    this.data.push(a);
+    const msg = { type: 'success', message: 'Http success response: 200 ' + method + ' OK! in ' + this.spentTime(startTime) + 'ms' };
+    this.data.push(msg);
   }
 
   public failed(err) {
-    const a = { type : 'danger', message: err.message, error: err.error };
-    this.data.push(a);
+    const msg = { type : 'danger', message: err.message, error: err.error };
+    this.data.push(msg);
+  }
+
+  public notFound(parameter: string) {
+    const msg = { type : 'danger', message: "Parameter [" + parameter + "] cannot be found! Please enter valid parameter!!" };
+    this.data.push(msg);
   }
 
   public set(message: string, type: string) {
-    const a = { type, message };
-    this.data.push(a);
+    const msg = { type, message };
+    this.data.push(msg);
   }
 }

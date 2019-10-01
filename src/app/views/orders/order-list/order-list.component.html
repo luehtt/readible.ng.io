@@ -1,4 +1,4 @@
-<div class="mb-3">
+<div *ngIf="loaded" class="mb-3">
   <button type="button" class="btn btn-secondary mr-2" (click)="onSelectStatus('pending')">Pending</button>
   <button type="button" class="btn btn-primary mr-2" (click)="onSelectStatus('delivering')">Delivering</button>
   <button type="button" class="btn btn-danger mr-2" (click)="onSelectStatus('failed')">Failed</button>

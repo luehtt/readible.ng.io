@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (FormGroupControl.validateForm(this.form)) { return; }
+    if (!FormGroupControl.validateForm(this.form)) { return; }
 
     const user = new User();
     user.email = this.form.controls.email.value;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {ChartOption, FormMessage} from '../../../common/const';
+import {ChartOption, ErrorMessage} from '../../../common/const';
 import {StatisticService} from '../../../services/statistic.service';
 import {OrderStatistic} from '../../../models/statistic';
 import {DataControl, TimestampControl} from '../../../common/function';
@@ -81,12 +81,12 @@ export class StatisticOrderComponent implements OnInit {
   private validateReference(reference: string, fromDate: Date, toDate: Date) {
     this.alertService.clear();
     let message: string;
-    if (fromDate > toDate) { message = FormMessage.SELECTED_DATE_MISMATCHED; }
-    if (reference === 'day' && TimestampControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'day' && TimestampControl.tooLongDay(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'month' && TimestampControl.tooLongMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_LONG; }
-    if (reference === 'month' && TimestampControl.isSameMonth(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
-    if (reference === 'year' && TimestampControl.isSameYear(fromDate, toDate)) { message = FormMessage.DURATION_TOO_SHORT; }
+    if (fromDate > toDate) { message = ErrorMessage.SELECTED_DATE_MISMATCHED; }
+    if (reference === 'day' && TimestampControl.tooLongDay(fromDate, toDate)) { message = ErrorMessage.DURATION_TOO_LONG; }
+    if (reference === 'day' && TimestampControl.tooLongDay(fromDate, toDate)) { message = ErrorMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && TimestampControl.tooLongMonth(fromDate, toDate)) { message = ErrorMessage.DURATION_TOO_LONG; }
+    if (reference === 'month' && TimestampControl.isSameMonth(fromDate, toDate)) { message = ErrorMessage.DURATION_TOO_SHORT; }
+    if (reference === 'year' && TimestampControl.isSameYear(fromDate, toDate)) { message = ErrorMessage.DURATION_TOO_SHORT; }
 
     if (!message) { return true; }
     this.alertService.set(message, 'danger');

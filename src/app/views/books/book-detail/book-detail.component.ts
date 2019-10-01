@@ -21,13 +21,13 @@ import {BookComment} from 'src/app/models/comment';
   templateUrl: './book-detail.component.html'
 })
 export class BookDetailComponent implements OnInit {
+  id: string;
   data: Book;
   imageTransform: string;
   categories: BookCategory[];
-  id: string;
-  form: FormGroup;
-  loaded: boolean;
+  formGroup: FormGroup;
 
+  loaded: boolean;
   commentPage = 1;
   commentPageSize: number = Common.PAGE_SIZE_DEFAULT;
   commentFilter = '';
@@ -35,7 +35,7 @@ export class BookDetailComponent implements OnInit {
   commentSortDirection = 'asc';
 
   // view child for NgbTypeahead
-  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
+  @ViewChild('instance', { static: false }) instance: NgbTypeahead;
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
@@ -48,7 +48,7 @@ export class BookDetailComponent implements OnInit {
       map(term => (term === '' ? Common.LANGUAGE
         : Common.LANGUAGE.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
-  }
+  };
 
   constructor(
     private formBuilder: FormBuilder,
@@ -62,10 +62,27 @@ export class BookDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id');
     this.alertService.clear();
-    this.initData();
+    this.id = this.getParam();
+    if (!this.id) return;
+
     this.initCategories();
+    this.initData();
+  }
+
+  private getParam(): string | null {
+    const value = this.route.snapshot.paramMap.get('id');
+    if (DataControl.isDigit(value) && value.length === 13) {
+      return value;
+    }
+    else {
+      return this.getParamFailed(value);
+    }
+  }
+
+  private getParamFailed(parameter: string): null {
+    this.alertService.notFound(parameter);
+    return null;
   }
 
   private initCategories() {
@@ -81,8 +98,8 @@ export class BookDetailComponent implements OnInit {
   private initData() {
     const startTime = this.alertService.startTime();
     this.service.get(this.id).subscribe(res => {
-      this.data = this.initDataOnRes(res);
-      this.form = this.initForm(this.data);
+      this.data = this.initDataExtend(res);
+      this.formGroup = this.initForm(this.data);
       this.alertService.success(startTime, 'GET');
       this.loaded = true;
     }, err => {
@@ -90,8 +107,8 @@ export class BookDetailComponent implements OnInit {
     });
   }
 
-  private initDataOnRes(res: Book): Book {
-    res.originalImage = res.image;
+  private initDataExtend(res: Book): Book {
+    if (res.image) { res.originalImage = res.image; }
     if (res.bookComments) { res.rating = this.calcDataRating(res.bookComments); }
     return res;
   }
@@ -174,35 +191,39 @@ export class BookDetailComponent implements OnInit {
     });
   }
 
-  private getItemData(data: Book, form: FormGroup): Book {
+  private getData(data: Book, formGroup: FormGroup): Book {
     const item = DataControl.clone(data);
+    const formControl = formGroup.controls;
 
-    item.title = form.controls.title.value;
-    item.author = form.controls.author.value;
-    item.categoryId = form.controls.categoryId.value;
-    item.publisher = form.controls.publisher.value;
-    item.published = TimestampControl.fromNgbDateToJson(form.controls.published.value);
-    item.language = form.controls.language.value;
-    item.price = form.controls.price.value;
-    item.page = form.controls.page.value;
-    item.discount = form.controls.discount.value;
-    item.active = form.controls.active.value;
-    item.info = form.controls.info.value;
+    item.title = formControl.title.value;
+    item.author = formControl.author.value;
+    item.categoryId = formControl.categoryId.value;
+    item.publisher = formControl.publisher.value;
+    item.published = TimestampControl.fromNgbDateToJson(formControl.published.value);
+    item.language = formControl.language.value;
+    item.price = formControl.price.value;
+    item.page = formControl.page.value;
+    item.discount = formControl.discount.value;
+    item.active = formControl.active.value;
+    item.info = formControl.info.value;
+
+    if (item.image === item.originalImage) { delete(item.image); }
+    if (!item.image) item.image = 'null';
     return item;
   }
 
   onSubmit() {
-    if (FormGroupControl.validateForm(this.form) === false) { return; }
-
-    this.data = this.getItemData(this.data, this.form);
-    this.data = TimestampControl.updateTimestamp(this.data);
-    if (this.data.image === this.data.originalImage) { delete(this.data.image); }
+    if (FormGroupControl.validateForm(this.formGroup) === false) { return; }
+    const data = this.getData(this.data, this.formGroup);
 
     const startTime = this.alertService.startTime();
     this.alertService.clear();
-    this.service.put(this.data).subscribe(
+    this.service.put(data).subscribe(
       res => {
-        this.initDataOnRes(res);
+        console.log(res);
+
+        this.data = DataControl.read(res, this.data, true);
+        this.data = this.initDataExtend(this.data);
         this.alertService.success(startTime, 'PUT');
       },
       err => {
@@ -217,7 +238,7 @@ export class BookDetailComponent implements OnInit {
     this.alertService.clear();
     this.service.destroy(this.id).subscribe(res => {
         this.alertService.success(startTime, 'DELETE');
-        this.router.navigate(['/']);
+        this.router.navigate(['/admin/books']);
       },
       err => {
         this.alertService.failed(err);

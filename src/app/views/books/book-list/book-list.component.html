@@ -1,9 +1,9 @@
-<button *ngIf="createDialog == false" type="button" class="btn btn-primary mb-3" (click)="createDialog = true">Create book</button>
+<button *ngIf="editDialog == false" type="button" class="btn btn-primary mb-3" (click)="editDialog = true">Create book</button>
 
-<div *ngIf="createDialog == true" class="card">
+<div *ngIf="editDialog == true" class="card">
   <div class="card-header">Create item</div>
   <div class="card-body">
-    <form *ngIf="form" [formGroup]="form">
+    <form *ngIf="formGroup" [formGroup]="formGroup">
       <div class="row">
 
         <!--column 1-->
@@ -12,21 +12,21 @@
             <label class="col-sm-4">ISBN</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" formControlName="isbn"/>
-              <app-form-error [(input)]="form.controls.isbn"></app-form-error>
+              <app-form-error [(input)]="formGroup.controls.isbn"></app-form-error>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-4">Title</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" formControlName="title"/>
-              <app-form-error [(input)]="form.controls.title"></app-form-error>
+              <app-form-error [(input)]="formGroup.controls.title"></app-form-error>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-4">Author</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" formControlName="author"/>
-              <app-form-error [(input)]="form.controls.author"></app-form-error>
+              <app-form-error [(input)]="formGroup.controls.author"></app-form-error>
             </div>
           </div>
           <div class="form-group row">
@@ -35,14 +35,14 @@
               <select class="form-control" formControlName="categoryId">
                 <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
               </select>
-              <app-form-error [(input)]="form.controls.categoryId"></app-form-error>
+              <app-form-error [(input)]="formGroup.controls.categoryId"></app-form-error>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-4">Publisher</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" formControlName="publisher"/>
-              <app-form-error [(input)]="form.controls.publisher"></app-form-error>
+              <app-form-error [(input)]="formGroup.controls.publisher"></app-form-error>
             </div>
           </div>
           <div class="form-group row">
@@ -53,14 +53,14 @@
                 <button class="btn btn-outline-secondary calendar" (click)="ngPublished.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
               </div>
             </div>
-            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.published"></app-form-error>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.published"></app-form-error>
           </div>
           <div class="form-group row">
             <label class="col-sm-4">Language</label>
             <div class="col-sm-8">
               <input class="form-control" formControlName="language" #instance="ngbTypeahead"
                 [ngbTypeahead]="search" (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)"/>
-              <app-form-error [(input)]="form.controls.language"></app-form-error>
+              <app-form-error [(input)]="formGroup.controls.language"></app-form-error>
             </div>
           </div>
           <div class="form-group row">
@@ -71,31 +71,6 @@
                 <label class="custom-file-label">{{ uploadFilename }}</label>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!--column 2-->
-        <div class="col-md-6">
-          <div class="form-group row">
-            <label class="col-sm-4">Price ($)</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" formControlName="price" step="0.01" min="0"/>
-            </div>
-            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.price"></app-form-error>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-4">Page</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" formControlName="page" step="1" min="0"/>
-            </div>
-            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.page"></app-form-error>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-4">Discount (%)</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" formControlName="discount" step="1" min="0"/>
-            </div>
-            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.discount"></app-form-error>
           </div>
           <div class="form-group row">
             <label class="col-sm-4">Active</label>
@@ -109,7 +84,32 @@
                 <label class="form-check-label">No</label>
               </div>
             </div>
-            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="form.controls.active"></app-form-error>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.active"></app-form-error>
+          </div>
+        </div>
+
+        <!--column 2-->
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-sm-4">Price ($)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="price" step="0.01" min="0"/>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.price"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Page</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="page" step="1" min="0"/>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.page"></app-form-error>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4">Discount (%)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="discount" step="1" min="0"/>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.discount"></app-form-error>
           </div>
           <div class="form-group">
             <label>Info</label>
@@ -119,9 +119,9 @@
           </div>
         </div>
 
-        <div class="form-group mt-3 ml-3">
+        <div class="form-group mt-3 mx-auto">
           <button type="button" class="btn btn-primary mr-2" (click)="onSubmit()">Save changes</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="createDialog = false">Close</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="editDialog = false">Close</button>
         </div>
       </div>
     </form>

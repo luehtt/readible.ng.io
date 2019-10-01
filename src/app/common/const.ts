@@ -38,7 +38,7 @@ export const Endpoint = {
   STATISTIC: 'statistic'
 };
 
-export const FormMessage = {
+export const ErrorMessage = {
   DURATION_TOO_LONG: 'The selected duration too long to request.',
   DURATION_TOO_SHORT: 'The selected duration too short to request.',
   SELECTED_DATE_MISMATCHED: 'The selected date is not optimized.',
@@ -54,7 +54,7 @@ export const FormMessage = {
   EMAIL_EXISTED: 'The email has existed in the database',
   CONFIRM_PASSWORD_MISMATCHED: 'The confirm password is not the same as password',
   REGISTER_AGE_LIMIT: 'The age must be higher than ' + Common.REGISTER_LOWER_LIMIT + ' and lower than ' + Common.REGISTER_UPPER_LIMIT,
-  CONFIRM_PASSWORD_ERROR: 'The two password does not match'
+  CONFIRM_PASSWORD_ERROR: 'The two password does not match',
 };
 
 export const ChartOption = {

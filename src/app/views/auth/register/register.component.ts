@@ -4,17 +4,17 @@ import {Validators, FormGroup, FormBuilder} from '@angular/forms';
 import {AuthService} from 'src/app/services/auth/auth.service';
 import {DataControl, FormGroupControl, TimestampControl} from 'src/app/common/function';
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {Common, FormMessage} from 'src/app/common/const';
+import {Common, ErrorMessage} from 'src/app/common/const';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html'
 })
 export class RegisterComponent implements OnInit {
-  USERNAME_EXISTED = FormMessage.USERNAME_EXISTED;
-  EMAIL_EXISTED = FormMessage.EMAIL_EXISTED;
-  CONFIRM_PASSWORD_MISMATCHED = FormMessage.CONFIRM_PASSWORD_MISMATCHED;
-  REGISTER_AGE_LIMIT = FormMessage.REGISTER_AGE_LIMIT;
+  USERNAME_EXISTED = ErrorMessage.USERNAME_EXISTED;
+  EMAIL_EXISTED = ErrorMessage.EMAIL_EXISTED;
+  CONFIRM_PASSWORD_MISMATCHED = ErrorMessage.CONFIRM_PASSWORD_MISMATCHED;
+  REGISTER_AGE_LIMIT = ErrorMessage.REGISTER_AGE_LIMIT;
 
   form: FormGroup;
   customRule = { confirm: true, birth: true, username: true, email: true };

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
-import {ChartOption, FormMessage} from '../../../common/const';
+import {ChartOption, ErrorMessage} from '../../../common/const';
 import {StatisticService} from '../../../services/statistic.service';
 import {OrderStatistic} from '../../../models/statistic';
 import {DataControl, TimestampControl,} from '../../../common/function';
@@ -61,7 +61,7 @@ export class StatisticCustomerComponent implements OnInit {
     this.toDate = new Date(TimestampControl.fromNgbDateToJson(this.toDateNgb));
 
     this.alertService.clear();
-    if (this.fromDate >= this.toDate) { this.alertService.set(FormMessage.SELECTED_DATE_MISMATCHED, 'warning'); }
+    if (this.fromDate >= this.toDate) { this.alertService.set(ErrorMessage.SELECTED_DATE_MISMATCHED, 'warning'); }
     if (this.alertService.hasMessage()) { return; }
     this.initData();
   }

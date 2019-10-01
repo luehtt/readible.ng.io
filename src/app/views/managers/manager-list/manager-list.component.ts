@@ -2,17 +2,11 @@ import {Component, OnInit} from '@angular/core';
 
 import {AlertMessageService} from 'src/app/services/common/alert-message.service';
 import {DataControl, FormGroupControl, TimestampControl} from 'src/app/common/function';
-import {Common, FormMessage} from '../../../common/const';
+import {Common, ErrorMessage} from '../../../common/const';
 import {ManagerService} from '../../../services/manager.service';
 import {Manager} from '../../../models/manager';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-interface CustomValidator {
-  confirm: boolean;
-  birth: boolean;
-  username: boolean;
-  email: boolean;
-}
 
 @Component({
   selector: 'app-manager-list',
@@ -32,9 +26,9 @@ export class ManagerListComponent implements OnInit {
   conflictEmail: string[];
 
   form: FormGroup;
-  USERNAME_EXISTED = FormMessage.USERNAME_EXISTED;
-  EMAIL_EXISTED = FormMessage.EMAIL_EXISTED;
-  REGISTER_AGE_LIMIT = FormMessage.REGISTER_AGE_LIMIT;
+  USERNAME_EXISTED = ErrorMessage.USERNAME_EXISTED;
+  EMAIL_EXISTED = ErrorMessage.EMAIL_EXISTED;
+  REGISTER_AGE_LIMIT = ErrorMessage.REGISTER_AGE_LIMIT;
 
   constructor(private service: ManagerService, private alertService: AlertMessageService, private formBuilder: FormBuilder) {
   }
@@ -131,7 +125,6 @@ export class ManagerListComponent implements OnInit {
     item.male = data.male;
     item.address = data.address;
     item.phone = data.phone;
-    item = TimestampControl.createTimestamp(item);
     this.data.push(item);
   }
 

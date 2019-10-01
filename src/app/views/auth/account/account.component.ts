@@ -7,7 +7,7 @@ import {AlertMessageService} from 'src/app/services/common/alert-message.service
 import {AccountService} from 'src/app/services/account.service';
 import {PlaceholderService} from '../../../services/common/placeholder.service';
 import {FileControl, FormGroupControl, DataControl, TimestampControl} from 'src/app/common/function';
-import {Common, FormMessage} from 'src/app/common/const';
+import {Common, ErrorMessage} from 'src/app/common/const';
 
 @Component({
   selector: 'app-account',
@@ -24,7 +24,7 @@ export class AccountComponent implements OnInit {
   confirmPasswordError = false;
   imageTransform: string;
 
-  CONFIRM_PASSWORD_ERROR = FormMessage.CONFIRM_PASSWORD_ERROR;
+  CONFIRM_PASSWORD_ERROR = ErrorMessage.CONFIRM_PASSWORD_ERROR;
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
               private service: AccountService, private alertService: AlertMessageService, public placeholderService: PlaceholderService) {
