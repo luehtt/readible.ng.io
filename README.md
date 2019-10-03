@@ -21,10 +21,10 @@ Node.js 12 and npm [(Homepage)](https://nodejs.org/en/)
 This app is written to target **readible.aspcore.io** as server so make sure it is running.
 
 ## NPM Package
-  - [angular 8.1.2](https://angular.io/): angular core  
-  - [rxjs 6.4.0](https://rxjs-dev.firebaseapp.com/): angular core  
-  - [ng-bootstrap 5.1.0](https://ng-bootstrap.github.io): angular widgets in bootstrap  
-  - [scss 0.2.4](https://sass-lang.com/): css extend  
-  - [piexifjs 1.0.6](https://piexifjs.readthedocs.io): image exif reader  
+  - [angular 8.1.2](https://angular.io/): Angular core  
+  - [rxjs 6.4.0](https://rxjs-dev.firebaseapp.com/): Angular core  
+  - [ng-bootstrap 5.1.0](https://ng-bootstrap.github.io): Angular widgets in Bootstrap  
+  - [scss 0.2.4](https://sass-lang.com/): CSS extend  
+  - [piexifjs 1.0.6](https://piexifjs.readthedocs.io): image EXIF reader  
   - [chart.js 2.8.0](https://www.chartjs.org): chart render  
-  - [bootstrap 4.2](https://getbootstrap.com/): css theme  
+  - [bootstrap 4.2](https://getbootstrap.com/): CSS theme  
