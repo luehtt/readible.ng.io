@@ -16,7 +16,7 @@ Node.js 12 and npm [(Homepage)](https://nodejs.org/en/)
   1. cd to app folder  
   2. run "npm i"  
   3. run "ng serve"  
-  4. go to address https://localhost:4200  
+  4. go to address http://localhost:4200  
 
 This app is written to target **readible.aspcore.io** as server so make sure it is running.
 
