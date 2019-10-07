@@ -91,7 +91,7 @@ export class CartService {
   }
 
   setViewed(data: Book[]) {
-    localStorage.setItem('viewed', JSON.stringify(data));
+    localStorage.setItem(this.VIEWED_SESSION, JSON.stringify(data));
   }
 
   clearViewed() {
