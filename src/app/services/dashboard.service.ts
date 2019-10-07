@@ -14,7 +14,7 @@ export class DashboardService {
 
   constructor(private httpService: HttpClientService) { }
 
-  fetchTopten(): Observable<DashboardTopTen> {
+  fetchTopTen(): Observable<DashboardTopTen> {
     return this.httpService.get(this.endpoint + '/topten');
   }
 
