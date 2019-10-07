@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
 
   private initSummary() {
     const startTime = this.alertService.startTime();
-    this.service.fetchTopten().subscribe(res => {
+    this.service.fetchTopTen().subscribe(res => {
       this.top = res;
       this.alertService.successResponse(startTime);
     }, err => {
