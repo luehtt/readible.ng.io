@@ -14,9 +14,9 @@ Node.js 12 and npm [(Homepage)](https://nodejs.org/en/)
 ## How to run
 
   1. cd to app folder  
-  2. run "npm i"  
-  3. run "ng serve"  
-  4. go to address http://localhost:4200  
+  2. run `npm i`  
+  3. run `ng serve`  
+  4. go to address `http://localhost:4200`  
 
 This app is written to target **readible.aspcore.io** as server so make sure it is running.
 
@@ -30,4 +30,4 @@ This app is written to target **readible.aspcore.io** as server so make sure it 
   - [bootstrap 4.2](https://getbootstrap.com/): CSS theme  
 
 ## Screenshots
-[Google photos](https://photos.app.goo.gl/tuqLmrmAeaFkuRg29)
+[Google photos](https://photos.app.goo.gl/tuqLmrmAeaFkuRg29)   
