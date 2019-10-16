@@ -4,10 +4,10 @@
     <ul *ngIf="categories" class="list-group list-group-flush border-0">
       <div class="row no-gutters">
           <li class="list-group-item p-1 col-md-12 col-sm-4 col-6">
-            <button (click)="onSetFilter('')" class="btn btn-link py-0" type="button">All</button>
+            <button (click)="onSetCategory('')" class="btn btn-link py-0" type="button">All</button>
           </li>
           <li *ngFor="let i of categories" class="list-group-item p-1 col-md-12 col-sm-4 col-6">
-            <button (click)="onSetFilter(i.name.toLowerCase())" class="btn btn-link py-0 text-left" type="button">{{ i.name }}</button>
+            <button (click)="onSetCategory(i.name.toLowerCase())" class="btn btn-link py-0 text-left" type="button">{{ i.name }}</button>
           </li>
       </div>
     </ul>
@@ -33,8 +33,8 @@
       </div>
 
       <!-- pagination section -->
-      <div *ngIf="data.length != 0" class="col-12">
-		  <ngb-pagination (pageChange)="onPageChange($event)" *ngIf="pagination" [(page)]="pagination.pageIndex" [maxSize]="10"
+      <div *ngIf="data.length != 0" class="col-12 mt-3">
+		  <ngb-pagination (pageChange)="onChangePage($event)" *ngIf="pagination" [(page)]="pagination.pageIndex" [maxSize]="10"
         [collectionSize]="pagination.totalItems" [pageSize]="pagination.itemsPerPage">
 			  <ng-template ngbPaginationFirst>First</ng-template>
 			  <ng-template ngbPaginationLast>Last</ng-template>
@@ -43,7 +43,6 @@
 			  <ng-template ngbPaginationEllipsis>...</ng-template>
 			  <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
 		  </ngb-pagination>
-
       </div>
     </div>
   </div>

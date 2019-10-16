@@ -13,8 +13,10 @@ export class ShopComponent implements OnInit {
 
   loggedIn = false;
 
-  constructor(public shopService: ShopService, public cartService: CartService,
-              public alertService: AlertMessageService, public authService: AuthService) {
+  constructor(public shopService: ShopService,
+    public cartService: CartService,
+    public alertService: AlertMessageService,
+    public authService: AuthService) {
   }
 
   ngOnInit() {

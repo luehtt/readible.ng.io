@@ -7,7 +7,7 @@ export class Cart {
   discount: number;
   amount: number;
   actualPrice: number;
-  meta: Book;
+  metaData: Book;
 
   constructor(data, amount: number) {
     this.isbn = data.isbn;

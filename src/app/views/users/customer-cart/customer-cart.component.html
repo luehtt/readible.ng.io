@@ -22,17 +22,13 @@
         <div class="card-body">
           <h4 class="mb-4 text-uppercase">Item in cart</h4>
           <div *ngFor="let i of data" class="row mb-4 mb-sm-2">
-
-            <div *ngIf="i.meta" class="col-lg-2 col-sm-3 mb-2 mb-sm-0">
-              <img *ngIf="i.meta.image" [alt]="i.meta.title" [src]="i.meta.image" class="img-fluid mt-2" style="max-height: 100px"/>
-              <img *ngIf="!i.meta.image " [alt]="i.meta.title"
-                   [src]="placeholderService.imgHolder(100, 140, i.meta.title)"
-                   class="img-fluid mt-2" style="max-height: 100px"/>
+            <div *ngIf="i.metaData" class="col-lg-2 col-sm-3 mb-2 mb-sm-0">
+              <img [alt]="i.metaData.title" [src]="i.metaData.image" class="img-fluid mt-2" style="max-height: 100px"/>
             </div>
 
-            <div *ngIf="i.meta" class="col-lg-8 col-sm-8 mb-2 mb-sm-0">
-              <div><a [routerLink]="'/shop/' + i.isbn" class="lead">{{ i.meta.title }}</a></div>
-              <div>{{ i.meta.author }} | {{ i.meta.published | date: "yyyy-MM-dd" }} | {{ i.meta.publisher }}</div>
+            <div *ngIf="i.metaData" class="col-lg-8 col-sm-8 mb-2 mb-sm-0">
+              <div><a [routerLink]="'/shop/' + i.isbn" class="lead">{{ i.metaData.title }}</a></div>
+              <div>{{ i.metaData.author }} | {{ i.metaData.published | date: "yyyy-MM-dd" }} | {{ i.metaData.publisher }}</div>
               <div class="h6 mt-1 mb-0"><strong>{{ i.actualPrice | currency }} x {{ i.amount }}</strong>
                 <div class="h6 mt-1 mb-0">
                   <button class="btn btn-link text-danger" (click)="onRemoveCart(i)">Clear</button>
@@ -40,7 +36,7 @@
               </div>
             </div>
 
-            <div *ngIf="i.meta" class="col-lg-2 col-sm-3 mb-sm-0">
+            <div *ngIf="i.metaData" class="col-lg-2 col-sm-3 mb-sm-0">
               <button class="btn btn-outline-warning h4 float-sm-right" type="button">{{ i.amount * i.actualPrice | currency }}</button>
             </div>
           </div>

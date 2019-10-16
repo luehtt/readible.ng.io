@@ -21,8 +21,11 @@ export class CustomerCartComponent implements OnInit {
   form: FormGroup;
   customer: Customer;
 
-  constructor(private formBuilder: FormBuilder, public placeholderService: PlaceholderService, private service: ShopService,
-    private cartService: CartService, private alertService: AlertMessageService) { }
+  constructor(private formBuilder: FormBuilder,
+    private placeholderService: PlaceholderService,
+    private service: ShopService,
+    private cartService: CartService,
+    private alertService: AlertMessageService) { }
 
   get totalPrice() {
     return !this.data ? 0 : this.data.map(x => x ? x.actualPrice * x.amount : 0).reduce((a, b) => a + b, 0);
@@ -33,7 +36,7 @@ export class CustomerCartComponent implements OnInit {
     this.data = this.cartService.fetchCart();
     this.viewed = this.cartService.fetchViewed();
 
-    this.initMetadata();
+    this.initExtendData();
     this.initForm();
   }
 
@@ -55,14 +58,15 @@ export class CustomerCartComponent implements OnInit {
     );
   }
 
-  private initMetadata() {
+  private initExtendData() {
     if (!this.data) { return; }
     for (const i of this.data) {
       const startTime = this.alertService.startTime();
       this.service.get(i.isbn).subscribe(
         res => {
-          i.meta = res;
-          i.actualPrice = i.meta.discount === 0 ? i.meta.price : i.meta.price * (100 - i.meta.discount) / 100;
+          i.metaData = res;
+          i.metaData.image = i.metaData.image ? i.metaData.image : this.placeholderService.imgHolder(100, 140, i.metaData.title);
+          i.actualPrice = i.metaData.discount === 0 ? i.metaData.price : i.metaData.price * (100 - i.metaData.discount) / 100;
           this.alertService.successResponse(startTime);
         }, err => {
           this.alertService.errorResponse(err, startTime);
@@ -75,9 +79,9 @@ export class CustomerCartComponent implements OnInit {
     return !this.data ? 0 : this.data.map(x => x.amount).reduce((a, b) => a + b, 0);
   }
 
-  onRemoveCart(object) {
-    this.data = this.data.filter(x => x.isbn !== object.isbn);
-    this.cartService.removeCart(object);
+  onRemoveCart(item) {
+    this.data = this.data.filter(x => x.isbn !== item.isbn);
+    this.cartService.removeCart(item);
   }
 
   onClearCart() {

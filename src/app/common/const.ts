@@ -13,7 +13,8 @@ export const Common = {
   TIME_OUT: 8000,
   INITIAL_YEAR: new Date().getFullYear() - 3,
   LANGUAGE: ['English', 'Português', 'Français', 'العربية', '日本語', '한국어', '中文', 'Tiếng Việt'],
-  
+  VERSION: '1.1.0.0',
+
   METHOD: {
     GET: 'GET',
     POST: 'POST',
@@ -86,6 +87,7 @@ export const ChartOption = {
   TRANSPARENT: 'transparent',
   CHART_LINE: 'line',
   CHART_BAR: 'bar',
+  CHART_DOUGHNUT: 'doughnut',
   STEP_MIDDLE: 'middle',
 
   DEFAULT_LINE_OPTION: {

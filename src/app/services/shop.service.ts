@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpClientService } from './common/http-client.service';
+import { BookCategoryService } from './category.service';
 import { Book, BookPagination } from '../models/book';
 import { Endpoint } from '../common/const';
 import { Customer } from '../models/customer';
 import { BookComment } from '../models/comment';
 import { Order } from '../models/order';
+import { BookCategory } from '../models/category';
 
 @Injectable({
   providedIn: 'root'
@@ -17,24 +19,22 @@ export class ShopService {
   private customerEndpoint = Endpoint.CUSTOMER;
   private orderEndpoint = Endpoint.ORDER;
 
-  constructor(private httpService: HttpClientService) {
+  constructor(private httpService: HttpClientService, private categoryService: BookCategoryService) {
   }
 
-  fetch(): Observable<BookPagination> {
+  fetchAll(): Observable<BookPagination> {
     return this.httpService.get(this.endpoint);
   }
 
-  fetchCategory(page: number, limit: number, category: string): Observable<BookPagination> {
-    return category ?
-      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}`) :
-      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}`);
+  fetch(page: number, pageSize: number, category: string, search: string): Observable<BookPagination> {
+    const categoryQuery = category ? '&category=' + category : '';
+    const searchQuery = search ? '&search=' + search : '';
+    const pageQuery = '?page=' + page + '&pageSize=' + pageSize;
+    return this.httpService.get(this.endpoint + pageQuery + categoryQuery + searchQuery);
   }
 
-  fetchSearchCategory(page: number, limit: number, category: string, search: string): Observable<BookPagination> {
-    return !search ?
-      this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}`) : category ?
-        this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&category=${category.toLowerCase()}&search=${search.toLowerCase()}`) :
-        this.httpService.get(`${this.endpoint}?page=${page}&pageSize=${limit}&search=${search.toLowerCase()}`);
+  fetchCategory(): Observable<BookCategory[]> {
+    return this.categoryService.fetch();
   }
 
   get(isbn: string): Observable<Book> {
@@ -53,19 +53,4 @@ export class ShopService {
     return this.httpService.post(this.customerEndpoint, {});
   }
 
-  calcRating(data: BookComment[], amount: number, property: string) {
-    if (!data || !property || amount < 1) { return null; }
-    const a = [];
-
-    for (let i = 1; i <= amount; i++) { a.push({ name: i, sum: 0, percent: 0 }); }
-    for (const d of data) {
-      for (let i = 1; i <= amount; i++) {
-        if (d[property] !== i) { continue; }
-        a[i - 1].sum++;
-      }
-    }
-
-    for (const d of a) { d.percent = d.sum * 100 / data.length; }
-    return a;
-  }
 }

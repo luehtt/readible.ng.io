@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ErrorMessage} from 'src/app/common/const';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ErrorMessage } from 'src/app/common/const';
 
 @Component({
   selector: 'app-form-error',
@@ -7,7 +8,7 @@ import {ErrorMessage} from 'src/app/common/const';
 })
 export class FormErrorComponent implements OnInit {
 
-  @Input() input: any;
+  @Input() input: FormControl;
 
   GENERAL_REQUIRED = ErrorMessage.GENERAL_REQUIRED;
   GENERAL_MAX_LENGTH = ErrorMessage.GENERAL_MAX_LENGTH;

@@ -9,8 +9,11 @@ import { TimestampControl } from '../../../common/function';
 
 interface IChartData {
   name: string;
-  data: OrderStatistic[];
   color: string[];
+  title: string;
+  labels: string[];
+  data: any[];
+  responseData: any[];
 }
 
 @Component({
@@ -31,7 +34,6 @@ export class StatisticCustomerComponent implements OnInit {
   ageChart: Chart;
   genderChart: Chart;
   chartTitle: string;
-  chartType = 'doughnut';
 
   constructor(private service: StatisticService, private alertService: AlertMessageService) { }
 
@@ -45,13 +47,19 @@ export class StatisticCustomerComponent implements OnInit {
     this.ageChartData = {
       name: 'ageCanvas',
       color: [ChartOption.COLOR_RED, ChartOption.COLOR_GREEN, ChartOption.COLOR_BLUE, ChartOption.COLOR_AMBER],
-      data: []
+      data: [],
+      responseData: [],
+      title: null,
+      labels: []
     };
 
     this.genderChartData = {
       name: 'genderCanvas',
       color: [ChartOption.COLOR_GREEN, ChartOption.COLOR_ROSE],
-      data: []
+      data: [],
+      responseData: [],
+      title: null,
+      labels: []
     }
   }
 
@@ -97,9 +105,9 @@ export class StatisticCustomerComponent implements OnInit {
   private initAgeData(fromDate: string, toDate: string) {
     const startTime = this.alertService.startTime();
     this.service.statisticCustomer('age', fromDate, toDate).subscribe(res => {
-      this.ageChartData.data = res;
+      this.ageChartData.responseData = res;
+      this.initAgeChart();
       this.alertService.successResponse(startTime);
-      this.initChart(this.ageChartData);
     }, err => {
       this.alertService.errorResponse(err, startTime);
     });
@@ -108,62 +116,58 @@ export class StatisticCustomerComponent implements OnInit {
   private initGenderData(fromDate: string, toDate: string) {
     const startTime = this.alertService.startTime();
     this.service.statisticCustomer('gender', fromDate, toDate).subscribe(res => {
-      this.genderChartData.data = res;
+      this.genderChartData.responseData = res;
+      this.initGenderChart();
       this.alertService.successResponse(startTime);
-      this.initChart(this.genderChartData);
     }, err => {
       this.alertService.errorResponse(err, startTime);
     });
   }
 
-  private calcChartValue(data: OrderStatistic[], value: string) {
+  private caclChartTitle(data: IChartData, value: string) {
     switch (value) {
-      case 'order': return this.calcChartValueData(data, 'totalOrder', 'Total orders');
-      case 'item': return this.calcChartValueData(data, 'totalItem', 'Total items sold');
-      case 'price': return this.calcChartValueData(data, 'totalPrice', 'Total price sold');
-      default: return null;
+      case 'order': return this.calcChartData(data, 'totalOrder', 'Total orders');
+      case 'item': return this.calcChartData(data, 'totalItem', 'Total items sold');
+      case 'price': return this.calcChartData(data, 'totalPrice', 'Total price sold');
+      default: return data;
     }
   }
 
-  private calcChartValueData(data: OrderStatistic[], property: string, chartTitle: string) {
-    return {
-      labels: data.map(x => x.property),
-      data: data.map(x => x[property]),
-      chartTitle: chartTitle + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
-    };
+  private calcChartData(data: IChartData, property: string, title: string): IChartData {
+    data.labels = data.responseData.map(x => x.property);
+    data.data = data.responseData.map(x => x[property]);
+    data.title = title + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate);
+    return data;
   }
 
-  private initChart(chart: IChartData) {
-    const chartData = this.calcChartValue(chart.data, this.selectedValue);
-    this.chartTitle = chartData.chartTitle;
+  private initAgeChart() {
+    const thisData = this.caclChartTitle(this.ageChartData, this.selectedValue);
+    this.chartTitle = thisData.title;
 
-    // have tried to include chart as variable and failed miserably
-    // better just use distinct variable for each chart and do not include in any interface
-    switch (chart.name) {
-      case 'ageCanvas':
-        if (this.ageChart) this.ageChart.destroy();
-        this.ageChart = new Chart(chart.name, {
-          type: this.chartType,
-          data: {
-            labels: chartData.labels,
-            datasets: [{ data: chartData.data, backgroundColor: chart.color, }]
-          },
-          options: ChartOption.DEFAULT_PIE_OPTION
-        });
-        return;
+    if (this.ageChart) this.ageChart.destroy();
+    this.ageChart = new Chart(thisData.name, {
+      type: ChartOption.CHART_DOUGHNUT,
+      data: {
+        labels: thisData.labels,
+        datasets: [{ data: thisData.data, backgroundColor: thisData.color }]
+      },
+      options: ChartOption.DEFAULT_PIE_OPTION
+    });
+  }
 
-      case 'genderCanvas':
-        if (this.genderChart) this.genderChart.destroy();
-        this.genderChart = new Chart(chart.name, {
-          type: this.chartType,
-          data: {
-            labels: chartData.labels,
-            datasets: [{ data: chartData.data, backgroundColor: chart.color, }]
-          },
-          options: ChartOption.DEFAULT_PIE_OPTION
-        });
-        return;
-    }
+  private initGenderChart() {
+    const thisData = this.caclChartTitle(this.genderChartData, this.selectedValue);
+    this.chartTitle = thisData.title;
+
+    if (this.genderChart) this.genderChart.destroy();
+    this.genderChart = new Chart(thisData.name, {
+      type: ChartOption.CHART_DOUGHNUT,
+      data: {
+        labels: thisData.labels,
+        datasets: [{ data: thisData.data, backgroundColor: thisData.color }]
+      },
+      options: ChartOption.DEFAULT_PIE_OPTION
+    });
   }
 
 }

@@ -1,7 +1,7 @@
 <div class="wrapper d-flex" [ngClass]="{ toggled: toggled == true }">
   <!-- sidebar -->
   <div class="sidebar-wrapper border-right bg-primary text-white">
-    <div class="sidebar-heading">Readible 1.0.1</div>
+    <div class="sidebar-heading">Readible <span class="text-small">{{version}}</span></div>
     <div class="list-group list-group-flush p-md">
       <a [routerLink]="'/admin/dashboard'" [class.active]="selectMenu == 'dashboard'" (click)="selectMenu = 'dashboard'" class="list-group-item list-group-item-action bg-primary text-white">Dashboard</a>
       <a [routerLink]="'/admin/books'" [class.active]="selectMenu == 'books'" (click)="selectMenu = 'books'" class="list-group-item list-group-item-action bg-primary text-white">Books</a>

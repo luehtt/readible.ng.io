@@ -6,7 +6,6 @@ import {OrderStatus} from '../../../models/order';
   templateUrl: './order-status.component.html'
 })
 export class OrderStatusComponent implements OnInit {
-
   @Input() input: OrderStatus;
 
   constructor() { }

@@ -5,8 +5,7 @@
   <div class="row my-4">
     <!--image section-->
     <div class="col-md-4 mb-4 mb-md-0">
-      <img *ngIf="data.image" [alt]="data.title" [src]="data.image" class="img-fluid mt-2" />
-      <img *ngIf="!data.image" [alt]="data.title" [src]="placeholderService.imgHolder(250, 350, data.title)" class="img-fluid mt-2" />
+      <img [alt]="data.title" [src]="data.image" class="img-fluid mt-2" />
     </div>
     <!--end image section-->
 
@@ -84,6 +83,7 @@
       <a [routerLink]="'../'">Back to index</a> | <a [routerLink]="'/customer/cart'">Go to my cart</a>
       <!--end purchase section-->
     </div>
+    <!--end info section-->
   </div>
   <hr>
 
@@ -102,7 +102,7 @@
   <div class="row my-4">
     <div class="col-md-4 mb-3 mb-md-0">
       <!--rating section-->
-      <div class="mb-0 text-uppercase font-weight-bold">{{ data.bookComments.length }} customer reviews</div>
+      <div class="mb-1 text-uppercase font-weight-bold">{{ data.bookComments.length }} customer reviews</div>
       <ng-template #t2 let-fill="fill">
           <span [class.full]="fill === 100" class="star">
             <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
@@ -137,7 +137,7 @@
               <div class="mb-2">Comment</div>
               <textarea class="form-control" formControlName="comment" placeholder="enter the comment" rows="3" type="text"></textarea>
               <div class="form-group text-center mt-3 mb-0">
-                  <button (click)="onSubmit()" class="btn btn-primary mr-1" type="button">Submit</button>
+                  <button (click)="onSubmitComment()" class="btn btn-primary mr-1" type="button">Submit</button>
                   <button (click)="editDialog = false" class="btn btn-outline-secondary" type="button">Close</button>
               </div>
           </form>

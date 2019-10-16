@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { Common } from 'src/app/common/const';
 
 @Component({
   selector: 'app-admin',
@@ -12,6 +13,7 @@ export class AdminComponent implements OnInit {
   public loggedIn = false;
   public role: string;
   public selectMenu = 'dashboard';
+  public version = Common.VERSION;
 
   constructor(private authService: AuthService) {  }
 

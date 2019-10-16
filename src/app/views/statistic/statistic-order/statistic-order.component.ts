@@ -7,25 +7,37 @@ import { StatisticService } from '../../../services/statistic.service';
 import { OrderStatistic } from '../../../models/statistic';
 import { TimestampControl } from '../../../common/function';
 
+
+interface IChartData {
+  name: string;
+  color: string;
+  title: string;
+  labels: string[];
+  data: any[];
+  responseData: any[];
+}
+
 @Component({
   selector: 'app-statistic-orders',
   templateUrl: './statistic-order.component.html'
 })
 export class StatisticOrderComponent implements OnInit {
 
-  chart: any;
+  chart: Chart;
+  chartData: IChartData
   chartTitle: string;
+
   loaded: boolean;
   fromDate: Date;
   toDate: Date;
   fromDateNgb: any;
   toDateNgb: any;
+
   selectedValue: string;
   selectedReference: string;
   selectedRecent: string;
   latestTimestamp: Date;
   oldestTimestamp: Date;
-  data: OrderStatistic[];
 
   constructor(private service: StatisticService, private alertService: AlertMessageService) { }
 
@@ -34,6 +46,18 @@ export class StatisticOrderComponent implements OnInit {
     this.selectedRecent = 'fortnight';
     this.selectedValue = 'item';
     this.initTimestamp();
+    this.initChartData();
+  }
+
+  private initChartData() {
+    this.chartData = {
+      name: 'canvas',
+      color: null,
+      title: null,
+      labels: [],
+      data: [],
+      responseData: [],
+    }
   }
 
   private initTimestamp() {
@@ -99,7 +123,7 @@ export class StatisticOrderComponent implements OnInit {
 
     const startTime = this.alertService.startTime();
     this.service.statisticOrder(this.selectedReference, fromDate, toDate).subscribe(res => {
-      this.data = res;
+      this.chartData.responseData = res;
       this.loaded = true;
       this.initChart();
       this.alertService.successResponse(startTime);
@@ -108,36 +132,35 @@ export class StatisticOrderComponent implements OnInit {
     });
   }
 
-  private calcChartValue(data: OrderStatistic[], value: string) {
+  private calcChartTitle(data: IChartData, value: string): IChartData {
     switch (value) {
-      case 'order': return this.calcChartValueData(data, 'totalOrder', ChartOption.COLOR_BLUE, 'Total orders');
-      case 'item': return this.calcChartValueData(data, 'totalItem', ChartOption.COLOR_GREEN, 'Total items sold');
-      case 'price': return this.calcChartValueData(data, 'totalPrice', ChartOption.COLOR_AMBER, 'Total price sold');
+      case 'order': return this.calcChartData(data, 'totalOrder', ChartOption.COLOR_BLUE, 'Total orders');
+      case 'item': return this.calcChartData(data, 'totalItem', ChartOption.COLOR_GREEN, 'Total items sold');
+      case 'price': return this.calcChartData(data, 'totalPrice', ChartOption.COLOR_AMBER, 'Total price sold');
       default: return null;
     }
   }
 
-  private calcChartValueData(data: OrderStatistic[], property: string, borderColor: string, chartTitle: string) {
-    return {
-      labels: this.selectedReference === 'day' ? this.data.map(x => x.property.substr(5, 5)) : this.data.map(x => x.property),
-      data: data.map(x => x[property]),
-      borderColor,
-      chartTitle: chartTitle + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
-    };
+  private calcChartData(data: IChartData, property: string, color: string, title: string): IChartData {
+    data.labels = data.responseData.map(x => x.property);
+    data.data = data.responseData.map(x => x[property]);
+    data.color = color;
+    data.title = title + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
+    return data;
   }
 
   private initChart() {
     if (this.chart) { this.chart.destroy(); }
-    const chartData = this.calcChartValue(this.data, this.selectedValue);
+    const data = this.calcChartTitle(this.chartData, this.selectedValue);
 
-    this.chartTitle = chartData.chartTitle;
-    this.chart = new Chart('canvas', {
+    this.chartTitle = data.title;
+    this.chart = new Chart(data.name, {
       type: ChartOption.CHART_LINE,
       data: {
-        labels: chartData.labels,
+        labels: data.labels,
         datasets: [{
-          data: chartData.data,
-          borderColor: chartData.borderColor,
+          data: data.data,
+          borderColor: data.color,
           backgroundColor: ChartOption.TRANSPARENT,
           steppedLine: ChartOption.STEP_MIDDLE
         }]
@@ -145,6 +168,5 @@ export class StatisticOrderComponent implements OnInit {
       options: ChartOption.DEFAULT_LINE_OPTION
     });
   }
-
 
 }
