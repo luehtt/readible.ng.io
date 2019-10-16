@@ -28,3 +28,6 @@ This app is written to target **readible.aspcore.io** as server so make sure it 
   - [piexifjs 1.0.6](https://piexifjs.readthedocs.io): image EXIF reader  
   - [chart.js 2.8.0](https://www.chartjs.org): chart render  
   - [bootstrap 4.2](https://getbootstrap.com/): CSS theme  
+
+## Screenshots
+[Google photos](https://photos.app.goo.gl/tuqLmrmAeaFkuRg29)
