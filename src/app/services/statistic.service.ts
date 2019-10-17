@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpClientService } from './common/http-client.service';
-import { OrderStatistic } from '../models/statistic';
 import { Endpoint } from '../common/const';
 
 @Injectable({
@@ -14,11 +13,11 @@ export class StatisticService {
 
   constructor(private httpService: HttpClientService) { }
 
-  statisticCustomer(reference: string, fromDate: string, toDate: string): Observable<OrderStatistic[]> {
+  statisticCustomer(reference: string, fromDate: string, toDate: string): Observable<any[]> {
     return this.httpService.get(`${this.endpoint}/customers?reference=${reference}&fromDate=${fromDate}&toDate=${toDate}`);
   }
 
-  statisticOrder(reference: string, fromDate: string, toDate: string): Observable<OrderStatistic[]> {
+  statisticOrder(reference: string, fromDate: string, toDate: string): Observable<any[]> {
     return this.httpService.get(`${this.endpoint}/orders?reference=${reference}&fromDate=${fromDate}&toDate=${toDate}`);
   }
 

@@ -1,6 +1,6 @@
-import {Customer} from './customer';
-import {Manager} from './manager';
-import {Book} from './book';
+import { Customer } from './customer';
+import { Manager } from './manager';
+import { Book } from './book';
 
 export class Order {
   id: number;

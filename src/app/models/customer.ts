@@ -1,6 +1,6 @@
-import {BookComment} from './comment';
-import {Order} from './order';
-import {User} from './user';
+import { BookComment } from './comment';
+import { Order } from './order';
+import { User } from './user';
 
 export class Customer {
   userId: number;

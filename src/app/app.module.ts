@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpLoaderInterceptorService } from './services/common/http-loader-interceptor.service';
 
-
 @NgModule({
   declarations: [
     AppComponent

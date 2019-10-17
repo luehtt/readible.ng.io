@@ -1,5 +1,5 @@
-import {Customer} from './customer';
-import {Book} from './book';
+import { Customer } from './customer';
+import { Book } from './book';
 
 export interface DashboardTopTen {
   sold: Book[];

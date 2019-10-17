@@ -1,6 +1,6 @@
-import {BookComment} from './comment';
-import {BookCategory} from './category';
-import {Pagination} from './pagination';
+import { BookComment } from './comment';
+import { BookCategory } from './category';
+import { Pagination } from './pagination';
 
 export class Book {
   isbn: string;

@@ -12,7 +12,7 @@ export const Common = {
   TIME_OUT: 8000,
   INITIAL_YEAR: new Date().getFullYear() - 3,
   LANGUAGE: ['English', 'Português', 'Français', 'العربية', '日本語', '한국어', '中文', 'Tiếng Việt'],
-  VERSION: '1.1.0.0',
+  VERSION: '1.2.0.0',
 
   METHOD: {
     GET: 'GET',

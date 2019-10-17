@@ -1,5 +1,5 @@
-import {Customer} from './customer';
-import {Book} from './book';
+import { Customer } from './customer';
+import { Book } from './book';
 
 export class BookComment {
   id: number;
