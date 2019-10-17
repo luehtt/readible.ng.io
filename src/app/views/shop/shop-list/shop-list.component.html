@@ -34,8 +34,8 @@
 
       <!-- pagination section -->
       <div *ngIf="data.length != 0" class="col-12 mt-3">
-		  <ngb-pagination (pageChange)="onChangePage($event)" *ngIf="pagination" [(page)]="pagination.pageIndex" [maxSize]="10"
-        [collectionSize]="pagination.totalItems" [pageSize]="pagination.itemsPerPage">
+      <ngb-pagination (pageChange)="onChangePage($event)" *ngIf="pagination" [(page)]="pagination.pageIndex"
+        [maxSize]="10" [collectionSize]="pagination.totalItems" [pageSize]="pagination.itemsPerPage">
 			  <ng-template ngbPaginationFirst>First</ng-template>
 			  <ng-template ngbPaginationLast>Last</ng-template>
 			  <ng-template ngbPaginationPrevious>Prev</ng-template>

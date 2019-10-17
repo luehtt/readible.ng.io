@@ -12,6 +12,7 @@
       </div>
     </div>
   </div>
+  <!--end empty cart section-->
 
   <!--my cart section-->
   <div *ngIf="data.length != 0" class="row">
@@ -21,11 +22,14 @@
       <div class="card">
         <div class="card-body">
           <h4 class="mb-4 text-uppercase">Item in cart</h4>
+          
+          <!-- list of item in cart -->
           <div *ngFor="let i of data" class="row mb-4 mb-sm-2">
+            <!-- image -->
             <div *ngIf="i.metaData" class="col-lg-2 col-sm-3 mb-2 mb-sm-0">
               <img [alt]="i.metaData.title" [src]="i.metaData.image" class="img-fluid mt-2" style="max-height: 100px"/>
             </div>
-
+            <!-- data -->
             <div *ngIf="i.metaData" class="col-lg-8 col-sm-8 mb-2 mb-sm-0">
               <div><a [routerLink]="'/shop/' + i.isbn" class="lead">{{ i.metaData.title }}</a></div>
               <div>{{ i.metaData.author }} | {{ i.metaData.published | date: "yyyy-MM-dd" }} | {{ i.metaData.publisher }}</div>
@@ -35,11 +39,14 @@
                 </div>
               </div>
             </div>
-
+            <!-- button -->
             <div *ngIf="i.metaData" class="col-lg-2 col-sm-3 mb-sm-0">
               <button class="btn btn-outline-warning h4 float-sm-right" type="button">{{ i.amount * i.actualPrice | currency }}</button>
             </div>
           </div>
+          <!-- end list of item in cart -->
+
+          <!-- footer button -->
           <div *ngIf="data.length != 0" class="mt-3">
             <a class="btn btn-link" [routerLink]="'/shop'">Looking for more</a> |
             <button class="btn btn-link text-danger" (click)="onClearCart()">Cancel all</button>
@@ -55,8 +62,8 @@
         <div class="card-body">
           <form *ngIf="form" [formGroup]="form">
             <div class="form-group">
-              <label>Full name</label>
-              <input type="text" class="form-control" formControlName="fullname" readonly/>
+              <label>Contact Name</label>
+              <input type="text" class="form-control" formControlName="contact"/>
             </div>
             <div class="form-group">
               <label>Address</label>
@@ -80,12 +87,10 @@
       <div class="card">
         <div class="card-header">Order Information</div>
         <div class="card-body">
-          <h5 style="clear: both">
-            Total items: <span class="h3 float-right">{{ totalItem }}</span>
-          </h5>
-          <h5 style="clear: both">
-            Total price: <span class="h3 float-right">{{ totalPrice | currency }}</span>
-          </h5>
+          <h5 style="clear: both">Total items: <span class="h3 float-right">{{ totalItem }}</span></h5>
+          <h5 style="clear: both">Total price: <span class="h3 float-right">{{ totalPrice | currency }}</span></h5>
+
+          <!-- payment method section -->
           <h5 style="clear: both">Payment method</h5>
           <div class="ml-4">
             <div class="form-check">
@@ -110,6 +115,8 @@
             </div>
           </div>
           <hr/>
+          <!-- end payment method section -->
+
           <h5 class="mb-2" style="clear: both">
             Total final price <span class="h1 float-right bg-warning text-white px-3 py-2 mt-2 mt-sm-0" style="border-radius: 10px">{{ totalPrice | currency }}</span>
           </h5>

@@ -1,11 +1,12 @@
 <div class="container">
   <div class="row">
+    <!-- order info section -->
     <div class="col-md-7 mb-md-0 mb-3">
       <div class="card mb-3" *ngIf="data">
         <div class="card-header">Information</div>
         <div class="card-body">
           <ul class="list-group padding-sm list-group-flush">
-            <li class="list-group-item"><strong>Full name:</strong> {{ data.customer.fullname }}</li>
+            <li class="list-group-item"><strong>Contact:</strong> {{ data.contact }}</li>
             <li class="list-group-item"><strong>Phone:</strong> {{ data.phone }}</li>
             <li class="list-group-item"><strong>Address: </strong> {{ data.address }}</li>
             <li class="list-group-item"><strong>Total items: </strong> {{ data.totalItem }}</li>
@@ -15,7 +16,9 @@
         </div>
       </div>
     </div>
+    <!-- end order info section -->
 
+    <!-- order status section -->
     <div class="col-md-5 mb-md-0 mb-3">
       <div class="card mb-3" *ngIf="data">
         <div class="card-header">Status</div>
@@ -29,8 +32,10 @@
         </div>
       </div>
     </div>
+    <!-- end order status section -->
   </div>
 
+  <!-- order detail section -->
   <div *ngIf="data" class="card mb-3">
     <div class="card-header">List of books ordered</div>
     <div class="card-body">
@@ -60,6 +65,7 @@
       </div>
     </div>
   </div>
+  <!-- end order detail section -->
 
   <div class="mb-4">
     <a class="btn btn-secondary mr-2" [routerLink]="'../'">Back</a>

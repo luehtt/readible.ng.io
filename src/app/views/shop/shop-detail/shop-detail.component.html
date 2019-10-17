@@ -16,8 +16,7 @@
         <strong>
           <span *ngIf="data.discount != 0" class="h4">{{ (data.price * (100 - data.discount)) / 100 | currency }} <del class="text-muted h6">({{ data.price | currency }})</del></span>
           <span *ngIf="data.discount == 0" class="h4">{{ data.price | currency }}</span>
-        </strong>
-        each
+        </strong> each
       </div>
       <hr/>
       <div class="mb-3">

@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { OrderService } from 'src/app/services/order.service';
 import { Order } from 'src/app/models/order';
-import { AuthService } from '../../../services/auth/auth.service';
 import { DataControl } from '../../../common/function';
 
 @Component({
@@ -15,9 +14,11 @@ export class OrderDetailComponent implements OnInit {
   data: Order;
   id: number;
   loaded: boolean;
-  userRole: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private service: OrderService, private alertService: AlertMessageService, private authService: AuthService) {
+  constructor(private route: ActivatedRoute,
+    private router: Router,
+    private service: OrderService,
+    private alertService: AlertMessageService) {
   }
 
   ngOnInit() {
@@ -25,7 +26,6 @@ export class OrderDetailComponent implements OnInit {
     this.id = this.getParam();
     if (!this.id) return;
 
-    this.userRole = this.authService.getToken('role');
     this.initData();
   }
 

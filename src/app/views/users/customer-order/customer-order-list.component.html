@@ -2,8 +2,8 @@
   <app-alert-message></app-alert-message>
 
   <div class="mt-4 mb-2 text-right">
-        <a class="btn btn-link" [routerLink]="'/customer/cart'">Go to Cart</a> |
-        <a class="btn btn-link" [routerLink]="'/shop'">Go to Shop</a>
+    <a class="btn btn-link" [routerLink]="'/customer/cart'">Go to Cart</a> |
+    <a class="btn btn-link" [routerLink]="'/shop'">Go to Shop</a>
   </div>
 
   <div class="card" style="clear: both;">
@@ -20,13 +20,13 @@
         <table class="table table-striped">
           <thead>
             <tr>
-                <th scope="col" (click)="onSort('id')" class="cursor-pointer">Id</th>
-                <th scope="col" (click)="onSort('totalItem')" class="cursor-pointer">Total items</th>
-                <th scope="col" (click)="onSort('totalPrice')" class="cursor-pointer">Total price</th>
-                <th scope="col" (click)="onSort('statusId')" class="cursor-pointer">Order status</th>
-                <th scope="col" (click)="onSort('createdAt')" class="cursor-pointer">Ordered at</th>
-                <th scope="col" (click)="onSort('updatedAt')" class="cursor-pointer">Updated at</th>
-                <th scope="col" (click)="onSort(null)" class="cursor-pointer">Action</th>
+              <th scope="col" (click)="onSort('id')" class="cursor-pointer">Id</th>
+              <th scope="col" (click)="onSort('totalItem')" class="cursor-pointer">Total items</th>
+              <th scope="col" (click)="onSort('totalPrice')" class="cursor-pointer">Total price</th>
+              <th scope="col" (click)="onSort('statusId')" class="cursor-pointer">Order status</th>
+              <th scope="col" (click)="onSort('createdAt')" class="cursor-pointer">Ordered at</th>
+              <th scope="col" (click)="onSort('updatedAt')" class="cursor-pointer">Updated at</th>
+              <th scope="col" (click)="onSort(null)" class="cursor-pointer">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -42,13 +42,13 @@
           </tbody>
         </table>
         <ngb-pagination *ngIf="dataFilter" [(page)]="page" [pageSize]="pageSize" [collectionSize]="dataFilter.length" [maxSize]="10">
-            <ng-template ngbPaginationFirst>First</ng-template>
-            <ng-template ngbPaginationLast>Last</ng-template>
-            <ng-template ngbPaginationPrevious>Prev</ng-template>
-            <ng-template ngbPaginationNext>Next</ng-template>
-            <ng-template ngbPaginationEllipsis>...</ng-template>
-            <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
-          </ngb-pagination>
+          <ng-template ngbPaginationFirst>First</ng-template>
+          <ng-template ngbPaginationLast>Last</ng-template>
+          <ng-template ngbPaginationPrevious>Prev</ng-template>
+          <ng-template ngbPaginationNext>Next</ng-template>
+          <ng-template ngbPaginationEllipsis>...</ng-template>
+          <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+        </ngb-pagination>
       </div>
     </div>
   </div>

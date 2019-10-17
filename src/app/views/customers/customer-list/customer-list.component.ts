@@ -14,7 +14,7 @@ export class CustomerListComponent implements OnInit {
   data: Customer[];
   filter = '';
   page = 1;
-  pageSize: number = Common.PAGE_SIZE_HIGHER;
+  pageSize: number = Common.PAGE_SIZE_DEFAULT;
   sortColumn = 'title';
   sortDirection = 'asc';
   loaded: boolean;

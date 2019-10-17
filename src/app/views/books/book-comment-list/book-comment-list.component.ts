@@ -15,7 +15,7 @@ export class BookCommentListComponent implements OnInit {
   filter = '';
   loaded: boolean;
   page = 1;
-  pageSize = Common.PAGE_SIZE_SMALLER;
+  pageSize = Common.PAGE_SIZE_DEFAULT;
   sortColumn = 'name';
   sortDirection = 'asc';
 

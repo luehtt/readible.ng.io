@@ -4,7 +4,6 @@ import { Chart } from 'chart.js';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
 import { ChartOption, ErrorMessage } from '../../../common/const';
 import { StatisticService } from '../../../services/statistic.service';
-import { OrderStatistic } from '../../../models/statistic';
 import { TimestampControl } from '../../../common/function';
 
 interface IChartData {

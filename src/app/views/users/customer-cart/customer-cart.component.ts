@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ShopService } from 'src/app/services/shop.service';
-import { Cart } from 'src/app/models/cart';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
+import { CartService } from '../../../services/cart.service';
+import { PlaceholderService } from '../../../services/common/placeholder.service';
+import { Cart } from 'src/app/models/cart';
 import { Customer } from 'src/app/models/customer';
 import { Book } from 'src/app/models/book';
 import { Common } from '../../../common/const';
 import { Order } from '../../../models/order';
-import { CartService } from '../../../services/cart.service';
-import { PlaceholderService } from '../../../services/common/placeholder.service';
 
 @Component({
   selector: 'app-customer-cart',
@@ -46,7 +46,7 @@ export class CustomerCartComponent implements OnInit {
       res => {
         this.customer = res;
         this.form = this.formBuilder.group({
-          fullname: [this.customer.fullname],
+          contact: [this.customer.fullname],
           address: [this.customer.address],
           phone: [this.customer.phone],
           note: ['']
@@ -95,10 +95,7 @@ export class CustomerCartComponent implements OnInit {
       orderDetails.push({ bookIsbn: i.isbn, amount: i.amount });
     }
 
-    const data = new Order();
-    data.address = this.form.controls.address.value;
-    data.phone = this.form.controls.phone.value;
-    data.note = this.form.controls.note.value;
+    const data = this.getFormData();
     data.orderDetails = orderDetails;
 
     this.alertService.clear();
@@ -110,6 +107,15 @@ export class CustomerCartComponent implements OnInit {
     }, err => {
       this.alertService.errorResponse(err, startTime);
     });
+  }
+
+  private getFormData(): Order {
+    const data = new Order();
+    data.contact = this.form.controls.contact.value;
+    data.address = this.form.controls.address.value;
+    data.phone = this.form.controls.phone.value;
+    data.note = this.form.controls.note.value;
+    return data;
   }
 
 }

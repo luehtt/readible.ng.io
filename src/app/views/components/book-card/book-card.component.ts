@@ -10,9 +10,10 @@ import { Book } from '../../../models/book';
 export class BookCardComponent implements OnInit {
   @Input() input: Book;
 
-  constructor(public placeholderService: PlaceholderService) { }
+  constructor(private placeholderService: PlaceholderService) { }
 
   ngOnInit() {
     this.input.rating = this.input.bookComments.length === 0 ? 0 : this.input.bookComments.map(e => e.rating).reduce((a, b) => a + b, 0) / this.input.bookComments.length;
+    this.input.image = this.input.image ? this.input.image : this.placeholderService.imgHolder(250, 350, this.input.title);
   }
 }

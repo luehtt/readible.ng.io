@@ -25,7 +25,7 @@ export class BookListComponent implements OnInit {
   uploadFilename: string;
 
   page = 1;
-  pageSize = Common.PAGE_SIZE_HIGHER;
+  pageSize = Common.PAGE_SIZE_DEFAULT;
   sortColumn = 'title';
   sortDirection = 'asc';
   filter = '';

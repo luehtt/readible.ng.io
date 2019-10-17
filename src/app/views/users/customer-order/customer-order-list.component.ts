@@ -27,7 +27,6 @@ export class CustomerOrderListComponent implements OnInit {
   }
 
   private fetchData() {
-    this.alertService.clear();
     const startTime = this.alertService.startTime();
     this.service.fetch(null).subscribe(
       res => {

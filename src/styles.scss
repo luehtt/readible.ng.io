@@ -45,6 +45,7 @@ body {
   padding: .25rem .5rem;
   border-radius: .25rem;
   color: #fff;
+  font-size: 0.95rem;
 }
 
 button.btn {
@@ -85,8 +86,12 @@ button.btn.calendar {
 }
 
 .table {
-  & th, & td {
+  & th {
     padding: 0.75rem 0.5rem;
+  }
+
+  & td {
+    padding: 0.5rem;
   }
 
   & th.cursor-pointer {

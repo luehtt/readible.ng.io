@@ -21,7 +21,7 @@ export class BookCategoryListComponent implements OnInit {
   loaded: boolean;
   filter = '';
   page = 1;
-  pageSize = Common.PAGE_SIZE_SMALLER;
+  pageSize = Common.PAGE_SIZE_DEFAULT;
   sortColumn = 'name';
   sortDirection = 'asc';
 

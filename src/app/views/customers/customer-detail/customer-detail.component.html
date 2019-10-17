@@ -7,8 +7,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 text-center mb-3 mb-md-0">
-            <img *ngIf="data.image" [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="data.image" />
-            <img *ngIf="!data.image" [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="placeholderService.imgHolder(300, 300, data.fullname)" />
+            <img [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="imageData" />
           </div>
 
           <div class="col-md-8">
@@ -28,10 +27,13 @@
 
     <div class="mb-3 mb-lg-0">
       <a class="btn btn-secondary mr-2" [routerLink]="'../'">Back</a>
-      <button *ngIf="account.active == true && userRole === 'ADMIN'" type="button" class="btn btn-danger" (click)="onSetEnabled()">Disable</button>
-      <button *ngIf="account.active == false && userRole === 'ADMIN'" type="button" class="btn btn-success" (click)="onSetEnabled()">Enable</button>
+      <span *ngIf="userRole === 'ADMIN'">
+        <button *ngIf="account.active == true" type="button" class="btn btn-danger" (click)="onSetEnabled()">Disable</button>
+        <button *ngIf="account.active == false" type="button" class="btn btn-success" (click)="onSetEnabled()">Enable</button>
+      </span>
     </div>
   </div>
+  <!-- end info section -->
 
   <!-- account section -->
   <div class="col-lg-5">
@@ -61,6 +63,7 @@
       </div>
     </div>
   </div>
+  <!-- end account section -->
 </div>
 
 <!-- customer's orders section -->

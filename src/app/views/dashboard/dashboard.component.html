@@ -1,5 +1,6 @@
 <!-- count all section -->
 <div *ngIf="count" class="row">
+  <!-- count book -->
   <div class="col-xl-3 col-6">
     <div class="card bg-success text-white">
       <div class="card-body">
@@ -15,7 +16,7 @@
       </div>
     </div>
   </div>
-
+  <!-- count comment -->
   <div class="col-xl-3 col-6">
     <div class="card bg-danger text-white">
       <div class="card-body">
@@ -31,7 +32,7 @@
       </div>
     </div>
   </div>
-
+  <!-- count customer -->
   <div class="col-xl-3 col-6">
     <div class="card bg-info text-white">
       <div class="card-body">
@@ -47,7 +48,7 @@
       </div>
     </div>
   </div>
-
+  <!-- count order -->
   <div class="col-xl-3 col-6">
     <div class="card bg-warning text-white">
       <div class="card-body">
@@ -67,7 +68,7 @@
 
 <!-- top section -->
 <div class="row">
-  <!-- top customer's purchased section -->
+  <!-- top customer's purchased -->
   <div *ngIf="top" class="col-md-6">
     <div class="card">
       <div class="card-header">Top purchased</div>
@@ -91,8 +92,7 @@
       </div>
     </div>
   </div>
-
-  <!-- top customer's paid section -->
+  <!-- top customer's paid -->
   <div *ngIf="top" class="col-md-6">
     <div class="card">
       <div class="card-header">Top paid</div>
@@ -116,12 +116,10 @@
       </div>
     </div>
   </div>
-
-  <!-- top book sold section -->
+  <!-- top book sold -->
   <div *ngIf="top" class="col-12">
     <div class="card">
       <div class="card-header">Top sold book</div>
-
       <div class="card-body">
         <table class="table table-striped">
           <thead>
@@ -146,12 +144,10 @@
       </div>
     </div>
   </div>
-
-  <!-- top rated book section -->
+  <!-- top rated book -->
   <div *ngIf="top" class="col-12">
     <div class="card">
       <div class="card-header">Top rated book</div>
-
       <div class="card-body">
         <table class="table table-striped">
           <thead>

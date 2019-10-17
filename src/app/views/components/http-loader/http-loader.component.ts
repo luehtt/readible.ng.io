@@ -7,14 +7,14 @@ import { HttpLoaderService, HttpLoaderState } from 'src/app/services/common/http
   templateUrl: './http-loader.component.html'
 })
 export class HttpLoader implements OnInit, OnDestroy {
-  stateShow = false;
+  show = false;
   subscription: Subscription;
 
   constructor(private loaderService: HttpLoaderService) { }
 
   ngOnInit() {
     this.subscription = this.loaderService.loaderState.subscribe((state: HttpLoaderState) => {
-      this.stateShow = state.show;
+      this.show = state.show;
     });
   }
 

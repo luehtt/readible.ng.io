@@ -5,10 +5,9 @@
       <div class="card-header">ISBN: {{ data.isbn }}</div>
       <div class="card-body">
         <div class="row">
+          <!-- left col: image info -->
           <div class="col-md-4 text-center mb-3 mb-md-0">
-            <img *ngIf="data.image" [alt]="data.title" class="img-fluid mt-2" [src]="data.image" [ngStyle]="{'transform': imageTransform}"/>
-            <img *ngIf="!data.image" [alt]="data.title" class="img-fluid mt-2"  [src]="placeholderService.imgHolder(500, 700, data.title)" />
-
+            <img [alt]="data.title" class="img-fluid mt-2" [src]="imageData" [ngStyle]="{'transform': imageTransform}"/>
             <div class="mt-2">
               <input class="d-none" id="file" type="file" accept="image/*" #fileInput (change)="onChangeImage($event)" />
               <button type="button" class="btn btn-sm btn-primary mr-1" (click)="fileInput.click()"><i class="fas fa-upload"></i></button>
@@ -16,7 +15,9 @@
               <button type="button" class="btn btn-sm btn-outline-info" (click)="onRefreshImage()"><i class="fas fa-redo"></i></button>
             </div>
           </div>
+          <!-- end left col: image info -->
 
+          <!-- right col: detail info -->
           <div class="col-md-8">
             <ul class="list-group padding-sm list-group-flush">
               <li class="list-group-item"><strong>Title: </strong>{{ data.title }}</li>
@@ -26,25 +27,25 @@
               <li class="list-group-item"><strong>Published: </strong>{{ data.published | date: "yyyy-MM-dd" }}</li>
               <li class="list-group-item"><strong>Language: </strong>{{ data.language }}</li>
               <li class="list-group-item"><strong>Rating: </strong>
-                <span class="tag bg-secondary" *ngIf="data.rating == 0">0</span>
-                <span class="tag bg-warning" *ngIf="data.rating != 0">{{ data.rating | number }}</span>
+                <app-boolean-tag [condition]="data.rating != 0" [trueStyle]="'warning'" [trueValue]="data.rating | number" [falseStyle]="'secondary'" [falseValue]="'0'"></app-boolean-tag>
               </li>
-              <li class="list-group-item"><strong>Price: </strong>{{ data.price | currency }}</li>
               <li class="list-group-item"><strong>Page: </strong>{{ data.page }}</li>
+              <li class="list-group-item"><strong>Price: </strong>{{ data.price | currency }}</li>
               <li class="list-group-item"><strong>Discount: </strong>{{ data.discount }} percent</li>
               <li class="list-group-item"><strong>Viewed: </strong> {{ data.viewed }}</li>
               <li class="list-group-item"><strong>Active: </strong>
-                <span class="tag bg-primary" *ngIf="data.active == true">Yes</span>
-                <span class="tag bg-secondary" *ngIf="data.active == false">Disabled</span>
+                <app-boolean-tag [condition]="data.active == true" [trueStyle]="'primary'" [trueValue]="'Yes'" [falseStyle]="'secondary'" [falseValue]="'Disabled'"></app-boolean-tag>
               </li>
               <li class="list-group-item"><strong>Created at: </strong>{{ data.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
               <li class="list-group-item"><strong>Updated at: </strong>{{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
             </ul>
           </div>
+          <!-- end right col: detail info -->
         </div>
       </div>
     </div>
   </div>
+  <!-- end info section -->
 
   <!-- edit section -->
   <div class="col-lg-6">
@@ -52,6 +53,7 @@
       <div class="card-header">Edit</div>
       <div class="card-body">
         <form [formGroup]="formGroup">
+          <!-- title -->
           <div class="form-group row">
             <label class="col-sm-4">Title</label>
             <div class="col-sm-8">
@@ -59,6 +61,7 @@
               <app-form-error [(input)]="formGroup.controls.title"></app-form-error>
             </div>
           </div>
+          <!-- author -->
           <div class="form-group row">
             <label class="col-sm-4">Author</label>
             <div class="col-sm-8">
@@ -66,6 +69,7 @@
               <app-form-error [(input)]="formGroup.controls.author"></app-form-error>
             </div>
           </div>
+          <!-- category select -->
           <div class="form-group row">
             <label class="col-sm-4">Category</label>
             <div class="col-sm-8">
@@ -75,6 +79,7 @@
               <app-form-error [(input)]="formGroup.controls.categoryId"></app-form-error>
             </div>
           </div>
+          <!-- publisher -->
           <div class="form-group row">
             <label class="col-sm-4">Publisher</label>
             <div class="col-sm-8">
@@ -82,6 +87,7 @@
               <app-form-error [(input)]="formGroup.controls.publisher"></app-form-error>
             </div>
           </div>
+          <!-- published datepicker -->
           <div class="form-group row">
             <label class="col-sm-4">Published</label>
             <div class="col-sm-8 input-group">
@@ -92,14 +98,24 @@
             </div>
             <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.published"></app-form-error>
           </div>
+          <!-- language typeahead -->
           <div class="form-group row">
             <label class="col-sm-4">Language</label>
             <div class="col-sm-8">
-              <input class="form-control" formControlName="language" #instance="ngbTypeahead"
-                     [ngbTypeahead]="search" (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)"/>
+              <input class="form-control" formControlName="language" #instance="ngbTypeahead" [ngbTypeahead]="search"
+                (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)"/>
               <app-form-error [(input)]="formGroup.controls.language"></app-form-error>
             </div>
           </div>
+          <!-- page number -->
+          <div class="form-group row">
+              <label class="col-sm-4">Page</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" formControlName="page" step="1" min="0" />
+              </div>
+              <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.page"></app-form-error>
+            </div>
+          <!-- price -->
           <div class="form-group row">
             <label class="col-sm-4">Price ($)</label>
             <div class="col-sm-4">
@@ -107,13 +123,7 @@
             </div>
             <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.price"></app-form-error>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-4">Page</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" formControlName="page" step="1" min="0" />
-            </div>
-            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.page"></app-form-error>
-          </div>
+          <!-- discount -->
           <div class="form-group row">
             <label class="col-sm-4">Discount (%)</label>
             <div class="col-sm-4">
@@ -121,6 +131,7 @@
             </div>
             <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.discount"></app-form-error>
           </div>
+          <!-- active checkbox -->
           <div class="form-group row">
             <label class="col-sm-4">Active</label>
             <div class="col-sm-8">
@@ -135,13 +146,14 @@
             </div>
             <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.active"></app-form-error>
           </div>
+          <!-- info area -->
           <div class="form-group row">
             <label class="col-12">Info</label>
             <div class="col-12">
               <textarea class="form-control" formControlName="info" rows="6"></textarea>
             </div>
           </div>
-
+          <!-- footer button -->
           <div class="form-group text-center mt-3">
             <button type="button" class="btn btn-primary mr-1" (click)="onSubmit()">Update</button>
             <button type="button" class="btn btn-outline-info mr-1" (click)="onRefresh()">Refresh</button>
@@ -152,6 +164,7 @@
       </div>
     </div>
   </div>
+  <!-- end edit section -->
 </div>
 
 <!-- comment section -->

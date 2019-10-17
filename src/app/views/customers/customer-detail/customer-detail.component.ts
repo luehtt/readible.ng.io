@@ -22,18 +22,19 @@ export class CustomerDetailComponent implements OnInit {
   account: User;
   id: number;
   userRole: string;
+  loaded: boolean;
 
   orderPage = 1;
   orderPageSize: number = Common.PAGE_SIZE_DEFAULT;
   orderFilter = '';
   orderSortColumn = 'id';
   orderSortDirection = 'asc';
+
   commentPage = 1;
   commentPageSize: number = Common.PAGE_SIZE_DEFAULT;
   commentFilter = '';
   commentSortColumn = 'bookIsbn';
   commentSortDirection = 'asc';
-  loaded: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,7 +42,7 @@ export class CustomerDetailComponent implements OnInit {
     private alertService: AlertMessageService,
     private commentService: BookCommentService,
     private authService: AuthService,
-    public placeholderService: PlaceholderService
+    private placeholderService: PlaceholderService
   ) { }
 
   ngOnInit() {
@@ -84,6 +85,10 @@ export class CustomerDetailComponent implements OnInit {
         this.alertService.errorResponse(err, startTime);
       }
     );
+  }
+
+  get imageData() {
+    return this.data.image ? this.data.image : this.placeholderService.imgHolder(300, 300, this.data.fullname);
   }
 
   get filterOrder(): Order[] {

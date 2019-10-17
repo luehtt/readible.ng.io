@@ -6,6 +6,7 @@ export class Order {
   id: number;
   customerId: number;
   statusId: number;
+  contact: string;
   address: string;
   phone: string;
   totalPrice: number;

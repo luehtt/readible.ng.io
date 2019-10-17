@@ -13,7 +13,8 @@ export class ShopComponent implements OnInit {
 
   loggedIn = false;
 
-  constructor(public shopService: ShopService,
+  constructor(
+    public shopService: ShopService,
     public cartService: CartService,
     public alertService: AlertMessageService,
     public authService: AuthService) {
@@ -26,5 +27,6 @@ export class ShopComponent implements OnInit {
   onLogout() {
     this.authService.logout();
   }
+
 
 }

@@ -6,7 +6,6 @@ import { BookCategoryService } from './category.service';
 import { Book, BookPagination } from '../models/book';
 import { Endpoint } from '../common/const';
 import { Customer } from '../models/customer';
-import { BookComment } from '../models/comment';
 import { Order } from '../models/order';
 import { BookCategory } from '../models/category';
 

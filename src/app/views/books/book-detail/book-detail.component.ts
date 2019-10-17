@@ -29,7 +29,7 @@ export class BookDetailComponent implements OnInit {
 
   loaded: boolean;
   commentPage = 1;
-  commentPageSize: number = Common.PAGE_SIZE_DEFAULT;
+  commentPageSize: number = Common.PAGE_SIZE_SMALLER;
   commentFilter = '';
   commentSortColumn = 'customer';
   commentSortDirection = 'asc';
@@ -58,7 +58,7 @@ export class BookDetailComponent implements OnInit {
     private alertService: AlertMessageService,
     private categoryService: BookCategoryService,
     private commentService: BookCommentService,
-    public placeholderService: PlaceholderService
+    private placeholderService: PlaceholderService
   ) { }
 
   ngOnInit() {
@@ -68,6 +68,10 @@ export class BookDetailComponent implements OnInit {
 
     this.initCategories();
     this.initData();
+  }
+
+  get imageData() {
+    return this.data.image ? this.data.image : this.placeholderService.imgHolder(500, 700, this.data.title);
   }
 
   private getParam(): string | null {
@@ -222,10 +226,12 @@ export class BookDetailComponent implements OnInit {
       res => {
         this.data = DataControl.read(res, this.data, true);
         this.data = this.calcDataDetail(this.data);
+        this.imageTransform = null;
         this.alertService.successResponse(startTime);
       },
       err => {
         this.data.image = this.data.originalImage;
+        this.imageTransform = null;
         this.alertService.errorResponse(err, startTime);
       }
     );

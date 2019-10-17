@@ -32,7 +32,7 @@ export class AccountComponent implements OnInit {
     private service: AccountService,
     private alertService: AlertMessageService,
     private authService: AuthService,
-    public placeholderService: PlaceholderService) {
+    private placeholderService: PlaceholderService) {
   }
 
   ngOnInit() {
@@ -57,6 +57,10 @@ export class AccountComponent implements OnInit {
         this.alertService.errorResponse(err, startTime);
       }
     );
+  }
+
+  get imageData() {
+    return this.data.image ? this.data.image : this.placeholderService.imgHolder(300, 300, this.data.fullname);
   }
 
   private initInfoForm() {
@@ -159,9 +163,12 @@ export class AccountComponent implements OnInit {
     this.service.put(item, this.userRole).subscribe(res => {
       this.alertService.successResponse(startTime);
       this.data = DataControl.read(res, this.data);
-      this.initInfoForm();
+      this.imageTransform = null;
       this.infoDialog = false;
+      this.initInfoForm();
     }, err => {
+      this.data.image = this.data.originalImage;
+      this.imageTransform = null;
       this.alertService.errorResponse(err, startTime);
     });
   }

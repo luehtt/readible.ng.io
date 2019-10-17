@@ -15,7 +15,7 @@ export class OrderListComponent implements OnInit {
   status = 'pending';
   filter = '';
   page = 1;
-  pageSize = Common.PAGE_SIZE_HIGHER;
+  pageSize = Common.PAGE_SIZE_DEFAULT;
   sortColumn = 'id';
   sortDirection = 'asc';
   loaded: boolean;
@@ -24,7 +24,7 @@ export class OrderListComponent implements OnInit {
   }
 
   get dataFilter() {
-    return DataControl.filter(this.data, this.filter, ['id', 'customer.fullname', 'phone', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
+    return DataControl.filter(this.data, this.filter, ['id', 'customer', 'phone', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
 
   ngOnInit() {

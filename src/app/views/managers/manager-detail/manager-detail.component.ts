@@ -24,7 +24,7 @@ export class ManagerDetailComponent implements OnInit {
   // this.orders is a combine list of confirmedOrders and completedOrders
   orders: Order[];
   orderPage = 1;
-  orderPageSize: number = Common.PAGE_SIZE_HIGHER;
+  orderPageSize: number = Common.PAGE_SIZE_DEFAULT;
   orderFilter = '';
   orderSortColumn = 'id';
   orderSortDirection = 'asc';
@@ -35,7 +35,7 @@ export class ManagerDetailComponent implements OnInit {
     private service: ManagerService,
     private alertService: AlertMessageService,
     private authService: AuthService,
-    public placeholderService: PlaceholderService
+    private placeholderService: PlaceholderService
   ) { }
 
   ngOnInit() {
@@ -80,6 +80,10 @@ export class ManagerDetailComponent implements OnInit {
     );
   }
 
+  get imageData() {
+    return this.data.image ? this.data.image : this.placeholderService.imgHolder(300, 300, this.data.fullname);
+  }
+
   get filterOrder() {
     return DataControl.filter(this.orders, this.orderFilter, ['id', 'statusId', 'totalItem', 'totalPrice', 'createdAt', 'updatedAt']);
   }
@@ -107,6 +111,5 @@ export class ManagerDetailComponent implements OnInit {
       }
     );
   }
-
 
 }

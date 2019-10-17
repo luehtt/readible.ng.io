@@ -22,7 +22,7 @@ export class ManagerListComponent implements OnInit {
 
   filter = '';
   page = 1;
-  pageSize = Common.PAGE_SIZE_HIGHER;
+  pageSize = Common.PAGE_SIZE_DEFAULT;
   sortColumn = 'title';
   sortDirection = 'asc';
   createDialog = false;

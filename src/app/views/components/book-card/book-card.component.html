@@ -1,7 +1,6 @@
 <div class="card h-100">
   <a [routerLink]="'/shop/' + input.isbn">
-    <img class="img-fluid card-img-top" *ngIf="input.image" [alt]="input.title" [src]="input.image"/>
-    <img class="img-fluid card-img-top" *ngIf="!input.image" [alt]="input.title" [src]="placeholderService.imgHolder(250, 350, input.title)"/>
+    <img class="img-fluid card-img-top" [alt]="input.title" [src]="input.image"/>
   </a>
   <div class="card-body p-3">
     <a class="font-weight-bold" [routerLink]="'/shop/' + input.isbn">{{ input.title }}</a>

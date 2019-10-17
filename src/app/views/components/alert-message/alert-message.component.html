@@ -1,4 +1,4 @@
-<div *ngIf="service.data && service.data.length != 0">
+<!-- <div *ngIf="service.data && service.data.length != 0">
   <div *ngFor="let msg of service.data; let i = index">
     <div class="mb-3" [class]="'alert alert-' + msg.type">
       <strong>{{msg.type | uppercase}}!</strong> {{msg.message}}
@@ -7,7 +7,15 @@
       </button>
     </div>
   </div>
+</div> -->
+
+<div *ngIf="service.data && service.data.length != 0">
+  <div *ngFor="let alert of service.data; let i = index">
+    <ngb-alert [type]="alert.type" (close)="service.remove(i)"><strong>{{alert.type | uppercase}}!</strong> {{ alert.message }}</ngb-alert>
+  </div>
 </div>
+
+
 
 
 

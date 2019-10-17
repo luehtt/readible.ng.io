@@ -126,7 +126,7 @@ export class ShopDetailComponent implements OnInit {
   }
 
   private renderImage(data: Book) {
-    return data.image ? data.image : this.placeholderService.imgHolder(250, 350, data.title);
+    return data.image ? data.image : this.placeholderService.imgHolder(500, 700, data.title);
   }
 
   private calcRating(data: BookComment[]) {

@@ -1,16 +1,17 @@
+<!-- order overview section -->
 <div *ngIf="loaded" class="row mb-4">
+  <!-- left col: delivery section -->
   <div class="col-md-6">
     <div class="card mb-3">
       <div class="card-header">Delivery Information</div>
       <div class="card-body">
         <ul class="list-group padding-sm list-group-flush">
+          <li class="list-group-item"><strong>Delivery customer:</strong> {{ data.contact }}</li>
           <li class="list-group-item"><strong>Delivery address:</strong> {{ data.address }}</li>
           <li class="list-group-item"><strong>Delivery phone:</strong> {{ data.phone }}</li>
           <li class="list-group-item"><strong>Total items:</strong> {{ data.totalItem }}</li>
           <li class="list-group-item"><strong>Total price:</strong> {{ data.totalPrice | currency }}</li>
-          <li class="list-group-item"><strong class="mr-2">Status:</strong>
-            <app-order-status [(input)]="data.status"></app-order-status>
-          </li>
+          <li class="list-group-item"><strong class="mr-2">Status:</strong><app-order-status [(input)]="data.status"></app-order-status></li>
           <li class="list-group-item" *ngIf="data.confirmedManager"><strong>Confirmed:</strong> {{ data.confirmedManager.fullname }} at {{ data.confirmedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
           <li class="list-group-item" *ngIf="data.completedManager"><strong>Completed:</strong> {{ data.completedManager.fullname }} at {{ data.completedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
           <li class="list-group-item"><strong>Created at:</strong> {{ data.createdAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
@@ -20,7 +21,8 @@
       </div>
     </div>
 
-    <div *ngIf="userRole === 'MANAGER'" class="mt-2">
+    <!-- order status button -->
+    <div class="mt-2">
       <!--if status is PENDING, set other button color and disabled-->
       <div *ngIf="data.status.name == 'PENDING'">
         <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="''">Pending</button>
@@ -53,8 +55,11 @@
         <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')" [attr.disabled]="''">Failed</button>
       </div>
     </div>
+    <!-- end order status section -->
   </div>
+  <!-- end left col: delivering section -->
 
+  <!-- right col: register customer section -->
   <div class="col-md-6">
     <div class="card mb-3">
       <div class="card-header">Customer Information</div>
@@ -76,6 +81,7 @@
       <button type="button" class="btn btn-outline-danger" [attr.disabled]="data.status.name != 'PENDING' ? '': null" (click)="onDelete()">Delete</button>
     </div>
   </div>
+  <!-- end right col: register customer section -->
 </div>
 
 <!-- order detail section -->
