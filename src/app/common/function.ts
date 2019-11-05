@@ -131,7 +131,7 @@ export class DataControl {
       if (data.hasOwnProperty(prop)) {
         if (this.isPrimitive(prop)) {
           target[prop] = data[prop];
-        } else if (this.isObject && includeObject === true) {
+        } else if (this.isObject(prop) && includeObject === true) {
           target[prop] = data[prop];
         }
       }
