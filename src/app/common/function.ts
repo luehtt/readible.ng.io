@@ -129,9 +129,9 @@ export class DataControl {
   private static cloneProps<T>(data: T, target: T, includeObject = false): T {
     for (let prop in data) {
       if (data.hasOwnProperty(prop)) {
-        if (this.isPrimitive(prop)) {
+        if (this.isPrimitive(prop) && !Array.isArray(data[prop])) {
           target[prop] = data[prop];
-        } else if (this.isObject(prop) && includeObject === true) {
+        } else if (includeObject === true && (this.isObject(prop) || Array.isArray(data[prop]))) {
           target[prop] = data[prop];
         }
       }
