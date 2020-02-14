@@ -17,7 +17,7 @@ export class AccountService {
     return this.httpService.get(this.endpoint);
   }
 
-  put(data, userRole: string): Observable<any> {
+  put(data: any, userRole: string): Observable<any> {
     userRole = userRole.toLowerCase() === 'admin' ? 'manager' : userRole.toLowerCase();
     return this.httpService.put(this.endpoint + '/' + userRole, data);
   }

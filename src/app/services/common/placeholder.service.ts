@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {environment} from '../../../environments/environment';
 
 import {ChartOption, Common} from '../../common/const';
 
@@ -7,7 +8,7 @@ import {ChartOption, Common} from '../../common/const';
 })
 export class PlaceholderService {
 
-  private url = Common.PLACEHOLDER_URL;
+  private url = environment.placeHolderUrl;
   private colors = ChartOption.COLOR_LIST;
 
   constructor() {

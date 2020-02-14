@@ -30,7 +30,7 @@ import { OrderStatusComponent } from './views/components/order-status/order-stat
 import { StatisticOrderComponent } from './views/statistic/statistic-order/statistic-order.component';
 import { StatisticCustomerComponent } from './views/statistic/statistic-customer/statistic-customer.component';
 import { AccountComponent } from './views/auth/account/account.component';
-import { HttpLoader } from './views/components/http-loader/http-loader.component';
+import { HttpLoaderComponent } from './views/components/http-loader/http-loader.component';
 import { BookCommentListComponent } from './views/books/book-comment-list/book-comment-list.component';
 import { BookCardComponent } from './views/components/book-card/book-card.component';
 import { BooleanTagComponent } from './views/components/boolean-tag/boolean-tag.component';
@@ -101,7 +101,7 @@ const routes: Routes = [
     ShopListComponent, ShopDetailComponent,
     LoginComponent, RegisterComponent, AccountComponent,
     AdminComponent, ShopComponent,
-    AlertMessageComponent, FormErrorComponent, OrderStatusComponent, HttpLoader, BookCardComponent, BooleanTagComponent,
+    AlertMessageComponent, FormErrorComponent, OrderStatusComponent, HttpLoaderComponent, BookCardComponent, BooleanTagComponent,
     StatisticOrderComponent, StatisticCustomerComponent
   ]
 })

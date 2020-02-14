@@ -48,7 +48,7 @@ export class BookDetailComponent implements OnInit {
       map(term => (term === '' ? Common.LANGUAGE
         : Common.LANGUAGE.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
-  };
+  }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -64,7 +64,7 @@ export class BookDetailComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
     this.id = this.getParam();
-    if (!this.id) return;
+    if (!this.id) { return; }
 
     this.initCategories();
     this.initData();
@@ -78,8 +78,7 @@ export class BookDetailComponent implements OnInit {
     const value = this.route.snapshot.paramMap.get('id');
     if (DataControl.isDigit(value) && value.length === 13) {
       return value;
-    }
-    else {
+    } else {
       return this.getParamFailed(value);
     }
   }
@@ -212,7 +211,7 @@ export class BookDetailComponent implements OnInit {
     item.info = formControl.info.value;
 
     if (item.image === item.originalImage) { delete (item.image); }
-    if (!item.image) item.image = 'null';
+    if (!item.image) { item.image = 'null'; }
     return item;
   }
 

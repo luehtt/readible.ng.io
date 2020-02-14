@@ -11,7 +11,6 @@ export class OrderStatusComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
   }
 
 }

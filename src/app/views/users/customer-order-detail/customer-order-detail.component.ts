@@ -21,20 +21,18 @@ export class CustomerOrderDetailComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
     this.id = this.getParam();
-    if (!this.id) return;
-    
+    if (!this.id) { return; }
     this.initData();
   }
 
   private getParam(): number | null {
     const value = this.route.snapshot.paramMap.get('id');
-    
+
     if (DataControl.isDigit(value)) {
       const res = parseInt(value, 10);
-      if (!isNaN(res)) return res;
+      if (!isNaN(res)) { return res; }
       return this.getParamFailed(value);
-    }
-    else {
+    } else {
       return this.getParamFailed(value);
     }
   }

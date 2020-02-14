@@ -7,7 +7,6 @@ import { ManagerService } from '../../../services/manager.service';
 import { Manager } from '../../../models/manager';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
 @Component({
   selector: 'app-manager-list',
   templateUrl: './manager-list.component.html'
@@ -80,7 +79,7 @@ export class ManagerListComponent implements OnInit {
 
   validateEmail() {
     const email = this.form.controls.email.value;
-    this.customRule.email = !this.conflictEmail.includes(email)
+    this.customRule.email = !this.conflictEmail.includes(email);
   }
 
   validateBirth() {
@@ -133,13 +132,13 @@ export class ManagerListComponent implements OnInit {
       } else {
         if (res.usernameConflict === true) {
           const username = data.username;
-          this.conflictUsername.filter(x => x != username);
+          this.conflictUsername.filter(x => x !== username);
           this.conflictUsername.push(username);
           this.customRule.username = false;
         }
         if (res.emailConflict === true) {
           const email = data.email;
-          this.conflictEmail.filter(x => x != email);
+          this.conflictEmail.filter(x => x !== email);
           this.conflictEmail.push(email);
           this.customRule.email = false;
         }

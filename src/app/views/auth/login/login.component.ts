@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { User } from 'src/app/models/user';
@@ -19,8 +20,7 @@ export class LoginComponent implements OnInit {
   redirect: string;
   failed = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
-    private service: AuthService, private alertService: AlertMessageService, private sessionService: SessionService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private service: AuthService, private alertService: AlertMessageService, private sessionService: SessionService) { }
 
   ngOnInit() {
     this.alertService.clear();
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
       this.navigateOnRole(json.role);
     }, err => {
       this.failed = true;
-      setTimeout(() => { this.failed = false }, Common.TIME_OUT)
+      setTimeout(() => { this.failed = false; }, Common.TIME_OUT);
     });
   }
 
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
       this.alertService.set('Login succeeded!!', 'success');
     } else if (userRole === 'CUSTOMER') {
       if (!this.redirect || this.redirect === '') {
-        window.location.href = Common.THIS_URL;
+        window.location.href = environment.thisUrl;
       } else {
         window.location.href = this.redirect;
       }

@@ -150,7 +150,7 @@ export class AccountComponent implements OnInit {
     item.phone = formControl.phone.value;
 
     if (item.image === item.originalImage) { delete (item.image); }
-    if (!item.image) item.image = 'null';
+    if (!item.image) { item.image = 'null'; }
     return item;
   }
 

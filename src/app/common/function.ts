@@ -19,7 +19,7 @@ export class DataControl {
     return data ? data.filter(x => this.includes(x, search, props)) : null;
   }
 
-  static includes(data, search: string, props: string[]): boolean {
+  static includes(data: any, search: string, props: string[]): boolean {
     const s = search.toLocaleLowerCase();
     for (const p of props) {
       const a = p.split('.');
@@ -40,9 +40,7 @@ export class DataControl {
   }
 
   static sort<T>(data: T[], prop: string, direction: string): T[] {
-    if (data.length === 0) {
-      return data;
-    }
+    if (data.length === 0) { return data; }
     switch (direction) {
       case 'asc':
         return data.sort((a, b) => this.compare(a, b, prop));
@@ -53,14 +51,12 @@ export class DataControl {
     }
   }
 
-  static compare(a, b, p: string) {
+  static compare(a: any, b: any, p: string) {
     const d = p.split('.');
     const ad = this.readObject(a, d);
     const bd = this.readObject(b, d);
 
-    if (typeof ad !== typeof bd) {
-      return 0;
-    }
+    if (typeof ad !== typeof bd) { return 0; }
     switch (typeof ad) {
       case 'number':
         return ad - bd;
@@ -71,35 +67,29 @@ export class DataControl {
     }
   }
 
-  private static isObject(prop): boolean {
+  private static isObject(prop: any): boolean {
     return typeof prop === 'object' && !!prop;
-  };
+  }
 
-  private static isPrimitive(prop): boolean {
+  private static isPrimitive(prop: any): boolean {
     const type = typeof prop;
     return type === 'number' || type === 'string' || type === 'boolean';
   }
 
   static clone<T>(data: T, includeObject = false): T {
-    if (!data) {
-      return null;
-    }
-    let target = {} as T;
+    if (!data) { return null; }
+    const target = {} as T;
     return this.cloneProps(data, target, includeObject);
   }
 
   static read<T>(data: T, target: T, includeObject = false): T {
-    if (!data) {
-      return target;
-    }
+    if (!data) { return target; }
     return this.cloneProps(data, target, includeObject);
   }
 
   static remove<T>(target: T, props: string[]) {
-    if (!props) {
-      return target;
-    }
-    for (let prop of props) {
+    if (!props) { return target; }
+    for (const prop of props) {
       if (target.hasOwnProperty(prop)) {
         delete target[prop];
       }
@@ -107,18 +97,14 @@ export class DataControl {
     return target;
   }
 
-  static updateItem<T>(list: T[], data, prop: string) {
-    if (!list || list.length === 0) {
-      return list;
-    }
-    if (this.isObject(list[0]) === false) {
-      return list;
-    }
+  static updateItem<T>(list: T[], data: any, prop: string) {
+    if (!list || list.length === 0) { return list; }
+    if (this.isObject(list[0]) === false) { return list; }
 
-    let item = list.find(x => x[prop] === data[prop]);
-    for (let prop in data) {
-      if (item.hasOwnProperty(prop)) {
-        item[prop] = data[prop];
+    const item = list.find(x => x[prop] === data[prop]);
+    for (const p in data) {
+      if (item.hasOwnProperty(p)) {
+        item[p] = data[p];
       }
     }
     return list;
@@ -126,12 +112,12 @@ export class DataControl {
 
   // https://medium.com/better-programming/3-ways-to-clone-objects-in-javascript-f752d148054d
   // this method used to create new object from existed object
-  private static cloneProps<T>(data: T, target: T, includeObject = false): T {
-    for (let prop in data) {
+  private static cloneProps<T>(data: T, target: T, object = false): T {
+    for (const prop in data) {
       if (data.hasOwnProperty(prop)) {
         if (this.isPrimitive(prop) && !Array.isArray(data[prop])) {
           target[prop] = data[prop];
-        } else if (includeObject === true && (this.isObject(prop) || Array.isArray(data[prop]))) {
+        } else if (object === true && (this.isObject(prop) || Array.isArray(data[prop]))) {
           target[prop] = data[prop];
         }
       }
@@ -139,18 +125,12 @@ export class DataControl {
     return target;
   }
 
-  static deleteItem<T>(list: T[], data, prop: string): T[] {
-    if (!list || list.length === 0) {
-      return list;
-    }
-    if (this.isObject(list[0]) === false) {
-      return list;
-    }
+  static deleteItem<T>(list: T[], data: any, prop: string): T[] {
+    if (!list || list.length === 0) { return list; }
+    if (this.isObject(list[0]) === false) { return list; }
 
     const iter = list.findIndex(x => x[prop] === data[prop]);
-    if (iter !== -1) {
-      list.splice(iter, 1);
-    }
+    if (iter !== -1) { list.splice(iter, 1); }
     return list;
   }
 
@@ -222,7 +202,7 @@ export class FileControl {
       default:
         return 'none';
     }
-  };
+  }
 }
 
 
@@ -234,7 +214,9 @@ export class FormGroupControl {
 
   static touchControls(form: FormGroup) {
     for (const i in form.controls) {
-      form.controls[i].markAsTouched();
+      if (form.controls[i]) {
+        form.controls[i].markAsTouched();
+      }
     }
   }
 }
@@ -243,7 +225,7 @@ export class FormGroupControl {
 export class TimestampControl {
   static toNgbDate(datetime: string) {
     const date = new Date(datetime);
-    return {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
+    return { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
   }
 
   static fillDigit(n: number, length: number = 2, char: string = '0'): string {

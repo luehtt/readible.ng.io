@@ -35,7 +35,8 @@ export class ShopDetailComponent implements OnInit {
   editDialog = false;
   isEdit = false;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -48,7 +49,7 @@ export class ShopDetailComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
     this.id = this.getParam();
-    if (!this.id) return;
+    if (!this.id) { return; }
 
     this.url = window.location.href;
     this.auth = this.authService.isLogged();
@@ -150,9 +151,7 @@ export class ShopDetailComponent implements OnInit {
   }
 
   private translateDateTimeFromNow(data: BookComment[]) {
-    for (let i of data) {
-      i.updatedFromNow = TimestampControl.translateDateTimeFromNow(TimestampControl.jsDate(i.updatedAt));
-    }
+    for (const i of data) { i.updatedFromNow = TimestampControl.translateDateTimeFromNow(TimestampControl.jsDate(i.updatedAt)); }
     return data;
   }
 

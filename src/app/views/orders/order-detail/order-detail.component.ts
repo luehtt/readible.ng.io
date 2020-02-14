@@ -15,7 +15,8 @@ export class OrderDetailComponent implements OnInit {
   id: number;
   loaded: boolean;
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private service: OrderService,
     private alertService: AlertMessageService) {
@@ -24,7 +25,7 @@ export class OrderDetailComponent implements OnInit {
   ngOnInit() {
     this.alertService.clear();
     this.id = this.getParam();
-    if (!this.id) return;
+    if (!this.id) { return; }
 
     this.initData();
   }
@@ -33,10 +34,9 @@ export class OrderDetailComponent implements OnInit {
     const value = this.route.snapshot.paramMap.get('id');
     if (DataControl.isDigit(value)) {
       const res = parseInt(value, 10);
-      if (!isNaN(res)) return res;
+      if (!isNaN(res)) { return res; }
       return this.getParamFailed(value);
-    }
-    else {
+    } else {
       return this.getParamFailed(value);
     }
   }

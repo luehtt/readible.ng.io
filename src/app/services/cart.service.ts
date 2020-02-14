@@ -23,7 +23,7 @@ export class CartService {
   fetchCart(): Cart[] {
     const session = localStorage.getItem(this.CART_SESSION);
     const data: Cart[] = [];
-    if (!session) return [];
+    if (!session) { return []; }
 
     const json = JSON.parse(session);
     for (const i of json) {
@@ -45,7 +45,7 @@ export class CartService {
     if (amount < 1) {
       this.removeCart(item);
     } else {
-      let data = this.fetchCart().filter(x => x.isbn !== item.isbn);
+      const data = this.fetchCart().filter(x => x.isbn !== item.isbn);
       const find = data.find(x => x.isbn === item.isbn);
       if (find) {
         find.amount = amount;
@@ -81,7 +81,7 @@ export class CartService {
   fetchViewed(): Book[] {
     const session = localStorage.getItem(this.VIEWED_SESSION);
     const data: Book[] = [];
-    if (!session) return [];
+    if (!session) { return []; }
 
     const json = JSON.parse(session);
     for (const i of json) {

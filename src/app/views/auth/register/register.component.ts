@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { FormGroupControl, TimestampControl } from 'src/app/common/function';
@@ -51,7 +52,7 @@ export class RegisterComponent implements OnInit {
 
   validateEmail() {
     const email = this.form.controls.email.value;
-    this.customRule.email = !this.conflictEmail.includes(email)
+    this.customRule.email = !this.conflictEmail.includes(email);
   }
 
   validateConfirm() {
@@ -86,17 +87,17 @@ export class RegisterComponent implements OnInit {
     const data = this.retrieveData(this.form);
     this.service.register(data).subscribe(res => {
       if (!res.usernameConflict && !res.emailConflict) {
-        window.location.href = Common.THIS_URL + '/login';
+        window.location.href = environment.thisUrl + '/login';
       } else {
         if (res.usernameConflict === true) {
           const username = data.username;
-          this.conflictUsername.filter(x => x != username);
+          this.conflictUsername.filter(x => x !== username);
           this.conflictUsername.push(username);
           this.customRule.username = false;
         }
         if (res.emailConflict === true) {
           const email = data.email;
-          this.conflictEmail.filter(x => x != email);
+          this.conflictEmail.filter(x => x !== email);
           this.conflictEmail.push(email);
           this.customRule.email = false;
         }

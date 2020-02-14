@@ -11,14 +11,14 @@ export interface HttpLoaderState {
 export class HttpLoaderService {
   private loaderSubject = new Subject<HttpLoaderState>();
   loaderState = this.loaderSubject.asObservable();
-  
+
   constructor() { }
-  
+
   show() {
-    this.loaderSubject.next(<HttpLoaderState>{ show: true });
+    this.loaderSubject.next({ show: true } as HttpLoaderState);
   }
-  
+
   hide() {
-    this.loaderSubject.next(<HttpLoaderState>{ show: false });
+    this.loaderSubject.next({ show: false } as HttpLoaderState);
   }
 }

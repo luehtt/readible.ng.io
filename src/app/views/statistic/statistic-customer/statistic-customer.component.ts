@@ -59,7 +59,7 @@ export class StatisticCustomerComponent implements OnInit {
       responseData: [],
       title: null,
       labels: []
-    }
+    };
   }
 
   private initTimestamp() {
@@ -143,7 +143,7 @@ export class StatisticCustomerComponent implements OnInit {
     const thisData = this.caclChartTitle(this.ageChartData, this.selectedValue);
     this.chartTitle = thisData.title;
 
-    if (this.ageChart) this.ageChart.destroy();
+    if (this.ageChart) { this.ageChart.destroy(); }
     this.ageChart = new Chart(thisData.name, {
       type: ChartOption.CHART_DOUGHNUT,
       data: {
@@ -158,7 +158,7 @@ export class StatisticCustomerComponent implements OnInit {
     const thisData = this.caclChartTitle(this.genderChartData, this.selectedValue);
     this.chartTitle = thisData.title;
 
-    if (this.genderChart) this.genderChart.destroy();
+    if (this.genderChart) { this.genderChart.destroy(); }
     this.genderChart = new Chart(thisData.name, {
       type: ChartOption.CHART_DOUGHNUT,
       data: {

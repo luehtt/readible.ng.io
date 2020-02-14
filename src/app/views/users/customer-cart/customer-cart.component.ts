@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 import { ShopService } from 'src/app/services/shop.service';
 import { AlertMessageService } from 'src/app/services/common/alert-message.service';
@@ -21,7 +22,8 @@ export class CustomerCartComponent implements OnInit {
   form: FormGroup;
   customer: Customer;
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private formBuilder: FormBuilder,
     private placeholderService: PlaceholderService,
     private service: ShopService,
     private cartService: CartService,
@@ -103,7 +105,7 @@ export class CustomerCartComponent implements OnInit {
     this.service.postOrder(data).subscribe(res => {
       this.alertService.successResponse(startTime);
       this.cartService.clearCart();
-      window.location.href = Common.THIS_URL + 'customer/orders';
+      window.location.href = environment.thisUrl + 'customer/orders';
     }, err => {
       this.alertService.errorResponse(err, startTime);
     });

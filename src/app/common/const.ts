@@ -1,7 +1,4 @@
 export const Common = {
-  SERVER_URL: 'https://localhost:5001/api/',
-  THIS_URL: 'http://localhost:4200/',
-  PLACEHOLDER_URL: 'https://via.placeholder.com/',
   RETRY_ATTEMPT: 3,
   REGISTER_LOWER_LIMIT: 12,
   REGISTER_UPPER_LIMIT: 100,
@@ -96,7 +93,7 @@ export const ChartOption = {
     scales: { xAxes: [{ display: true }], yAxes: [{ display: true }] },
     elements: { line: { tension: 0 } },
     animation: { duration: 0 }
-  },
+  } as Chart.ChartOptions,
 
   DEFAULT_PIE_OPTION: {
     responsive: true,
@@ -105,7 +102,7 @@ export const ChartOption = {
     scales: { xAxes: [{ display: false }], yAxes: [{ display: false }] },
     elements: { line: { tension: 0 } },
     animation: { duration: 0 }
-  }
+  } as Chart.ChartOptions
 };
 
 

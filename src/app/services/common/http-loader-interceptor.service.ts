@@ -10,13 +10,11 @@ import { HttpLoaderService } from './http-loader.service';
 })
 export class HttpLoaderInterceptorService implements HttpInterceptor {
   constructor(private loaderService: HttpLoaderService) { }
-  
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.showLoader();
-    return next.handle(req).pipe(tap((event: HttpEvent<any>) => { 
-      if (event instanceof HttpResponse) {
-        this.onEnd();
-      }
+    return next.handle(req).pipe(tap((event: HttpEvent<any>) => {
+      if (event instanceof HttpResponse) { this.onEnd(); }
     }, err => {
         this.onEnd();
     }));

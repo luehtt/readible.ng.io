@@ -20,7 +20,7 @@ export class AlertMessageService {
   }
 
   public remove(index: number) {
-    this.data = this.data.length != 1 ? this.data.splice(index - 1, 1) : [];
+    this.data = this.data.length !== 1 ? this.data.splice(index - 1, 1) : [];
   }
 
   public clear() {
@@ -50,20 +50,20 @@ export class AlertMessageService {
 
   private setCustomError(err, customError) {
     for (const i of customError) {
-      if (err.status !== i.status) continue;
+      if (err.status !== i.status) { continue; }
       err.error = i.error;
       return err;
     }
   }
 
-  public errorResponse(err, startTime: number = null, customError = null) {
+  public errorResponse(err: any, startTime: number = null, customError = null) {
     if (customError) { err = this.setCustomError(err, customError); }
     const message = 'Http failed response: ' + err.status + (startTime ? ` in ${this.spentTime(startTime)}ms` : '') + '!' + (err.error ? ' ' + err.error : '');
-    this.error(message)
+    this.error(message);
   }
 
   public mismatchParameter(parameter: string) {
-    const msg = { type : 'danger', message: "Parameter [" + parameter + "] cannot be found! Please enter valid parameter!!" };
+    const msg = { type : 'danger', message: 'Parameter [' + parameter + '] cannot be found! Please enter valid parameter!!' };
     this.data.push(msg);
   }
 

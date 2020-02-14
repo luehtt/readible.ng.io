@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {retry} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 
 import {Common} from '../../common/const';
 import {SessionService} from './session.service';
@@ -11,7 +12,7 @@ import {SessionService} from './session.service';
 })
 export class HttpClientService {
 
-  private endpoint = Common.SERVER_URL;
+  private endpoint = environment.serverUrl;
   private attempt = Common.RETRY_ATTEMPT;
 
   constructor(private httpClient: HttpClient, private sessionService: SessionService) {

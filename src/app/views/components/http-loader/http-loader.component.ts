@@ -6,7 +6,7 @@ import { HttpLoaderService, HttpLoaderState } from 'src/app/services/common/http
   selector: 'app-http-loader',
   templateUrl: './http-loader.component.html'
 })
-export class HttpLoader implements OnInit, OnDestroy {
+export class HttpLoaderComponent implements OnInit, OnDestroy {
   show = false;
   subscription: Subscription;
 

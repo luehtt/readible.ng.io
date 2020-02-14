@@ -58,7 +58,7 @@ export class BookCommentListComponent implements OnInit {
     this.alertService.clear();
     this.service.destroy(id).subscribe(res => {
       this.data.filter(x => x.id !== res.id);
-      this.alertService.successResponse(startTime)
+      this.alertService.successResponse(startTime);
     },
       err => {
         this.alertService.errorResponse(err, startTime);

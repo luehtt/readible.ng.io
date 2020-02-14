@@ -22,7 +22,7 @@ interface IChartData {
 export class StatisticOrderComponent implements OnInit {
 
   chart: Chart;
-  chartData: IChartData
+  chartData: IChartData;
   chartTitle: string;
 
   loaded: boolean;
@@ -55,7 +55,7 @@ export class StatisticOrderComponent implements OnInit {
       labels: [],
       data: [],
       responseData: [],
-    }
+    };
   }
 
   private initTimestamp() {
@@ -143,7 +143,7 @@ export class StatisticOrderComponent implements OnInit {
     data.labels = data.responseData.map(x => x.property);
     data.data = data.responseData.map(x => x[property]);
     data.color = color;
-    data.title = title + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate)
+    data.title = title + ' from ' + TimestampControl.jsonDate(this.fromDate) + ' to ' + TimestampControl.jsonDate(this.toDate);
     return data;
   }
 
@@ -160,7 +160,7 @@ export class StatisticOrderComponent implements OnInit {
           data: data.data,
           borderColor: data.color,
           backgroundColor: ChartOption.TRANSPARENT,
-          steppedLine: ChartOption.STEP_MIDDLE
+          steppedLine: 'middle'
         }]
       },
       options: ChartOption.DEFAULT_LINE_OPTION

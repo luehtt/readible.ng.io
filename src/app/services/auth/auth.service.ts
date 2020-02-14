@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
 
 import {HttpClientService} from '../common/http-client.service';
-import {Common} from 'src/app/common/const';
 import {SessionService} from '../common/session.service';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class AuthService {
 
   logout() {
     this.sessionService.clearTokenSession();
-    window.location.href = Common.THIS_URL;
+    window.location.href = environment.thisUrl;
   }
 
   getToken(value: string): string {

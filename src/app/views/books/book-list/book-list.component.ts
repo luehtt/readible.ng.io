@@ -45,9 +45,10 @@ export class BookListComponent implements OnInit {
       map(term => (term === '' ? Common.LANGUAGE
         : Common.LANGUAGE.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
-  };
+  }
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private formBuilder: FormBuilder,
     private service: BookService,
     private alertService: AlertMessageService,
     private categoryService: BookCategoryService) {
@@ -140,12 +141,12 @@ export class BookListComponent implements OnInit {
     item.active = formControl.active.value;
     item.info = formControl.info.value;
 
-    if (this.upload && this.uploadFilename) item.image = this.upload;
+    if (this.upload && this.uploadFilename) { item.image = this.upload; }
     return item;
   }
 
   onSubmit() {
-    if (FormGroupControl.validateForm(this.formGroup) == false) { return; }
+    if (FormGroupControl.validateForm(this.formGroup) === false) { return; }
     const item = this.getFormData(this.formGroup);
 
     this.alertService.clear();
