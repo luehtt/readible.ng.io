@@ -1,0 +1,55 @@
+<div class="container">
+  <app-alert-message></app-alert-message>
+
+  <div class="mt-4 mb-2 text-right">
+    <a class="btn btn-link" [routerLink]="'/customer/cart'">Go to Cart</a> |
+    <a class="btn btn-link" [routerLink]="'/shop'">Go to Shop</a>
+  </div>
+
+  <div class="card" style="clear: both;">
+    <div class="card-header">List of orders</div>
+    <div class="card-body">
+      <div class="input-group mb-4">
+        <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Search..." />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" (click)="filter = ''"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" (click)="onSort('id')" class="cursor-pointer">Id</th>
+              <th scope="col" (click)="onSort('totalItem')" class="cursor-pointer">Total items</th>
+              <th scope="col" (click)="onSort('totalPrice')" class="cursor-pointer">Total price</th>
+              <th scope="col" (click)="onSort('statusId')" class="cursor-pointer">Order status</th>
+              <th scope="col" (click)="onSort('createdAt')" class="cursor-pointer">Ordered at</th>
+              <th scope="col" (click)="onSort('updatedAt')" class="cursor-pointer">Updated at</th>
+              <th scope="col" (click)="onSort(null)" class="cursor-pointer">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of dataFilter">
+              <td><ngb-highlight [result]="item.id" [term]="filter"></ngb-highlight></td>
+              <td><ngb-highlight [result]="item.totalItem" [term]="filter"></ngb-highlight> items</td>
+              <td><ngb-highlight [result]="item.totalPrice | currency" [term]="filter"></ngb-highlight></td>
+              <td><app-order-status [(input)]="item.status"></app-order-status></td>
+              <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd hh:mm:ss'" [term]="filter"></ngb-highlight></td>
+              <td><ngb-highlight [result]="item.updatedAt | date: 'yyyy-MM-dd hh:mm:ss'" [term]="filter"></ngb-highlight></td>
+              <td><a [routerLink]="'./' + item.id">Detail</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination *ngIf="dataFilter" [(page)]="page" [pageSize]="pageSize" [collectionSize]="dataFilter.length" [maxSize]="10">
+          <ng-template ngbPaginationFirst>First</ng-template>
+          <ng-template ngbPaginationLast>Last</ng-template>
+          <ng-template ngbPaginationPrevious>Prev</ng-template>
+          <ng-template ngbPaginationNext>Next</ng-template>
+          <ng-template ngbPaginationEllipsis>...</ng-template>
+          <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+        </ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

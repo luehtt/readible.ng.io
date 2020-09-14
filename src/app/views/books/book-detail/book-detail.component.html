@@ -1,0 +1,211 @@
+<div *ngIf="loaded" class="row">
+  <!-- info section -->
+  <div class="col-lg-6">
+    <div class="card" *ngIf="data">
+      <div class="card-header">ISBN: {{ data.isbn }}</div>
+      <div class="card-body">
+        <div class="row">
+          <!-- left col: image info -->
+          <div class="col-md-4 text-center mb-3 mb-md-0">
+            <img [alt]="data.title" class="img-fluid mt-2" [src]="imageData" [ngStyle]="{'transform': imageTransform}"/>
+            <div class="mt-2">
+              <input class="d-none" id="file" type="file" accept="image/*" #fileInput (change)="onChangeImage($event)" />
+              <button type="button" class="btn btn-sm btn-primary mr-1" (click)="fileInput.click()"><i class="fas fa-upload"></i></button>
+              <button type="button" class="btn btn-sm btn-outline-danger mr-1" (click)="data.image = ''"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-sm btn-outline-info" (click)="onRefreshImage()"><i class="fas fa-redo"></i></button>
+            </div>
+          </div>
+          <!-- end left col: image info -->
+
+          <!-- right col: detail info -->
+          <div class="col-md-8">
+            <ul class="list-group padding-sm list-group-flush">
+              <li class="list-group-item"><strong>Title: </strong>{{ data.title }}</li>
+              <li class="list-group-item"><strong>Author: </strong>{{ data.author }}</li>
+              <li class="list-group-item"><strong>Category: </strong>{{ data.category.name }}</li>
+              <li class="list-group-item"><strong>Publisher: </strong>{{ data.publisher }}</li>
+              <li class="list-group-item"><strong>Published: </strong>{{ data.published | date: "yyyy-MM-dd" }}</li>
+              <li class="list-group-item"><strong>Language: </strong>{{ data.language }}</li>
+              <li class="list-group-item"><strong>Rating: </strong>
+                <app-boolean-tag [condition]="data.rating != 0" [trueStyle]="'warning'" [trueValue]="data.rating | number" [falseStyle]="'secondary'" [falseValue]="'0'"></app-boolean-tag>
+              </li>
+              <li class="list-group-item"><strong>Page: </strong>{{ data.page }}</li>
+              <li class="list-group-item"><strong>Price: </strong>{{ data.price | currency }}</li>
+              <li class="list-group-item"><strong>Discount: </strong>{{ data.discount }} percent</li>
+              <li class="list-group-item"><strong>Viewed: </strong> {{ data.viewed }}</li>
+              <li class="list-group-item"><strong>Active: </strong>
+                <app-boolean-tag [condition]="data.active == true" [trueStyle]="'primary'" [trueValue]="'Yes'" [falseStyle]="'secondary'" [falseValue]="'Disabled'"></app-boolean-tag>
+              </li>
+              <li class="list-group-item"><strong>Created at: </strong>{{ data.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+              <li class="list-group-item"><strong>Updated at: </strong>{{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+            </ul>
+          </div>
+          <!-- end right col: detail info -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end info section -->
+
+  <!-- edit section -->
+  <div class="col-lg-6">
+    <div class="card" *ngIf="data">
+      <div class="card-header">Edit</div>
+      <div class="card-body">
+        <form [formGroup]="formGroup">
+          <!-- title -->
+          <div class="form-group row">
+            <label class="col-sm-4">Title</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="title" />
+              <app-form-error [(input)]="formGroup.controls.title"></app-form-error>
+            </div>
+          </div>
+          <!-- author -->
+          <div class="form-group row">
+            <label class="col-sm-4">Author</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="author" />
+              <app-form-error [(input)]="formGroup.controls.author"></app-form-error>
+            </div>
+          </div>
+          <!-- category select -->
+          <div class="form-group row">
+            <label class="col-sm-4">Category</label>
+            <div class="col-sm-8">
+              <select class="form-control" formControlName="categoryId">
+                <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+              </select>
+              <app-form-error [(input)]="formGroup.controls.categoryId"></app-form-error>
+            </div>
+          </div>
+          <!-- publisher -->
+          <div class="form-group row">
+            <label class="col-sm-4">Publisher</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" formControlName="publisher" />
+              <app-form-error [(input)]="formGroup.controls.publisher"></app-form-error>
+            </div>
+          </div>
+          <!-- published datepicker -->
+          <div class="form-group row">
+            <label class="col-sm-4">Published</label>
+            <div class="col-sm-8 input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" formControlName="published" ngbDatepicker #ngd="ngbDatepicker" />
+              <div class="input-group-append">
+                <button class="btn calendar" (click)="ngd.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
+              </div>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.published"></app-form-error>
+          </div>
+          <!-- language typeahead -->
+          <div class="form-group row">
+            <label class="col-sm-4">Language</label>
+            <div class="col-sm-8">
+              <input class="form-control" formControlName="language" #instance="ngbTypeahead" [ngbTypeahead]="search"
+                (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)"/>
+              <app-form-error [(input)]="formGroup.controls.language"></app-form-error>
+            </div>
+          </div>
+          <!-- page number -->
+          <div class="form-group row">
+              <label class="col-sm-4">Page</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" formControlName="page" step="1" min="0" />
+              </div>
+              <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.page"></app-form-error>
+            </div>
+          <!-- price -->
+          <div class="form-group row">
+            <label class="col-sm-4">Price ($)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="price" step="0.01" min="0" />
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.price"></app-form-error>
+          </div>
+          <!-- discount -->
+          <div class="form-group row">
+            <label class="col-sm-4">Discount (%)</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" formControlName="discount" step="1" min="0" />
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.discount"></app-form-error>
+          </div>
+          <!-- active checkbox -->
+          <div class="form-group row">
+            <label class="col-sm-4">Active</label>
+            <div class="col-sm-8">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="active" value="true" />
+                <label class="form-check-label">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="active" value="false" />
+                <label class="form-check-label">No</label>
+              </div>
+            </div>
+            <app-form-error class="offset-sm-4 col-sm-8" [(input)]="formGroup.controls.active"></app-form-error>
+          </div>
+          <!-- info area -->
+          <div class="form-group row">
+            <label class="col-12">Info</label>
+            <div class="col-12">
+              <textarea class="form-control" formControlName="info" rows="6"></textarea>
+            </div>
+          </div>
+          <!-- footer button -->
+          <div class="form-group text-center mt-3">
+            <button type="button" class="btn btn-primary mr-1" (click)="onSubmit()">Update</button>
+            <button type="button" class="btn btn-outline-info mr-1" (click)="onRefresh()">Refresh</button>
+            <button type="button" class="btn btn-outline-danger mr-1" (click)="onDelete()">Delete</button>
+            <a [routerLink]="'../'" class="btn btn-outline-secondary">Back</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- end edit section -->
+</div>
+
+<!-- comment section -->
+<div *ngIf="loaded" class="card">
+  <div class="card-header">List of comments</div>
+  <div class="card-body">
+    <div class="input-group mb-4">
+      <input type="text" class="form-control" [(ngModel)]="commentFilter" placeholder="Search..."/>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" (click)="commentFilter = ''"><i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('customer.fullname')">Customer</th>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('rating')">Rating</th>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('comment')">Comment</th>
+          <th scope="col" class="cursor-pointer" (click)="onSortComment('createdAt')">Timestamp</th>
+          <th scope="col" class="cursor-pointer text-center" (click)="onSortComment(null)">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filterComment | slice: (commentPage-1) * commentPageSize : (commentPage-1) * commentPageSize + commentPageSize">
+          <td><ngb-highlight [result]="item.customer.fullname" [term]="commentFilter"></ngb-highlight></td>
+          <td><ngb-rating class="text-warning star-container" [rate]="item.rating" [readonly]="true" max="5"></ngb-rating></td>
+          <td class="text-justify"><ngb-highlight [result]="item.comment" [term]="commentFilter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="commentFilter"></ngb-highlight></td>
+          <td class="text-center"><button type="button" class="btn btn-link text-danger" (click)="onDeleteComment(item.id)">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <ngb-pagination *ngIf="filterComment" [(page)]="commentPage" [pageSize]="commentPageSize" [collectionSize]="filterComment.length" [maxSize]="10">
+      <ng-template ngbPaginationFirst>First</ng-template>
+      <ng-template ngbPaginationLast>Last</ng-template>
+      <ng-template ngbPaginationPrevious>Prev</ng-template>
+      <ng-template ngbPaginationNext>Next</ng-template>
+      <ng-template ngbPaginationEllipsis>...</ng-template>
+      <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+    </ngb-pagination>
+  </div>
+</div>

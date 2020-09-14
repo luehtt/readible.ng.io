@@ -1,0 +1,24 @@
+<div class="card h-100">
+  <a [routerLink]="'/shop/' + input.isbn">
+    <img class="img-fluid card-img-top" [alt]="input.title" [src]="input.image"/>
+  </a>
+  <div class="card-body p-3">
+    <a class="font-weight-bold" [routerLink]="'/shop/' + input.isbn">{{ input.title }}</a>
+    <div class="text-dark mb-1">{{ input.author }}</div>
+    <div>
+      <ng-template #t let-fill="fill">
+        <span [class.full]="fill === 100" class="star">
+          <span [style.width.%]="fill" class="half">&#9733;</span>&#9733;
+        </span>
+      </ng-template>
+      <ngb-rating [rate]="input.rating" [readonly]="true" [starTemplate]="t" class="text-warning star-template-container" max="5"></ngb-rating>
+    </div>
+    <div>
+      <span *ngIf="input.discount != 0">
+        <span class="mr-2 font-weight-bold">{{input.price * (100 - input.discount) / 100 | currency}}</span>
+          <del class="text-muted">({{input.price | currency}})</del>
+        </span>
+      <span class="h6" *ngIf="input.discount == 0">{{input.price | currency}}</span>
+    </div>
+  </div>
+</div>

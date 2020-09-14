@@ -1,0 +1,217 @@
+$color-primary: #563D7C;
+$color-secondary: #868E96;
+$color-success: #28A745;
+$color-danger: #E8286B;
+$color-warning: #FF550B;
+$color-info: #17A2B8;
+$color-light: #F8F9FA;
+$color-dark: #343434;
+
+* {
+  font-family: Montserrat, sans-serif;
+  font-size: 15px;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.alert {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+button.btn {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem;
+
+  .input-group-append & {
+    margin: 0;
+  }
+}
+
+button.btn-link,
+a.btn-link {
+  margin: 0;
+  padding: 0;
+}
+
+button.btn.calendar {
+  font-size: 1rem;
+  color: $color-light;
+  background-color: $color-primary;
+  cursor: pointer;
+  margin: 0;
+}
+
+.card {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+
+  & .card-header {
+    color: $color-light;
+    background-color: $color-primary;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  & .card-body {
+    flex: 1 1 auto;
+  }
+
+  & .card-footer {
+    background-color: $color-light;
+  }
+}
+
+.form-group {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+
+.list-group {
+  & .list-group-item {
+    padding: .5rem;
+  }
+}
+
+.tag {
+  padding: .25rem .5rem;
+  border-radius: .25rem;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.table {
+  & th {
+    padding: 0.75rem 0.5rem;
+  }
+
+  & td {
+    padding: 0.5rem;
+  }
+
+  & th.cursor-pointer {
+    cursor: pointer;
+  }
+}
+
+
+// simple navbar css section //////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+.page-content-wrapper {
+  min-width: 100vw;
+
+  & .navbar-collapse {
+    padding: .2rem 0;
+  }
+}
+
+.navbar-heading a.nav-link {
+  font-size: 1.25rem;
+  padding: 0.5rem 1rem;
+}
+
+.sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  transition: margin .25s ease-out;
+
+  & .sidebar-heading {
+    padding: 1rem 1.25rem;
+    font-size: 1.25rem;
+  }
+
+  & .list-group {
+    width: 15rem;
+
+    & .list-group-item { padding: 0.75rem 1.25rem; }
+  }
+
+  .wrapper.toggled & { margin-left: 0; }
+}
+
+@media (min-width: 992px) {
+  .page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+  
+  .sidebar-wrapper {
+    margin-left: 0;
+
+    .wrapper.toggled & { margin-left: -15rem; }
+  }
+}
+
+
+// ngb-rating css section /////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+.star-template-container .star {
+  position: relative;
+  display: inline-block;
+  color: #d3d3d3;
+  font-size: 1.5rem;
+  margin-top: -0.5rem;
+
+  &.full {
+    color: $color-warning;
+    font-size: 1.5rem;
+  }
+
+  & .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: $color-warning;
+    font-size: 1.5rem;
+  }
+}
+
+.star-container span {
+  margin-top: -0.5rem;
+  font-size: 1.5rem;
+}
+
+
+// http loader css section ////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+.loader-container {
+  margin: 0;
+  width: 100%;
+  min-height: 5px;
+}
+
+.loader {
+  margin: 0;
+  min-height: 5px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    display: block;
+    position: absolute;
+    content: "";
+    left: 0;
+    min-height: 5px;
+    background-color: #4caf50;
+    animation: loading 1s linear infinite;
+  }
+}
+
+@keyframes loading {
+  from {width: 30%;}
+  10% { left: 10%; width: 30%; }
+  25% { left: 25%; width: 35%; }
+  40% { left: 40%; width: 45%; }
+  60% { left: 60%; width: 60%; }
+  85% { left: 80%; width: 45%; }
+  to { left: 100%; width: 35%; }
+}

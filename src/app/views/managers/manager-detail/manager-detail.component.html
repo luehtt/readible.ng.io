@@ -1,0 +1,111 @@
+<!-- manager detail section -->
+<div *ngIf="loaded" class="row mb-4">
+  <div class="col-lg-7">
+    <div class="card mb-3" *ngIf="data">
+      <div class="card-header">Customer Information</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 text-center mb-3 mb-md-0">
+            <img [alt]="data.fullname" class="img-fluid rounded-circle mt-2" [src]="imageData" />
+          </div>
+          <div class="col-md-8">
+            <ul class="list-group padding-sm list-group-flush">
+              <li class="list-group-item"><strong>Fullname:</strong> {{ data.fullname }}</li>
+              <li class="list-group-item"><strong>Gender:</strong> {{ data.male == true ? 'Male' : 'Female' }}</li>
+              <li class="list-group-item"><strong>Year of birth:</strong> {{ data.birth }}</li>
+              <li class="list-group-item"><strong>Address:</strong> {{ data.address }}</li>
+              <li class="list-group-item"><strong>Phone:</strong> {{ data.phone }}</li>
+              <li class="list-group-item"><strong>Registered at:</strong> {{ data.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+              <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3 mb-lg-0">
+      <a class="btn btn-secondary mr-2" [routerLink]="'../'">Back</a>
+      <span class="userRole === 'ADMIN'">
+        <button *ngIf="account.active == true" type="button" class="btn btn-danger" (click)="onSetEnabled()">Disable</button>
+        <button *ngIf="account.active == false" type="button" class="btn btn-success" (click)="onSetEnabled()">Enable</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card mb-3" *ngIf="account">
+      <div class="card-header">Account Information</div>
+      <div class="card-body">
+        <ul class="list-group padding-sm list-group-flush">
+          <li class="list-group-item"><strong>Username:</strong> {{ account.username }}</li>
+          <li class="list-group-item"><strong>Email:</strong> {{ account.email }}</li>
+          <li class="list-group-item"><strong>Active: </strong>
+            <span class="tag bg-primary" *ngIf="account.active == true">Yes</span>
+            <span class="tag bg-secondary" *ngIf="account.active == false">Disabled</span>
+          </li>
+          <li class="list-group-item"><strong>Registered at: </strong> {{ account.createdAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+          <li class="list-group-item"><strong>Updated at:</strong> {{ account.updatedAt | date:"yyyy-MM-dd HH:mm:ss" }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" *ngIf="data">
+      <div class="card-header">Summary</div>
+      <div class="card-body">
+        <ul class="list-group padding-sm list-group-flush">
+          <li class="list-group-item"><strong>Total confirmed orders:</strong> {{ data.confirmedOrders.length }}</li>
+          <li class="list-group-item"><strong>Total completed orders:</strong> {{ data.completedOrders.length }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- manager orders section -->
+<div *ngIf="loaded" class="card">
+  <div class="card-header">List of orders</div>
+  <div class="card-body">
+    <div class="input-group mb-4">
+      <input type="text" class="form-control" [(ngModel)]="orderFilter" placeholder="Search..." />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" (click)="orderFilter = ''"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col" (click)="onSortOrder('id')" class="cursor-pointer">Id</th>
+          <th scope="col" (click)="onSortOrder('totalItem')" class="cursor-pointer">Total items</th>
+          <th scope="col" (click)="onSortOrder('totalPrice')" class="cursor-pointer">Total price</th>
+          <th scope="col" (click)="onSortOrder('statusId')" class="cursor-pointer">Order status</th>
+          <th scope="col" (click)="onSortOrder('createdAt')" class="cursor-pointer">Ordered at</th>
+          <th scope="col" (click)="onSortOrder('updatedAt')" class="cursor-pointer">Updated at</th>
+          <th scope="col" (click)="onSortOrder(null)" class="cursor-pointer">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of filterOrder | slice: (orderPage-1) * orderPageSize : (orderPage-1) * orderPageSize + orderPageSize">
+          <td><ngb-highlight [result]="item.id" [term]="orderFilter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.totalItem" [term]="orderFilter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.totalPrice | currency" [term]="orderFilter"></ngb-highlight></td>
+          <td><app-order-status [(input)]="item.status"></app-order-status></td>
+          <td><ngb-highlight [result]="item.createdAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="orderFilter"></ngb-highlight></td>
+          <td><ngb-highlight [result]="item.updatedAt | date: 'yyyy-MM-dd HH:mm:ss'" [term]="orderFilter"></ngb-highlight></td>
+          <td><a [routerLink]="'/admin/orders/' + item.id">Detail</a></td>
+        </tr>
+        </tbody>
+      </table>
+      <ngb-pagination *ngIf="filterOrder" [(page)]="orderPage" [pageSize]="orderPageSize" [collectionSize]="filterOrder.length" [maxSize]="10">
+        <ng-template ngbPaginationFirst>First</ng-template>
+        <ng-template ngbPaginationLast>Last</ng-template>
+        <ng-template ngbPaginationPrevious>Prev</ng-template>
+        <ng-template ngbPaginationNext>Next</ng-template>
+        <ng-template ngbPaginationEllipsis>...</ng-template>
+        <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+      </ngb-pagination>
+    </div>
+  </div>
+</div>
+

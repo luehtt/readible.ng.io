@@ -1,0 +1,49 @@
+<div class="row">
+  <!-- categories filter section -->
+  <div class="col-md-3 col-lg-2">
+    <ul *ngIf="categories" class="list-group list-group-flush border-0">
+      <div class="row no-gutters">
+          <li class="list-group-item p-1 col-md-12 col-sm-4 col-6">
+            <button (click)="onSetCategory('')" class="btn btn-link py-0" type="button">All</button>
+          </li>
+          <li *ngFor="let i of categories" class="list-group-item p-1 col-md-12 col-sm-4 col-6">
+            <button (click)="onSetCategory(i.name.toLowerCase())" class="btn btn-link py-0 text-left" type="button">{{ i.name }}</button>
+          </li>
+      </div>
+    </ul>
+  </div>
+
+  <!-- main section -->
+  <div *ngIf="data" class="col-md-9 col-lg-10">
+    <app-alert-message></app-alert-message>
+
+    <!-- search filter section -->
+    <div class="input-group mb-3">
+      <input (change)="search = $event.target.value" [value]="search" class="form-control" placeholder="" type="text">
+      <div class="input-group-append">
+        <button (click)="onSetSearch()" class="btn btn-square btn-info px-5" type="button"><i class="fas fa-search"></i></button>
+        <button (click)="onClear()" class="btn btn-outline-secondary" type="button"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+
+    <!-- list books section -->
+    <div class="row less-gutters">
+      <div *ngFor="let i of data" class="card-group col-sm-4 col-md-4 col-lg-3 col-xl-2">
+        <app-book-card class="mb-2" [input]="i"></app-book-card>
+      </div>
+
+      <!-- pagination section -->
+      <div *ngIf="data.length != 0" class="col-12 mt-3">
+      <ngb-pagination (pageChange)="onChangePage($event)" *ngIf="pagination" [(page)]="pagination.pageIndex"
+        [maxSize]="10" [collectionSize]="pagination.totalItems" [pageSize]="pagination.itemsPerPage">
+			  <ng-template ngbPaginationFirst>First</ng-template>
+			  <ng-template ngbPaginationLast>Last</ng-template>
+			  <ng-template ngbPaginationPrevious>Prev</ng-template>
+			  <ng-template ngbPaginationNext>Next</ng-template>
+			  <ng-template ngbPaginationEllipsis>...</ng-template>
+			  <ng-template ngbPaginationNumber let-page>{{ page }}</ng-template>
+		  </ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

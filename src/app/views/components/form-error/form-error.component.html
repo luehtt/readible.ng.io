@@ -1,0 +1,8 @@
+<div class="text-danger" *ngIf="input.touched && input.errors">
+  <small *ngIf="input.errors.required">{{ GENERAL_REQUIRED }}</small>
+  <small *ngIf="input.errors.maxlength">{{ GENERAL_MAX_LENGTH }}</small>
+  <small *ngIf="input.errors.minlength">{{ GENERAL_MIN_LENGTH }}</small>
+  <small *ngIf="input.errors.email">{{ GENERAL_EMAIL }}</small>
+  <small *ngIf="input.errors.max">{{ GENERAL_MAX_VALUE }}</small>
+  <small *ngIf="input.errors.min">{{ GENERAL_MIN_VALUE }}</small>
+</div>

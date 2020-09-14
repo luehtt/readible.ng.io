@@ -1,0 +1,55 @@
+<div class="wrapper d-flex" [ngClass]="{ toggled: toggled == true }">
+  <!-- sidebar -->
+  <div class="sidebar-wrapper border-right bg-primary text-white">
+    <div class="sidebar-heading">Readible <span class="text-small">{{version}}</span></div>
+    <div class="list-group list-group-flush p-md">
+      <a [routerLink]="'/admin/dashboard'" [class.active]="selectMenu == 'dashboard'" (click)="selectMenu = 'dashboard'" class="list-group-item list-group-item-action bg-primary text-white">Dashboard</a>
+      <a [routerLink]="'/admin/books'" [class.active]="selectMenu == 'books'" (click)="selectMenu = 'books'" class="list-group-item list-group-item-action bg-primary text-white">Books</a>
+      <a [routerLink]="'/admin/book-categories'" [class.active]="selectMenu == 'book-categories'" (click)="selectMenu = 'book-categories'" class="list-group-item list-group-item-action bg-primary text-white">Book Categories</a>
+      <a [routerLink]="'/admin/book-comments'" [class.active]="selectMenu == 'book-comments'" (click)="selectMenu = 'book-comments'" class="list-group-item list-group-item-action bg-primary text-white">Book Comments</a>
+      <a [routerLink]="'/admin/orders'" [class.active]="selectMenu == 'orders'" (click)="selectMenu = 'orders'" class="list-group-item list-group-item-action bg-primary text-white">Orders</a>
+      <a [routerLink]="'/admin/customers'" [class.active]="selectMenu == 'customers'" (click)="selectMenu = 'customers'" class="list-group-item list-group-item-action bg-primary text-white">Customers</a>
+      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/managers'" [class.active]="selectMenu == 'managers'" (click)="selectMenu = 'managers'" class="list-group-item list-group-item-action bg-primary text-white">Managers</a>
+      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/statistic/orders'" [class.active]="selectMenu == 'ordersStatistic'" (click)="selectMenu = 'ordersStatistic'" class="list-group-item list-group-item-action bg-primary text-white">Orders Statistic</a>
+      <a *ngIf="userRole === 'ADMIN'" [routerLink]="'/admin/statistic/customers'" [class.active]="selectMenu == 'customersStatistic'" (click)="selectMenu = 'customersStatistic'" class="list-group-item list-group-item-action bg-primary text-white">Customers Statistic</a>
+    </div>
+  </div>
+  <!-- sidebar-wrapper -->
+
+  <!-- page content -->
+  <div class="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
+      <button class="btn btn-outline-light btn-normal btn-icon my-0" (click)="toggled = !toggled"><i class="fas fa-sliders-h"></i></button>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0" style="font-size: 1rem !important">
+          <li class="nav-item">
+            <a class="nav-link"><i class="fas fa-bell"></i> Message</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" [routerLink]="'/admin/account'"><i class="fas fa-user"></i> Account</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" [routerLink]="''" (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Log out</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- main container -->
+    <div class="main-content-wrapper container-fluid">
+      <app-http-loader></app-http-loader>
+      <app-alert-message></app-alert-message>
+      <div class="my-3">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  <!-- page-content-wrapper -->
+</div>
+<!-- wrapper -->

@@ -1,0 +1,118 @@
+<!-- order overview section -->
+<div *ngIf="loaded" class="row mb-4">
+  <!-- left col: delivery section -->
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header">Delivery Information</div>
+      <div class="card-body">
+        <ul class="list-group padding-sm list-group-flush">
+          <li class="list-group-item"><strong>Delivery customer:</strong> {{ data.contact }}</li>
+          <li class="list-group-item"><strong>Delivery address:</strong> {{ data.address }}</li>
+          <li class="list-group-item"><strong>Delivery phone:</strong> {{ data.phone }}</li>
+          <li class="list-group-item"><strong>Total items:</strong> {{ data.totalItem }}</li>
+          <li class="list-group-item"><strong>Total price:</strong> {{ data.totalPrice | currency }}</li>
+          <li class="list-group-item"><strong class="mr-2">Status:</strong><app-order-status [(input)]="data.status"></app-order-status></li>
+          <li class="list-group-item" *ngIf="data.confirmedManager"><strong>Confirmed:</strong> {{ data.confirmedManager.fullname }} at {{ data.confirmedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item" *ngIf="data.completedManager"><strong>Completed:</strong> {{ data.completedManager.fullname }} at {{ data.completedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item"><strong>Created at:</strong> {{ data.createdAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item"><strong>Updated at:</strong> {{ data.updatedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item text-justify">{{ data.note }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- order status button -->
+    <div class="mt-2">
+      <!--if status is PENDING, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'PENDING'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="''">Pending</button>
+        <button type="button" class="btn btn-primary mr-1" (click)="onChangeStatus('delivering')">Delivering</button>
+        <button type="button" class="btn btn-outline-success mr-1" (click)="onChangeStatus('success')" [attr.disabled]="''">Success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')" [attr.disabled]="''">Failed</button>
+      </div>
+
+      <!--if status is DELIVERING, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'DELIVERING'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')">Pending</button>
+        <button type="button" class="btn btn-outline-primary mr-1" [attr.disabled]="''">Delivering</button>
+        <button type="button" class="btn btn-success mr-1" (click)="onChangeStatus('success')">Success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')">Failed</button>
+      </div>
+
+      <!--if status is SUCCESS, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'SUCCESS'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="''">Pending</button>
+        <button type="button" class="btn btn-outline-primary mr-1" (click)="onChangeStatus('delivering')">Delivering</button>
+        <button type="button" class="btn btn-outline-success mr-1" (click)="onChangeStatus('success')" [attr.disabled]="''">Success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')">Failed</button>
+      </div>
+
+      <!--if status is FAILED, set other button color and disabled-->
+      <div *ngIf="data.status.name == 'FAILED'">
+        <button type="button" class="btn btn-outline-secondary mr-1" (click)="onChangeStatus('pending')" [attr.disabled]="''">Pending</button>
+        <button type="button" class="btn btn-outline-primary mr-1" (click)="onChangeStatus('delivering')">Delivering</button>
+        <button type="button" class="btn btn-outline-success mr-1" (click)="onChangeStatus('success')" [attr.disabled]="''">Success</button>
+        <button type="button" class="btn btn-outline-danger" (click)="onChangeStatus('failed')" [attr.disabled]="''">Failed</button>
+      </div>
+    </div>
+    <!-- end order status section -->
+  </div>
+  <!-- end left col: delivering section -->
+
+  <!-- right col: register customer section -->
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header">Customer Information</div>
+      <div class="card-body">
+        <ul class="list-group padding-sm list-group-flush">
+          <li class="list-group-item"><strong>Customer:</strong> {{ data.customer.fullname }}</li>
+          <li class="list-group-item"><strong>Year of birth:</strong> {{ data.customer.birth }}</li>
+          <li class="list-group-item"><strong>Gender:</strong> {{ data.customer.male == true ? "Male" : "Female" }}</li>
+          <li class="list-group-item"><strong>Default address:</strong> {{ data.customer.address }}</li>
+          <li class="list-group-item"><strong>Default phone:</strong> {{ data.customer.phone }}</li>
+          <li class="list-group-item"><strong>Registered at:</strong> {{ data.createdAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+          <li class="list-group-item"><strong>Modified at:</strong> {{ data.updatedAt | date: "yyyy-MM-dd hh:mm:ss" }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <a class="btn btn-outline-secondary mr-1" [routerLink]="'/admin/orders'">Back</a>
+      <button type="button" class="btn btn-outline-danger" [attr.disabled]="data.status.name != 'PENDING' ? '': null" (click)="onDelete()">Delete</button>
+    </div>
+  </div>
+  <!-- end right col: register customer section -->
+</div>
+
+<!-- order detail section -->
+<div *ngIf="loaded" class="card mb-4">
+  <div class="card-header">List of books ordered</div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ISBN</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total price</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data.orderDetails">
+            <td>{{ item.book.isbn }}</td>
+            <td><a [routerLink]="'/admin/books/' + item.book.isbn">{{ item.book.title }}</a></td>
+            <td>{{ item.book.author }}</td>
+            <td>{{ item.amount }}</td>
+            <td>{{ item.price | currency }}</td>
+            <td>{{ item.amount * item.price | currency }}</td>
+            <td><button class="btn btn-link text-danger" type="button" disabled ngbTooltip="Not implemented yet">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
