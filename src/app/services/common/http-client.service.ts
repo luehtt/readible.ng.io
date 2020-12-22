@@ -11,7 +11,6 @@ import { SessionService } from './session.service';
   providedIn: 'root'
 })
 export class HttpClientService {
-
   private endpoint = environment.serverUrl;
   private attempt = Common.RETRY_ATTEMPT;
 
@@ -41,7 +40,8 @@ export class HttpClientService {
   public initHeaders(): HttpHeaders {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('Authorization', 'Bearer ' + this.sessionService.getTokenSession());
+	  const bearer = this.sessionService.getTokenSession();
+	  if (bearer) headers = headers.append('Authorization', 'Bearer ' + bearer);
     return headers;
   }
 
