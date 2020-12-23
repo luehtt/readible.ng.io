@@ -31,7 +31,6 @@ import { ShopDetailComponent } from './views/shop/shop-detail/shop-detail.compon
 import { ShopListComponent } from './views/shop/shop-list/shop-list.component';
 import { StatisticCustomerComponent } from './views/statistic/statistic-customer/statistic-customer.component';
 import { StatisticOrderComponent } from './views/statistic/statistic-order/statistic-order.component';
-import { SignalRTestComponent } from './views/test/signalr-test.component';
 import { CustomerOrderDetailComponent } from './views/users/customer-order-detail/customer-order-detail.component';
 import { CustomerOrderListComponent } from './views/users/customer-order/customer-order-list.component';
 
@@ -46,7 +45,6 @@ const routes: Routes = [
       { path: 'register', component: RegisterComponent },
       { path: 'shop', component: ShopListComponent, pathMatch: 'full' },
       { path: 'shop/:id', component: ShopDetailComponent },
-      { path: 'test', component: SignalRTestComponent }
     ]
   },
 

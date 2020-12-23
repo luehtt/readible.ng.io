@@ -1,47 +1,57 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { retry } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { Common } from '../../common/const';
-import { SessionService } from './session.service';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { EventEmitter, Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SignalRService {
-  connectionEstablished = new EventEmitter<Boolean>();
-  messageReceived = new EventEmitter<string>();
+export class SignalService<T> {
+  protected endpoint = environment.serverHub;
+  protected hubConnection: HubConnection;
 
-  private connectionIsEstablished = false;
-  private connection: HubConnection;
+  public connectionEstablished = new EventEmitter<Boolean>();
+  public storeDataEmitter = new EventEmitter<T>();
+  public updateDataEmitter = new EventEmitter<T>();
+  public deleteIdEmitter = new EventEmitter<number>();
 
-  constructor() {
-    this.createConnection();
-    this.registerOnServerEvents();
-    this.startConnection();
-  }
-
-  private createConnection() {
-    this.connection = new HubConnectionBuilder().withUrl('https://localhost:44388/hub/orders').build();
-  }
-
-  private startConnection(): void {
-    this.connection.start().then(() => {
-      this.connectionIsEstablished = true;
-      console.log('Hub connection started');
+  public startConnection(interval: number = 600_000) {
+    this.hubConnection = new HubConnectionBuilder().withUrl(this.endpoint + 'orders').build();
+    this.hubConnection.serverTimeoutInMilliseconds = interval;
+    this.hubConnection.start().then(res => {
       this.connectionEstablished.emit(true);
-    }).catch(err => {
-      console.log('Error while establishing connection, retrying...');
-      setTimeout(function () { this.startConnection(); }, 5000);
+    })
+    .catch(err => {
+      this.connectionEstablished.emit(false);
+    })
+
+    this.hubConnection.onclose(() => setTimeout(() => this.startConnection(), 1000));
+  }
+
+  public mapUrl(url: string, action: string): string {
+    return url[0].toUpperCase() + url.substr(1) + action[0].toUpperCase() + action.substr(1);
+  }
+
+  public addStoreListener(name: string) {
+    this.hubConnection.on(name, res => {
+      return this.storeDataEmitter.emit(res);
     });
   }
 
-  private registerOnServerEvents(): void {
-    this.connection.on('MessageReceived', (data: any) => {
-      this.messageReceived.emit(data);
+  public addUpdateListener(name: string) {
+    this.hubConnection.on(name, res => {
+      return this.updateDataEmitter.emit(res);
     });
   }
 
+  public addDeleteListener(name: string) {
+    this.hubConnection.on(name, res => {
+      return this.deleteIdEmitter.emit(res);
+    });
+  }
+
+  public addListeners(routeName: string) {
+    this.addStoreListener(this.mapUrl(routeName, 'Store'));
+    this.addUpdateListener(this.mapUrl(routeName, 'Update'))
+    this.addDeleteListener(this.mapUrl(routeName, 'Delete'))
+  }
 }

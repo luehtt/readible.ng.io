@@ -23,7 +23,9 @@ export class DataControl {
     const s = search.toLocaleLowerCase();
     for (const p of props) {
       const a = p.split('.');
-      const d = this.readObject(data, a).toString();
+      const r = this.readObject(data, a);
+      if (!r) continue;
+      const d = r.toString();
       if (d.toLocaleLowerCase().includes(s)) {
         return true;
       }

@@ -4,7 +4,10 @@
 
 export const environment = {
   production: false,
-  serverUrl: 'https://localhost:5001/api/',
+  // serverUrl: 'http://localhost:57365/api/',
+  // serverHub: 'http://localhost:57365/hub/',
+  serverUrl: 'http://localhost:5000/api/',
+  serverHub: 'http://localhost:5000/hub/',
   thisUrl: 'http://localhost:4200/',
   placeHolderUrl: 'https://via.placeholder.com/'
 };

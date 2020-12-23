@@ -17,23 +17,23 @@ export class HttpClientService {
   constructor(private httpClient: HttpClient, private sessionService: SessionService) {
   }
 
-  public fetch(url: string): Observable<any> {
+  public fetch(url: string) {
     return this.httpClient.get<any>(this.endpoint + url, {headers: this.initHeaders()}).pipe(retry(this.attempt));
   }
 
-  public get(url: string): Observable<any> {
+  public get(url: string) {
     return this.httpClient.get<any>(this.endpoint + url, {headers: this.initHeaders()}).pipe(retry(this.attempt));
   }
 
-  public post(url: string, data: object): Observable<any> {
+  public post(url: string, data: object) {
     return this.httpClient.post<any>(this.endpoint + url, data, { headers: this.initHeaders() }).pipe(retry(this.attempt));
   }
 
-  public put(url: string, data: object): Observable<any> {
+  public put(url: string, data: object) {
     return this.httpClient.put<any>(this.endpoint + url, data, { headers: this.initHeaders() }).pipe(retry(this.attempt));
   }
 
-  public delete(url: string): Observable<any> {
+  public delete(url: string) {
     return this.httpClient.delete<any>(this.endpoint + url, {headers: this.initHeaders()}).pipe(retry(this.attempt));
   }
 
