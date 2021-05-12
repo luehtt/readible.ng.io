@@ -21,7 +21,7 @@
     "@angular/router": "~10.1.1",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
     "@types/chart.js": "^2.9.24",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "piexifjs": "^1.0.6",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
